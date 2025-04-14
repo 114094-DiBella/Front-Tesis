@@ -1,0 +1,52 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2 class="title">Iniciar sesión</h2>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="alert alert-danger" *ngIf="errorMessage()" [style.display]="errorMessage() ? 'block' : 'none'">
+        {{ errorMessage() }}
+      </div>
+      
+      <div class="form-group mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input 
+          type="email" 
+          class="form-control" 
+          id="email" 
+          formControlName="email"
+          [class.is-invalid]="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)">
+        <div class="invalid-feedback" *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)">
+          <span *ngIf="loginForm.controls['email'].errors?.['required']">El email es obligatorio</span>
+          <span *ngIf="loginForm.controls['email'].errors?.['email']">Formato de email inválido</span>
+        </div>
+      </div>
+      
+      <div class="form-group mb-4">
+        <label for="password" class="form-label">Contraseña</label>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="password" 
+          formControlName="password"
+          [class.is-invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+        <div class="invalid-feedback" *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+          <span *ngIf="loginForm.controls['password'].errors?.['required']">La contraseña es obligatoria</span>
+          <span *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+        </div>
+      </div>
+      
+      <div class="d-grid gap-2">
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-lg"
+          [disabled]="loginForm.invalid || loading()">
+          {{ loading() ? 'Cargando...' : 'Iniciar sesión' }}
+        </button>
+      </div>
+      
+      <div class="form-group">
+        <p class="register-link">¿No tienes una cuenta? <a (click)="createUser()" style="cursor: pointer;">Regístrate aquí</a></p>
+      </div>
+    </form>
+  </div>
+</div>

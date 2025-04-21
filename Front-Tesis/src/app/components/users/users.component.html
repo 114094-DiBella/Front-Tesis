@@ -1,0 +1,21 @@
+<!-- src/app/components/employee-card/employee-card.component.html -->
+<div class="employee-card">
+    <div class="employee-image">
+      <img [src]="employee.imageUrl || 'assets/images/default-avatar.png'" alt="{{employee.firstName}} {{employee.lastName}}">
+      <span class="status-badge" [class.active]="employee.isActive">
+        {{employee.isActive ? 'Activo' : 'Inactivo'}}
+      </span>
+    </div>
+    <div class="employee-info">
+      <h3>{{employee.firstName}} {{employee.lastName}}</h3>
+      <p class="position">{{employee.position}}</p>
+      <p class="department"><i class="fas fa-building"></i> {{employee.department}}</p>
+      <p class="contact"><i class="fas fa-envelope"></i> {{employee.email}}</p>
+      <p class="contact"><i class="fas fa-phone"></i> {{employee.phone}}</p>
+      <p class="hire-date"><i class="fas fa-calendar"></i> Contratado: {{employee.hireDate | date:'dd/MM/yyyy'}}</p>
+      <div class="card-actions">
+        <button class="btn-edit" (click)="onEdit()"><i class="fas fa-edit"></i> Editar</button>
+        <button class="btn-delete" (click)="onDelete()"><i class="fas fa-trash"></i> Eliminar</button>
+      </div>
+    </div>
+  </div>

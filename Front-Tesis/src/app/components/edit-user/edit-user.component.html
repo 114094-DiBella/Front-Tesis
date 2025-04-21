@@ -1,0 +1,85 @@
+<div class="edit-user-container">
+    <div class="page-header">
+      <h1>Editar Usuario</h1>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading-indicator">
+      <div class="spinner"></div>
+      <p>Cargando información del usuario...</p>
+    </div>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>{{errorMessage}}</p>
+      <button (click)="loadUserData()">Reintentar</button>
+    </div>
+  
+    <div *ngIf="successMessage" class="success-message">
+      <i class="fas fa-check-circle"></i>
+      <p>{{successMessage}}</p>
+    </div>
+  
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !errorMessage" class="user-form">
+      <div class="form-section">
+        <h2>Información Personal</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">Nombre</label>
+            <input type="text" id="firstName" formControlName="firstName" class="form-control">
+            <div *ngIf="userForm.controls['firstName'].invalid && userForm.controls['firstName'].touched" class="error-text">
+              El nombre es requerido
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="lastName">Apellido</label>
+            <input type="text" id="lastName" formControlName="lastName" class="form-control">
+            <div *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched" class="error-text">
+              El apellido es requerido
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" class="form-control">
+          <div *ngIf="userForm.controls['email'].invalid && userForm.controls['email'].touched" class="error-text">
+            <span *ngIf="userForm.controls['email'].errors?.['required']">El email es requerido</span>
+            <span *ngIf="userForm.controls['email'].errors?.['email']">Formato de email inválido</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="telephone">Teléfono</label>
+          <input type="tel" id="telephone" formControlName="telephone" class="form-control">
+          <div *ngIf="userForm.controls['telephone'].invalid && userForm.controls['telephone'].touched" class="error-text">
+            El teléfono es requerido
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="numberDoc">Número de Documento</label>
+          <input type="text" id="numberDoc" formControlName="numberDoc" class="form-control">
+          <div *ngIf="userForm.controls['numberDoc'].invalid && userForm.controls['numberDoc'].touched" class="error-text">
+            El número de documento es requerido
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="birthday">Fecha de Nacimiento</label>
+          <input type="date" id="birthday" formControlName="birthday" class="form-control">
+          <div *ngIf="userForm.controls['birthday'].invalid && userForm.controls['birthday'].touched" class="error-text">
+            La fecha de nacimiento es requerida
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">Cancelar</button>
+        <button type="button" class="btn-save" [disabled]="userForm.invalid || isLoading" (click)="onSubmit()">
+          <i class="fas fa-save"></i> Guardar Cambios
+        </button>
+      </div>
+    </form>
+  </div>

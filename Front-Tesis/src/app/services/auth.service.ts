@@ -33,5 +33,19 @@ export class AuthService {
       return this.http.post<User>(URL_USERS + "/create", user);
     }
 
+    updateUser(id: string, user: User): Observable<User> {
+      console.log("Edit to user:", id, user);
+      // Enviar el ID y el usuario en el cuerpo
+      return this.http.put<User>(`${URL_USERS}/update/${id}`, user);
+
+  }
+    deleteUser(id: string): Observable<void> {
+      console.log("usuario por borrar: ", id)
+      return this.http.delete<void>(`${URL_USERS}/${id}`);
+    }
     
+    getUserById(id: string): Observable<User> {
+      console.log("userss", id)
+      return this.http.get<User>(`${URL_USERS}/${id}`)
+    }
 }

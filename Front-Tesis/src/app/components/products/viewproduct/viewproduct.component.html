@@ -130,12 +130,12 @@
         <div class="product-actions">
           <button class="add-to-cart-btn">Añadir al Carrito</button>
           @if (isAdmin) {
-            <div class="actions">
-              <button class="action-btn" (click)="onEditProduct(product)" title="Editar">
-                <i class="fas fa-edit"></i>
+            <div class="admin-actions">
+              <button class="admin-btn edit-btn" (click)="onEditProduct(product)" title="Editar">
+                <i class="bi bi-pencil-square"></i>
               </button>
-              <button class="action-btn" (click)="onDeleteProduct(product)" title="Eliminar">
-                <i class="fas fa-trash"></i>
+              <button class="admin-btn delete-btn" (click)="onDeleteProduct(product)" title="Eliminar">
+                <i class="bi bi-trash"></i>
               </button>
             </div>
           }

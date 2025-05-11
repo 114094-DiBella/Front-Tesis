@@ -8,6 +8,7 @@ import { Product } from './models/product.model';
 import { ViewproductComponent } from './components/products/viewproduct/viewproduct.component';
 import { ImageUploadComponent } from './components/images/image-upload/image-upload.component';
 import { AltaproductComponent } from './components/products/altaproduct/altaproduct.component';
+import { EditproductComponent } from './components/products/editproduct/editproduct.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/store', pathMatch: 'full' }, // Cambiar de '/login' a '/store'
@@ -18,6 +19,7 @@ export const routes: Routes = [
     { path: 'users/edit/:id', component: EditUserComponent },
     { path: 'catalog', component: ViewproductComponent},
     { path: 'images', component: ImageUploadComponent},
-    { path: 'products', component: AltaproductComponent}
+    { path: 'products', component: AltaproductComponent},
+    { path: 'products/edit/:id', component: EditproductComponent },
 
 ];

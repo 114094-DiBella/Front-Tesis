@@ -22,6 +22,13 @@ export class StoreComponent implements OnInit, AfterViewInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
 
+  private categoryImages: {[key: string]: string} = {
+    'Jeans': '/images/jeans.jpg',
+    'Remeras': '/images/remeras.jpg',
+    'Vestidos': '/images/vestidos.jpg',
+    'Casual': '/images/casual.jpg'
+  };
+
   constructor() { }
 
   ngOnInit(): void {
@@ -36,23 +43,11 @@ export class StoreComponent implements OnInit, AfterViewInit {
   getAllProducts() {
     this.productService.getAllProducts().subscribe({
       next: (response) => {
-        // Procesar las URLs de las imágenes
-        this.products = response.map((product: Product) => {
-          if (product.imageUrls) {
-            product.imageUrls = product.imageUrls.map((url: string) => {
-              // Si la URL comienza con "/images/", agregarle el prefijo del backend
-              if (url.startsWith('/images/')) {
-                return 'http://localhost:8080' + url;
-              }
-              return url;
-            });
-          }
-          return product;
-        });
-        console.log('Products processed:', this.products);
+        this.products = response;
+        console.log('Productos obtenidos:', this.products);
       },
       error: (error) => {
-        console.error('Error obtaining products:', error);
+        console.error('Error obteniendo productos:', error);
       }
     });
   }
@@ -104,4 +99,32 @@ export class StoreComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  viewProducts(category: Category) {
+    this.router.navigate(['/products', category.id]);
+  }
+
+  getCategoryImage(category: Category): string {
+    if (!category || !category.name) {
+      console.warn('Categoría inválida o sin nombre:', category);
+      return 'assets/images/default-category.png';
+    }
+  
+    const image = this.categoryImages[category.name];
+    if (!image) {
+      console.warn(`No se encontró una imagen para la categoría: ${category.name}`);
+      return 'assets/images/default-category.png';
+    }
+  
+    return image;
+  }
+
+  viewDetails(product: Product) {
+    this.router.navigate(['/products/details', product.id]);
+  }
+
+  viewAllProducts() {
+    this.router.navigate(['/products']);
+  }
+
 }

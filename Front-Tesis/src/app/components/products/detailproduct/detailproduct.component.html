@@ -1,0 +1,225 @@
+<div class="product-detail-container">
+    <!-- Migas de pan (Breadcrumbs) -->
+    <div class="breadcrumbs">
+      <a [routerLink]="['/catalog']">Catálogo</a> 
+      <span>›</span> 
+      @if (product?.category) {
+        <a [routerLink]="['/products', product?.category?.id]">{{product?.category?.name}}</a>
+        <span>›</span>
+      }
+      <span class="current">{{product?.name || 'Detalle de producto'}}</span>
+    </div>
+  
+    <!-- Indicador de carga -->
+    @if (isLoading) {
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Cargando producto...</p>
+      </div>
+    }
+    
+    <!-- Mensaje de error -->
+    @if (errorMessage) {
+      <div class="error-message">
+        <i class="bi bi-exclamation-triangle"></i> {{ errorMessage }}
+        <button class="back-btn" (click)="goBack()">Volver al catálogo</button>
+      </div>
+    }
+    
+    <!-- Detalle del producto -->
+    @if (product && !isLoading) {
+      <div class="product-detail">
+        <div class="product-images-section">
+          <!-- Imagen principal -->
+          <div class="main-image">
+            @if (selectedImage) {
+              <img [src]="selectedImage" [alt]="product.name">
+            } @else {
+              <img src="/images/problemastecnicos.jpeg" [alt]="product.name">
+            }
+          </div>
+          
+          <!-- Imágenes miniaturas -->
+          @if (product.imageUrls && Array.isArray(product.imageUrls) && product.imageUrls.length > 1) {
+            <div class="thumbnail-gallery">
+              @for (image of product.imageUrls; track $index) {
+                <div 
+                  class="thumbnail" 
+                  [class.active]="currentImageIndex === $index"
+                  (click)="selectImage(image, $index)"
+                >
+                  <img [src]="image" [alt]="product.name + ' - Vista ' + ($index + 1)">
+                </div>
+              }
+            </div>
+          }
+        </div>
+        
+        <div class="product-info-section">
+          <!-- Detalles principales del producto -->
+          <div class="product-header">
+            @if (product.marca) {
+              <div class="brand">{{product.marca.name}}</div>
+            }
+            <h1 class="product-title">{{product.name}}</h1>
+            @if (product.id) {
+              <div class="product-id">REF: {{product.id}}</div>
+            }
+          </div>
+          
+          <!-- Precio y opciones de pago -->
+          <div class="pricing-section">
+            <div class="price-box">
+              <span class="price">${{product.price?.toFixed(2)}}</span>
+              <div class="installments">
+                @if (product.price) {
+                  <p>O 6 cuotas sin interés de ${{(product.price / 6).toFixed(2)}}</p>
+                }
+              </div>
+            </div>
+            
+            <!-- Disponibilidad -->
+            <div class="availability">
+              @if (product.stock) {
+                <span class="in-stock">✓ En stock ({{product.stock}} disponibles)</span>
+              } @else {
+                <span class="out-of-stock">✗ Sin stock</span>
+              }
+            </div>
+          </div>
+          
+          <!-- Atributos del producto -->
+          <div class="attributes-section">
+            <!-- Color -->
+            @if (product.color) {
+              <div class="attribute-row">
+                <span class="attribute-label">Color:</span>
+                <div class="attribute-value color-attribute">
+                  <span class="color-dot" [style.background-color]="product.color"></span>
+                  <span>{{product.color}}</span>
+                </div>
+              </div>
+            }
+            
+            <!-- Talla -->
+            @if (product.size) {
+              <div class="attribute-row">
+                <span class="attribute-label">Talla:</span>
+                <div class="attribute-value">{{product.size}}</div>
+              </div>
+            }
+            
+            <!-- Categoría -->
+            @if (product.category) {
+              <div class="attribute-row">
+                <span class="attribute-label">Categoría:</span>
+                <div class="attribute-value">{{product.category.name}}</div>
+              </div>
+            }
+          </div>
+          
+          <!-- Selector de cantidad y botón de añadir al carrito -->
+          <div class="purchase-section">
+            <div class="quantity-selector" [formGroup]="quantityForm">
+              <button 
+                type="button" 
+                class="qty-btn decrease" 
+                (click)="decrementQuantity()" 
+                [disabled]="quantityForm.get('quantity')?.value <= 1"
+              >
+                <i class="bi bi-dash"></i>
+              </button>
+              
+              <input 
+                type="number" 
+                formControlName="quantity" 
+                min="1" 
+                max="10" 
+                class="qty-input"
+              >
+              
+              <button 
+                type="button" 
+                class="qty-btn increase" 
+                (click)="incrementQuantity()"
+                [disabled]="quantityForm.get('quantity')?.value >= 10"
+              >
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+            
+            <button 
+              class="add-to-cart-btn" 
+              (click)="addToCart()" 
+              [disabled]="!product.stock"
+            >
+              <i class="bi bi-cart-plus"></i> Añadir al Carrito
+            </button>
+          </div>
+          
+          <!-- Descripción del producto -->
+          <div class="description-section">
+            <h3>Descripción del Producto</h3>
+            @if (product.name) {
+              <p>{{product.name}}</p>
+            } @else {
+              <p>Este producto no tiene una descripción detallada disponible en este momento.</p>
+            }
+          </div>
+          
+          <!-- Políticas de compra -->
+          <div class="policies-section">
+            <div class="policy">
+              <i class="bi bi-truck"></i>
+              <div class="policy-text">
+                <h4>Envío Gratuito</h4>
+                <p>Para compras superiores a $10,000</p>
+              </div>
+            </div>
+            
+            <div class="policy">
+              <i class="bi bi-arrow-counterclockwise"></i>
+              <div class="policy-text">
+                <h4>Devoluciones Sencillas</h4>
+                <p>30 días para cambios y devoluciones</p>
+              </div>
+            </div>
+            
+            <div class="policy">
+              <i class="bi bi-shield-check"></i>
+              <div class="policy-text">
+                <h4>Compra Segura</h4>
+                <p>Tus datos están protegidos</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Productos relacionados -->
+      @if (relatedProducts.length > 0) {
+        <div class="related-products-section">
+          <h2 class="section-title">También te puede interesar</h2>
+          
+          <div class="related-products">
+            @for (relatedProduct of relatedProducts; track relatedProduct.id) {
+              <div class="related-product-card" (click)="goToProduct(relatedProduct)">
+                <div class="related-product-image">
+                  @if (relatedProduct.imageUrls && relatedProduct.imageUrls.length > 0) {
+                    <img [src]="relatedProduct.imageUrls[0]" [alt]="relatedProduct.name">
+                  } @else {
+                    <img src="/images/problemastecnicos.jpeg" [alt]="relatedProduct.name">
+                  }
+                </div>
+                
+                <div class="related-product-info">
+                  <h3 class="related-product-name">{{relatedProduct.name}}</h3>
+                  <p class="related-product-price">${{relatedProduct.price?.toFixed(2)}}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>

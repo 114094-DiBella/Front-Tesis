@@ -4,7 +4,7 @@
     <div class="hero-content">
       <h1>Nueva Colección Primavera-Verano</h1>
       <p>Descubre las últimas tendencias en moda</p>
-      <button class="primary-button" routerLink="/catalog">Ver Catálogo</button>
+      <button class="primary-button" (click)="viewAllProducts()">Ver Catálogo</button>
     </div>
   </div>
 
@@ -18,14 +18,19 @@
       </button>
       
       <div class="product-carousel" #categoryCarousel>
-        @for (category of featuredCategories; track category.name) {
-          <div class="product-card">
+        @for (category of featuredCategories; track category.id) {
+          <div class="product-card" (click)="viewProducts(category)">
             <div class="product-image">
-              <img [src]="category.image_url" [alt]="category.name">
+              <!-- Usando un objeto para mapear categorías a imágenes -->
+              <img 
+                [src]="getCategoryImage(category)" 
+                [alt]="category.name"
+                loading="lazy"
+              >
             </div>
             <div class="product-info">
               <h3 class="product-name">{{category.name}}</h3>
-              <button class="add-to-cart">Ver Productos</button>
+              <button class="primary-button">Ver Productos</button>
             </div>
           </div>
         }
@@ -48,12 +53,12 @@
       
       <div class="product-carousel" #productCarousel>
         @for (product of products; track product.id) {
-          <div class="product-card">
+          <div class="product-card" (click)="viewDetails(product)">
             <div class="product-image">
               @if (product.imageUrls && product.imageUrls.length > 0) {
-                <img [src]="product.imageUrls" [alt]="product.name">
+               <img [src]="product.imageUrls[0]" [alt]="product.name">
               } @else {
-                <img src="assets/images/default-product.png" [alt]="product.name">
+                <img src="/images/problemastecnicos.jpeg" [alt]="product.name">
               }
             </div>
             
@@ -67,7 +72,7 @@
                 }
               </p>
               
-              <button class="add-to-cart">Añadir al Carrito</button>
+              <button class="primary-button">Añadir al Carrito</button>
             </div>
           </div>
         }
@@ -79,29 +84,7 @@
     </div>
     
     <div class="view-more">
-      <button class="secondary-button" (click)="viewCatalog()">Ver Catálogo Completo</button>
-    </div>
-  </section>
-
-  <!-- Banner Promocional -->
-  <section class="promo-banner">
-    <div class="promo-content">
-      <h2>Descuento Especial</h2>
-      <p>20% de descuento en toda la nueva colección</p>
-      <p class="promo-code">Usa el código: LILAC20</p>
-      <button class="primary-button" routerLink="/offers">Comprar Ahora</button>
-    </div>
-  </section>
-
-  <!-- Newsletter -->
-  <section class="newsletter">
-    <div class="newsletter-content">
-      <h2>Suscríbete a Nuestro Newsletter</h2>
-      <p>Recibe las últimas tendencias y ofertas exclusivas directamente en tu correo.</p>
-      <div class="newsletter-form">
-        <input #emailInput type="email" placeholder="Tu correo electrónico">
-        <button class="primary-button" >Suscríbete</button>
-      </div>
+      <button class="primary-button" (click)="viewAllProducts()">Ver Catálogo Completo</button>
     </div>
   </section>
 </div>

@@ -91,12 +91,12 @@
   <!-- Cuadrícula de productos -->
   <div class="products-grid">
     @for (product of filteredProducts; track product.id) {
-      <div class="product-card">
+      <div class="product-card" (click)="viewDetails(product)">
         <div class="product-image">
           @if (product.imageUrls && product.imageUrls.length > 0) {
-            <img [src]="product.imageUrls" [alt]="product.name">
+            <img [src]="product.imageUrls[0]" [alt]="product.name">
           } @else {
-            <img src="assets/images/default-product.png" [alt]="product.name">
+            <img src="/images/problemastecnicos.jpeg" [alt]="product.name">
           }
         </div>
         

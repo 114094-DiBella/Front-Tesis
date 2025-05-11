@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Product, Category } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
 import { CategoryService } from '../../../services/category.services';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -40,6 +40,7 @@ export class ViewproductComponent implements OnInit {
     private productService: ProductService,
     private categoryService: CategoryService,
     private router: Router,
+    private route: ActivatedRoute,
     private fb: FormBuilder
   ) {
     this.filterForm = this.createFilterForm();
@@ -48,11 +49,30 @@ export class ViewproductComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     
-    // Cargar productos y categorías
-    this.loadCategories();
+    // Primero cargar las categorías
+    this.loadCategories().then(() => {
+      // Después, examinar los parámetros de la ruta
+      this.route.params.subscribe(params => {
+        const categoryId = params['id'];
+        console.log('ID de categoría desde URL:', categoryId);
+        
+        if (categoryId) {
+          // Si hay un ID de categoría en la URL, aplicarlo al formulario
+          this.selectedCategory = categoryId;
+          this.filterForm.patchValue({
+            categoryId: categoryId
+          });
+          console.log('Formulario actualizado con categoría:', this.filterForm.value);
+        }
+        
+        // Finalmente, cargar todos los productos
+        this.getAllProducts();
+      });
+    });
     
     // Suscribirse a los cambios en el formulario de filtros
     this.filterForm.valueChanges.subscribe(filters => {
+      console.log('Formulario cambió:', filters);
       this.applyFilters();
     });
   }
@@ -67,17 +87,9 @@ export class ViewproductComponent implements OnInit {
   
   // Método para obtener el nombre de la categoría por ID
   getCategoryName(categoryId: string): string {
-    console.log('Buscando categoría con ID:', categoryId);
-    console.log('Categorías disponibles:', this.categories);
-    
     if (!categoryId) return 'Sin categoría';
     
-    const category = this.categories.find(c => {
-      // Verificar coincidencia examinando también tipos de datos
-      console.log(`Comparando ${c.id} (${typeof c.id}) con ${categoryId} (${typeof categoryId})`);
-      return c.id?.toString() === categoryId.toString();
-    });
-    
+    const category = this.categories.find(c => c.id?.toString() === categoryId.toString());
     return category ? category.name || 'Sin categoría' : 'Sin categoría';
   }
   
@@ -96,65 +108,37 @@ export class ViewproductComponent implements OnInit {
   }
   
   // Método para cargar categorías
-  loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-        console.log('Categorías cargadas:', this.categories);
-        
-        // Cargar productos después de tener las categorías
-        this.getAllProducts();
-      },
-      error: (error) => {
-        console.error('Error al cargar categorías:', error);
-        this.errorMessage = 'Error al cargar categorías. Por favor, intente de nuevo.';
-        this.isLoading = false;
-      }
+  loadCategories(): Promise<void> {
+    return new Promise((resolve) => {
+      this.categoryService.getAllCategories().subscribe({
+        next: (categories) => {
+          this.categories = categories;
+          console.log('Categorías cargadas:', this.categories);
+          resolve();
+        },
+        error: (error) => {
+          console.error('Error al cargar categorías:', error);
+          this.errorMessage = 'Error al cargar categorías. Por favor, intente de nuevo.';
+          this.isLoading = false;
+          resolve(); // Resolver de todos modos para continuar
+        }
+      });
     });
   }
   
   // Método para cargar todos los productos
   getAllProducts(): void {
     this.isLoading = true;
-    this.errorMessage = ''; // Limpiar mensaje de error previo
-    
     this.productService.getAllProducts().subscribe({
-      next: (response) => {
-        try {
-          // Procesar las URLs de las imágenes
-          this.products = response.map((product: Product) => {
-            if (product.imageUrls && product.imageUrls.length > 0) {
-              // Si es un array, procesamos cada URL
-              if (Array.isArray(product.imageUrls)) {
-                product.imageUrls = product.imageUrls.map((url: string) => {
-                  // Si la URL comienza con "/images/", agregarle el prefijo del backend
-                  if (url && url.startsWith('/images/')) {
-                    return 'http://localhost:8080' + url;
-                  }
-                  return url;
-                });
-              } else {
-                // Si no es un array (podría ser un solo string), convertirlo en array
-                const imageUrl = product.imageUrls;
-              }
-            }
-            return product;
-          });
-          
-          console.log('Products processed:', this.products);
-          
-          // Inicializar productos filtrados con todos los productos
-          this.filteredProducts = [...this.products];
-          this.isLoading = false;
-        } catch (err) {
-          console.error('Error processing products:', err);
-          this.errorMessage = 'Error al procesar los productos. Por favor, intente de nuevo.';
-          this.isLoading = false;
-        }
+      next: (products) => {
+        this.products = products;
+        this.filteredProducts = [...this.products]; // Inicializar productos filtrados
+        console.log('Productos cargados:', this.products);
+        this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error obtaining products:', error);
-        this.errorMessage = 'Error al cargar los productos. Por favor, intente de nuevo.';
+        console.error('Error al cargar productos:', error);
+        this.errorMessage = 'Error al cargar productos. Por favor, intente de nuevo.';
         this.isLoading = false;
       }
     });
@@ -175,6 +159,7 @@ export class ViewproductComponent implements OnInit {
     
     // Comenzar con todos los productos
     let result = [...this.products];
+    console.log('Total productos antes de filtrar:', result.length);
     
     // Filtrar por término de búsqueda
     if (this.searchTerm) {
@@ -183,6 +168,7 @@ export class ViewproductComponent implements OnInit {
         (product.marca?.name?.toLowerCase() || '').includes(this.searchTerm) ||
         (product.category?.name?.toLowerCase() || '').includes(this.searchTerm)
       );
+      console.log('Productos después del filtro de búsqueda:', result.length);
     }
     
     // Filtrar por categoría
@@ -191,13 +177,17 @@ export class ViewproductComponent implements OnInit {
       
       result = result.filter(product => {
         const productCategoryId = product.category?.id;
-        console.log(`Comparando producto ${product.name} con categoría ${productCategoryId} vs ${this.selectedCategory}`);
+        console.log(`Producto [${product.name}]: ID Categoría [${productCategoryId}] vs Filtro [${this.selectedCategory}]`);
         
-        // Normalizar comparación para evitar problemas con tipos de datos
-        return productCategoryId?.toString() === this.selectedCategory.toString();
+        // Comparar como strings para evitar problemas de tipo
+        const match = productCategoryId?.toString() === this.selectedCategory.toString();
+        if (match) {
+          console.log(`COINCIDENCIA: Producto ${product.name}`);
+        }
+        return match;
       });
       
-      console.log('Productos después del filtro de categoría:', result);
+      console.log('Productos después del filtro de categoría:', result.length);
     }
     
     // Ordenar productos
@@ -209,8 +199,6 @@ export class ViewproductComponent implements OnInit {
           case 'price-desc':
             return (b.price || 0) - (a.price || 0);
           case 'newest':
-            // Si tienes campo de fecha de creación, úsalo aquí
-            // Por ahora usamos el id como aproximación
             return (b.id || '').localeCompare(a.id || '');
           default:
             return 0;
@@ -220,7 +208,7 @@ export class ViewproductComponent implements OnInit {
     
     // Actualizar productos filtrados
     this.filteredProducts = result;
-    console.log('Productos filtrados:', this.filteredProducts.length);
+    console.log('Productos filtrados finales:', this.filteredProducts.length);
   }
   
   // Método para resetear filtros
@@ -265,5 +253,9 @@ export class ViewproductComponent implements OnInit {
   
   onAddProduct(): void {
     this.router.navigate(['/products/new']);
+  }
+
+  viewDetails(product: Product): void {
+    this.router.navigate(['/products/details', product.id]);
   }
 }

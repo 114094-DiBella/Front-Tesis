@@ -11,43 +11,75 @@
   <!-- Categorías Destacadas -->
   <section class="featured-categories">
     <h2 class="section-title">Categorías Destacadas</h2>
-    <div class="category-grid">
-      <!-- @for (category of featuredCategories; track category.name) {
-        <div class="category-card">
-          <div class="category-image">
-            <img [src]="category.image" [alt]="category.name">
+    
+    <div class="product-carousel-container">
+      <button class="carousel-control prev-btn" (click)="scrollCategoryPrev()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <div class="product-carousel" #categoryCarousel>
+        @for (category of featuredCategories; track category.name) {
+          <div class="product-card">
+            <div class="product-image">
+              <img [src]="category.image_url" [alt]="category.name">
+            </div>
+            <div class="product-info">
+              <h3 class="product-name">{{category.name}}</h3>
+              <button class="add-to-cart">Ver Productos</button>
+            </div>
           </div>
-          <h3>{{category.name}}</h3>
-          <a [routerLink]="category.link" class="category-link">Ver Productos</a>
-        </div>
-      } -->
+        }
+      </div>
+      
+      <button class="carousel-control next-btn" (click)="scrollCategoryNext()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
   </section>
 
   <!-- Productos Destacados -->
   <section class="featured-products">
     <h2 class="section-title">Productos Destacados</h2>
-    <div class="product-grid">
-      <!-- @for (product of featuredProducts; track product.name) {
-        <div class="product-card">
-          <div class="product-image">
-            <img [src]="product.image" [alt]="product.name">
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">{{product.name}}</h3>
-            <p class="product-price">${{product.price.toFixed(2)}}</p>
-            <div class="product-colors">
-              @for (color of product.colors; track color) {
-                <span class="color-dot" [ngClass]="color"></span>
+    
+    <div class="product-carousel-container">
+      <button class="carousel-control prev-btn" (click)="scrollProductPrev()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <div class="product-carousel" #productCarousel>
+        @for (product of products; track product.id) {
+          <div class="product-card">
+            <div class="product-image">
+              @if (product.imageUrls && product.imageUrls.length > 0) {
+                <img [src]="product.imageUrls" [alt]="product.name">
+              } @else {
+                <img src="assets/images/default-product.png" [alt]="product.name">
               }
             </div>
-            <button class="add-to-cart" >Añadir al Carrito</button>
+            
+            <div class="product-info">
+              <h3 class="product-name">{{product.name}}</h3>
+              <p class="product-price">${{product.price?.toFixed(2)}}</p>
+              
+              <p class="product-installments">
+                @if (product.price) {
+                  6 cuotas sin interés de ${{(product.price / 6).toFixed(2)}}
+                }
+              </p>
+              
+              <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
           </div>
-        </div>
-      } -->
+        }
+      </div>
+      
+      <button class="carousel-control next-btn" (click)="scrollProductNext()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
+    
     <div class="view-more">
-      <button class="secondary-button" routerLink="/catalog">Ver Más Productos</button>
+      <button class="secondary-button" (click)="viewCatalog()">Ver Catálogo Completo</button>
     </div>
   </section>
 

@@ -7,6 +7,8 @@ export class User {
     telephone?: number;
     numberDoc?: number;
     birthday?: Date; 
+    role?: number;
+    status?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 
@@ -20,6 +22,8 @@ export class User {
         this.telephone = data?.telephone;
         this.numberDoc = data?.numberDoc;
         this.birthday = data?.birthday;
+        this.role = data?.role;
+        this.status = data?.status;
         this.createdAt = data?.createdAt;
         this.updatedAt = data?.updatedAt;
     }

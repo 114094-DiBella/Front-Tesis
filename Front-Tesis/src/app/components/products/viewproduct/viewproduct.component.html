@@ -1,0 +1,170 @@
+<div class="products-container">
+  <div class="products-header">
+    <h1 class="page-title">Catálogo de Productos</h1>
+    
+    <!-- Barra de filtros -->
+    <div class="filters-bar" [formGroup]="filterForm">
+      <div class="search-container">
+        <input 
+          type="text" 
+          placeholder="Buscar productos..." 
+          class="search-input" 
+          formControlName="searchTerm"
+          (keyup.enter)="onSearch()"
+        >
+        <button class="search-btn" (click)="onSearch()">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      
+      <div class="filter-controls">
+        <select class="filter-select" formControlName="categoryId">
+          <option value="">Todas las categorías</option>
+          @for (category of categories; track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+        
+        <select class="filter-select" formControlName="sortOrder">
+          <option value="">Ordenar por</option>
+          <option value="price-asc">Precio: Menor a Mayor</option>
+          <option value="price-desc">Precio: Mayor a Menor</option>
+          <option value="newest">Más recientes</option>
+        </select>
+        
+        <button class="reset-filter-btn" (click)="resetFilters()" title="Restablecer filtros">
+          <i class="fas fa-undo"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Resumen de filtros aplicados -->
+    @if (searchTerm || selectedCategory || sortOrder) {
+      <div class="active-filters">
+        <span>Filtros aplicados:</span>
+        
+        @if (searchTerm) {
+          <div class="filter-tag">
+            Búsqueda: "{{ searchTerm }}"
+            <button class="remove-filter" (click)="filterForm.patchValue({searchTerm: ''})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        }
+        
+        @if (selectedCategory) {
+          <div class="filter-tag">
+            Categoría: {{ getCategoryName(selectedCategory) }}
+            <button class="remove-filter" (click)="filterForm.patchValue({categoryId: ''})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        }
+        
+        @if (sortOrder) {
+          <div class="filter-tag">
+            Ordenado: {{ getSortOrderText(sortOrder) }}
+            <button class="remove-filter" (click)="filterForm.patchValue({sortOrder: ''})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Indicador de carga -->
+  @if (isLoading) {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+  }
+  
+  <!-- Mensaje de error -->
+  @if (errorMessage) {
+    <div class="error-message">
+      <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+    </div>
+  }
+
+  <!-- Cuadrícula de productos -->
+  <div class="products-grid">
+    @for (product of filteredProducts; track product.id) {
+      <div class="product-card">
+        <div class="product-image">
+          @if (product.imageUrls && product.imageUrls.length > 0) {
+            <img [src]="product.imageUrls" [alt]="product.name">
+          } @else {
+            <img src="assets/images/default-product.png" [alt]="product.name">
+          }
+        </div>
+        
+        <div class="product-info">
+          <h3 class="product-name">{{product.name}}</h3>
+          <div class="product-details">
+            <span class="marca">{{product.marca?.name}}</span>
+            <span class="category">{{product.category?.name}}</span>
+          </div>
+          <p class="product-price">${{product.price?.toFixed(2)}}</p>
+          <div class="product-payment">
+            <p class="product-installments">
+              @if (product.price) {
+                6 cuotas sin interés de ${{(product.price / 6).toFixed(2)}}
+              }
+            </p>
+          </div>
+          <div class="product-attributes">
+            <div class="color-attribute">
+              <span class="color-dot" [style.background-color]="product.color"></span>
+            </div>
+            <div class="size-attribute">
+              <span class="size-tag">Talla: {{product.size}}</span>
+            </div>
+            <div class="stock-attribute">
+              <span class="stock-tag">Stock: {{product.stock}}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="product-actions">
+          <button class="add-to-cart-btn">Añadir al Carrito</button>
+          @if (isAdmin) {
+            <div class="actions">
+              <button class="action-btn" (click)="onEditProduct(product)" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn" (click)="onDeleteProduct(product)" title="Eliminar">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    
+    @empty {
+      <div class="no-products">
+        <i class="fas fa-shopping-bag"></i>
+        <p>No hay productos disponibles</p>
+        <button class="btn-add-first" (click)="onAddProduct()">Añadir nuevo producto</button>
+      </div>
+    }
+  </div>
+  
+  <!-- Paginación (opcional) -->
+  @if (filteredProducts.length > 0) {
+    <div class="pagination">
+      <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+      <span class="pagination-current">Página 1 de 1</span>
+      <button class="pagination-btn" disabled><i class="fas fa-chevron-right"></i></button>
+    </div>
+  }
+  
+  <!-- Controles de administrador -->
+  <div class="admin-controls">
+    <button class="add-product-btn" (click)="onAddProduct()">
+      <i class="fas fa-plus"></i> Añadir Nuevo Producto
+    </button>
+  </div>
+</div>

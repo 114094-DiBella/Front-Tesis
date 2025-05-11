@@ -1,0 +1,232 @@
+<div class="product-form-container">
+    <div class="form-header">
+      <h1 class="form-title">{{ isEditing ? 'Editar Producto' : 'Nuevo Producto' }}</h1>
+      <button type="button" class="btn-back" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Volver
+      </button>
+    </div>
+  
+    @if (isLoading) {
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+      </div>
+    }
+  
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+  
+    @if (successMessage) {
+      <div class="success-message">
+        <i class="fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+    }
+  
+    @if (!isLoading) {
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <!-- Información básica del producto -->
+          <div class="form-section">
+            <h2 class="section-title">Información Básica</h2>
+            
+            <div class="form-group">
+              <label for="name">Nombre del Producto</label>
+              <input 
+                type="text" 
+                id="name" 
+                formControlName="name" 
+                class="form-control" 
+                [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+              >
+              @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+                <div class="invalid-feedback">
+                  El nombre del producto es obligatorio
+                </div>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="marcaId">Marca</label>
+              <select 
+                id="marcaId" 
+                formControlName="marcaId" 
+                class="form-control"
+                [class.is-invalid]="productForm.get('marcaId')?.invalid && productForm.get('marcaId')?.touched"
+              >
+                <option value="">Seleccionar Marca</option>
+                @for (marca of marcas; track marca.id) {
+                  <option [value]="marca.id">
+                    {{ marca.name }}
+                  </option>
+                }
+              </select>
+              @if (productForm.get('marcaId')?.invalid && productForm.get('marcaId')?.touched) {
+                <div class="invalid-feedback">
+                  La marca es obligatoria
+                </div>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="categoryId">Categoría</label>
+              <select 
+                id="categoryId" 
+                formControlName="categoryId" 
+                class="form-control"
+                [class.is-invalid]="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched"
+              >
+                <option value="">Seleccionar Categoría</option>
+                @for (category of categories; track category.id) {
+                  <option [value]="category.id">
+                    {{ category.name }}
+                  </option>
+                }
+              </select>
+              @if (productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched) {
+                <div class="invalid-feedback">
+                  La categoría es obligatoria
+                </div>
+              }
+            </div>
+          </div>
+          
+          <!-- Características del producto -->
+          <div class="form-section">
+            <h2 class="section-title">Características</h2>
+            
+            <div class="form-group">
+              <label for="size">Talla</label>
+              <select 
+                id="size" 
+                formControlName="size" 
+                class="form-control"
+                [class.is-invalid]="productForm.get('size')?.invalid && productForm.get('size')?.touched"
+              >
+                <option value="">Seleccionar Talla</option>
+                @for (size of sizes; track size) {
+                  <option [value]="size">
+                    {{ size }}
+                  </option>
+                }
+              </select>
+              @if (productForm.get('size')?.invalid && productForm.get('size')?.touched) {
+                <div class="invalid-feedback">
+                  La talla es obligatoria
+                </div>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="color">Color</label>
+              <input 
+                type="text" 
+                id="color" 
+                formControlName="color" 
+                class="form-control" 
+                [class.is-invalid]="productForm.get('color')?.invalid && productForm.get('color')?.touched"
+              >
+              @if (productForm.get('color')?.invalid && productForm.get('color')?.touched) {
+                <div class="invalid-feedback">
+                  El color es obligatorio
+                </div>
+              }
+            </div>
+          </div>
+          
+          <!-- Precio y stock -->
+          <div class="form-section">
+            <h2 class="section-title">Precio y Stock</h2>
+            
+            <div class="form-group">
+              <label for="price">Precio ($)</label>
+              <input 
+                type="number" 
+                id="price" 
+                formControlName="price" 
+                class="form-control" 
+                min="0" 
+                step="0.01"
+                [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+              >
+              @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+                <div class="invalid-feedback">
+                  El precio es obligatorio y debe ser mayor o igual a 0
+                </div>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="stock">Stock</label>
+              <input 
+                type="number" 
+                id="stock" 
+                formControlName="stock" 
+                class="form-control" 
+                min="0" 
+                step="1"
+                [class.is-invalid]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched"
+              >
+              @if (productForm.get('stock')?.invalid && productForm.get('stock')?.touched) {
+                <div class="invalid-feedback">
+                  El stock es obligatorio y debe ser mayor o igual a 0
+                </div>
+              }
+            </div>
+            
+            <div class="form-group form-check">
+              <input 
+                type="checkbox" 
+                id="active" 
+                formControlName="active" 
+                class="form-check-input"
+              >
+              <label class="form-check-label" for="active">Producto Activo</label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Imágenes del producto -->
+        <div class="form-section">
+          <h2 class="section-title">Imágenes del Producto</h2>
+          <p class="section-description">Sube imágenes de tu producto. La primera imagen será la principal.</p>
+          
+          <!-- Componente de carga de imágenes -->
+          <app-image-upload 
+            [allowMultiple]="true"
+            [allowMainImage]="true"
+            (imagesUploaded)="onImagesUploaded($event)">
+          </app-image-upload>
+          
+          <!-- Imágenes previamente cargadas (para edición) -->
+          @if (uploadedImages.length > 0 && isEditing) {
+            <div class="existing-images">
+              <h3>Imágenes Actuales</h3>
+              <div class="images-grid">
+                @for (image of uploadedImages; track image.imageId; let i = $index) {
+                  <div class="image-item">
+                    <img [src]="image.imageUrl" [alt]="'Imagen ' + (i + 1)">
+                    <div class="image-overlay">
+                      <button type="button" class="btn-delete" title="Eliminar imagen" (click)="removeExistingImage(i)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        
+        <!-- Botones de acción -->
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="goBack()">Cancelar</button>
+          <button type="submit" class="btn-save" [disabled]="isLoading || !!successMessage">
+            {{ isEditing ? 'Actualizar Producto' : 'Crear Producto' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>

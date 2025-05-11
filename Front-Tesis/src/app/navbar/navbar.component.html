@@ -1,12 +1,16 @@
 <header class="header">
-    <div class="logo">LILAC BOUTIQUE</div>
+    <div class="logo">TIENDA</div>
     <nav class="nav-menu">
       <ul>
         <li><a routerLink="store" routerLinkActive="active">Inicio</a></li>
-        <li><a routerLink="#" routerLinkActive="active">Mujer</a></li>
-        <li><a routerLink="#" routerLinkActive="active">Accesorios</a></li>
-        <li><a routerLink="#" routerLinkActive="active">Ofertas</a></li>
+        <li><a routerLink="catalog" routerLinkActive="active">Productos</a></li>
         <li><a routerLink="users" routerLinkActive="active" >Usuarios</a></li>
+        @if(isAdmin) {
+          <li><a routerLink="orders" routerLinkActive="active">Pedidos</a></li>
+          <li><a routerLink="products" routerLinkActive="active">Alta Productos</a></li>
+        }
+
+
       </ul>
     </nav>
     <div class="header-icons">

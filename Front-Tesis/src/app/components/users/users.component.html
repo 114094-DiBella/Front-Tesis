@@ -1,6 +1,8 @@
+
 <div class="users-container">
   <div class="users-grid">
     @for (user of users; track user.id) {
+      @if (user.status) {
       <div class="user-card">
         <div class="user-card-header">
           <div class="user-avatar">
@@ -28,6 +30,7 @@
           </button>
         </div>
       </div>
+      }
     }
 
     @empty {

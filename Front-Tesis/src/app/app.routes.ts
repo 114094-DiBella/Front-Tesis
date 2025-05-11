@@ -4,6 +4,10 @@ import { StoreComponent } from './store/store.component';
 import { RegisterComponent } from './register/register.component';
 import { UsersComponent } from './components/users/users.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { Product } from './models/product.model';
+import { ViewproductComponent } from './components/products/viewproduct/viewproduct.component';
+import { ImageUploadComponent } from './components/images/image-upload/image-upload.component';
+import { AltaproductComponent } from './components/products/altaproduct/altaproduct.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/store', pathMatch: 'full' }, // Cambiar de '/login' a '/store'
@@ -11,5 +15,9 @@ export const routes: Routes = [
     { path: 'store', component: StoreComponent},
     { path: 'register', component: RegisterComponent},
     { path: 'users', component: UsersComponent},
-    { path: 'users/edit/:id', component: EditUserComponent }
+    { path: 'users/edit/:id', component: EditUserComponent },
+    { path: 'catalog', component: ViewproductComponent},
+    { path: 'images', component: ImageUploadComponent},
+    { path: 'products', component: AltaproductComponent}
+
 ];

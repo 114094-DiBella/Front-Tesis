@@ -1,0 +1,81 @@
+<div class="image-upload-container">
+    <div class="upload-area" (click)="fileInput.click()" 
+         [class.has-image]="previewImages.length > 0"
+         [class.drag-over]="isDragOver"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)">
+      
+      <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" [multiple]="allowMultiple">
+      
+      @if (previewImages.length === 0) {
+        <div class="upload-prompt">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Haz clic para seleccionar o arrastra imágenes aquí</p>
+        </div>
+      }
+      
+      @if (previewImages.length > 0) {
+        <div class="preview-container">
+          @for (preview of previewImages; track preview.file; let i = $index) {
+            <div class="image-preview">
+              <img [src]="preview.src" [alt]="'Vista previa ' + (i + 1)">
+              <div class="image-actions">
+                <button type="button" class="remove-btn" (click)="removeImage(i, $event)">
+                  <i class="fas fa-times"></i>
+                </button>
+                @if (preview.isMain) {
+                  <span class="main-badge">Principal</span>
+                }
+                @if (!preview.isMain && allowMainImage) {
+                  <button type="button" class="set-main-btn" 
+                          (click)="setMainImage(i, $event)">
+                    Establecer como principal
+                  </button>
+                }
+              </div>
+            </div>
+          }
+          
+          @if (allowMultiple) {
+            <div class="add-more" (click)="fileInput.click(); $event.stopPropagation()">
+              <i class="fas fa-plus"></i>
+              <span>Añadir más</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+    
+    @if (uploadProgress > 0 && uploadProgress < 100) {
+      <div class="progress-bar">
+        <div class="progress" [style.width.%]="uploadProgress"></div>
+      </div>
+    }
+    
+    @if (previewImages.length > 0) {
+      <div class="buttons-container">
+        <button type="button" class="btn-cancel" (click)="cancelUpload()">Cancelar</button>
+        <button type="button" class="btn-upload" [disabled]="isUploading" (click)="uploadImages()">
+          {{ isUploading ? 'Subiendo...' : 'Subir imágenes' }}
+        </button>
+      </div>
+    }
+    
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+    
+    @if (uploadedImages.length > 0) {
+      <div class="uploaded-images">
+        <h3>Imágenes subidas:</h3>
+        <ul>
+          @for (image of uploadedImages; track image.name) {
+            <li>{{ image.name }}</li>
+          }
+        </ul>
+      </div>
+    }
+  </div>

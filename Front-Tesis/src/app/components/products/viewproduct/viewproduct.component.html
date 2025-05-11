@@ -122,28 +122,30 @@
               <span class="size-tag">Talla: {{product.size}}</span>
             </div>
             <div class="stock-attribute">
-              <span class="stock-tag">Stock: {{product.stock}}</span>
+              <span class="stock-tag" [class.out-of-stock]="!isInStock(product)">
+                Stock: {{isInStock(product) ? product.stock : 'Agotado'}}
+              </span>
             </div>
           </div>
         </div>
         
         <div class="product-actions">
-          <button class="add-to-cart-btn">Añadir al Carrito</button>
+          <button class="add-to-cart-btn" [disabled]="!isInStock(product)">
+            {{isInStock(product) ? 'Añadir al Carrito' : 'Producto Agotado'}}
+          </button>
           @if (isAdmin) {
             <div class="admin-actions">
-              <button class="admin-btn edit-btn" (click)="onEditProduct(product)" title="Editar">
+              <button class="admin-btn edit-btn" (click)="onEditProduct(product); $event.stopPropagation();" title="Editar">
                 <i class="bi bi-pencil-square"></i>
               </button>
-              <button class="admin-btn delete-btn" (click)="onDeleteProduct(product)" title="Eliminar">
+              <button class="admin-btn delete-btn" (click)="onDeleteProduct(product); $event.stopPropagation();" title="Eliminar">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
           }
         </div>
       </div>
-    }
-    
-    @empty {
+    } @empty {
       <div class="no-products">
         <i class="fas fa-shopping-bag"></i>
         <p>No hay productos disponibles</p>

@@ -491,3 +491,12 @@
     margin-bottom: 5px;
   }
 }
+.out-of-stock {
+  color: #e53935;
+  font-weight: bold;
+}
+
+.add-to-cart-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

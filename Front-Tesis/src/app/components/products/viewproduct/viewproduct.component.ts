@@ -258,4 +258,8 @@ export class ViewproductComponent implements OnInit {
   viewDetails(product: Product): void {
     this.router.navigate(['/products/details', product.id]);
   }
+
+  isInStock(product: Product): boolean {
+    return !!product.stock && BigInt(product.stock.toString()) > BigInt(0);
+  }
 }

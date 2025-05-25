@@ -43,6 +43,17 @@ export class StoreComponent implements OnInit, AfterViewInit {
   getAllProducts() {
     this.productService.getAllProducts().subscribe({
       next: (response) => {
+        if (response.length === 0) {
+          console.warn('No se encontraron productos.');
+          this.products = [];
+          return;
+        }
+        // Filtrar productos activos
+        this.products = response.filter((product: Product) => product.active === true);
+        if (this.products.length === 0) {
+          console.warn('No se encontraron productos activos.');
+          return;
+        }
         this.products = response;
         console.log('Productos obtenidos:', this.products);
       },
@@ -125,6 +136,9 @@ export class StoreComponent implements OnInit, AfterViewInit {
 
   viewAllProducts() {
     this.router.navigate(['/products']);
+  }
+  isActive(product: Product): boolean {
+    return !!product.active && product.active === true;
   }
 
 }

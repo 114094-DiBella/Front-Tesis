@@ -10,6 +10,7 @@ import { ImageUploadComponent } from './components/images/image-upload/image-upl
 import { AltaproductComponent } from './components/products/altaproduct/altaproduct.component';
 import { EditproductComponent } from './components/products/editproduct/editproduct.component';
 import { DetailproductComponent } from './components/products/detailproduct/detailproduct.component';
+import { ViewordersComponent } from './components/shoppingcart/vieworders/vieworders.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/store', pathMatch: 'full' }, // Cambiar de '/login' a '/store'
@@ -24,6 +25,7 @@ export const routes: Routes = [
     { path: 'products/edit/:id', component: EditproductComponent },
     { path: 'products/:id', component: ViewproductComponent },
     { path: 'products/details/:id', component: DetailproductComponent },
+    { path: 'orders', component: ViewordersComponent },
 
     { path: '**', redirectTo: '/store' }
 ];

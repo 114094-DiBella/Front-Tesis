@@ -262,4 +262,8 @@ export class ViewproductComponent implements OnInit {
   isInStock(product: Product): boolean {
     return !!product.stock && BigInt(product.stock.toString()) > BigInt(0);
   }
+
+  isActive(product: Product): boolean {
+    return !!product.active && product.active === true;
+  }
 }

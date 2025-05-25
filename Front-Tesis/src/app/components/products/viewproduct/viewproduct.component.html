@@ -91,6 +91,7 @@
   <!-- Cuadrícula de productos -->
   <div class="products-grid">
     @for (product of filteredProducts; track product.id) {
+      @if (isActive(product)) {
       <div class="product-card" (click)="viewDetails(product)">
         <div class="product-image">
           @if (product.imageUrls && product.imageUrls.length > 0) {
@@ -145,7 +146,8 @@
           }
         </div>
       </div>
-    } @empty {
+    }
+  } @empty {
       <div class="no-products">
         <i class="fas fa-shopping-bag"></i>
         <p>No hay productos disponibles</p>

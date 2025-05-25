@@ -1,0 +1,117 @@
+<div class="orders-container">
+  <!-- Header -->
+  <div class="orders-header">
+    <h1 class="orders-title">Gestión de Pedidos</h1>
+    <p class="orders-subtitle">Administra y monitorea todos los pedidos de tu tienda</p>
+  </div>
+
+  <!-- Estadísticas rápidas -->
+  <div class="orders-stats">
+    <div class="stat-card">
+      <div class="stat-number">156</div>
+      <div class="stat-label">Total Pedidos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">23</div>
+      <div class="stat-label">Pendientes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">89</div>
+      <div class="stat-label">En Proceso</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">44</div>
+      <div class="stat-label">Entregados</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">$125,450</div>
+      <div class="stat-label">Ingresos del Mes</div>
+    </div>
+  </div>
+
+  <!-- Filtros y búsqueda -->
+  <div class="orders-filters">
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Buscar por número de pedido, cliente o email..."
+      >
+    </div>
+    
+    <select class="filter-select">
+      <option value="">Todos los estados</option>
+      <option value="pending">Pendiente</option>
+      <option value="processing">En Proceso</option>
+      <option value="shipped">Enviado</option>
+      <option value="delivered">Entregado</option>
+      <option value="cancelled">Cancelado</option>
+    </select>
+
+    <div class="date-filters">
+      <input type="date" class="date-input">
+      <span>-</span>
+      <input type="date" class="date-input">
+    </div>
+  </div>
+
+
+<!-- Lista de órdenes -->
+    <div class="orders-list">
+    @for (item of orders; track $index) {
+    <div class="order-card">
+        <div class="order-header">
+        <div class="order-info">
+            <div class="order-number">{{ item.id }}</div>
+            <div class="order-date">{{item.createdAt}}</div>
+            <div class="order-customer">
+            ID de Usuario :{{item.userId}} 
+            </div>
+        </div>
+        <div class="order-status">
+            <span class="status-badge status-pending">{{ getStatusText(item.status) }}</span>
+            <div class="order-total">${{ item.total | number: '1.2-2' }}</div>
+        </div>
+        </div>
+        
+        <div class="order-details">
+        <div class="order-items">
+            @for (product of item.detalles; track product.id) {
+            <div class="item-preview">
+                <div class="item-image">📦</div>
+                <span>{{ product.idProducto }} - Cantidad: {{ product.cantidad }} - ${{ product.precioUnitario | number: '1.2-2' }}</span>
+            </div>
+            }
+        </div>
+        
+        <div class="order-actions">
+            <button class="btn btn-primary">
+            <i class="fas fa-eye"></i>
+            Ver Detalles
+            </button>
+            <button class="btn btn-secondary">
+            <i class="fas fa-print"></i>  
+            Imprimir
+            </button>
+        </div>
+        </div>
+    </div>
+    }
+    </div>
+
+  <!-- Paginación -->
+  <div class="pagination">
+    <button class="pagination-btn" disabled>
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="pagination-btn active">1</button>
+    <button class="pagination-btn">2</button>
+    <button class="pagination-btn">3</button>
+    <button class="pagination-btn">4</button>
+    <button class="pagination-btn">5</button>
+    <button class="pagination-btn">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

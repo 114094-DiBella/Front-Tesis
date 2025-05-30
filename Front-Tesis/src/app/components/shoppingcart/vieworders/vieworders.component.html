@@ -57,84 +57,100 @@
   </div>
 
   <!-- Lista de órdenes -->
-  <div class="orders-list">
-    @for (order of getPaginatedOrders(); track order.codOrder) {
-      <div class="order-card">
-        <div class="order-header">
-          <div class="order-info">
-            <div class="order-number">{{ order.codOrder }}</div>
-            <div class="order-date">{{ formatDate(order.createdAt) }}</div>
-            <div class="order-customer">
-              {{ order.user.firstName || 'Usuario no disponible' }} {{ order.user.lastName || 'Apellido no disponible' }} - {{ order.user.email || 'Email no disponible' }}
+  @if (getPaginatedOrders().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3 class="empty-title">No hay órdenes</h3>
+      <p class="empty-message">
+        @if (filteredOrders.length === 0 && orders.length > 0) {
+          No se encontraron órdenes con los filtros aplicados
+        } @else {
+          Aún no hay órdenes registradas en el sistema
+        }
+      </p>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of getPaginatedOrders(); track order.codOrder) {
+        <div class="order-card">
+          <div class="order-header">
+            <div class="order-info">
+              <div class="order-number">{{ order.codOrder }}</div>
+              <div class="order-date">{{ formatDate(order.createdAt) }}</div>
+              <div class="order-customer">
+                <i class="fas fa-user customer-icon"></i>
+                <span>{{ getUserFullName(order.user) }}</span>
+                <span class="customer-email">{{ getUserEmail(order.user) }}</span>
+              </div>
+            </div>
+            <div class="order-status">
+              <span class="status-badge" [class]="getStatusClass(order.status)">
+                {{ getStatusText(order.status) }}
+              </span>
+              <div class="order-total">{{ formatPrice(order.total) }}</div>
             </div>
           </div>
-          <div class="order-status">
-            <span class="status-badge" [class]="getStatusClass(order.status)">
-              {{ getStatusText(order.status) }}
-            </span>
-            <div class="order-total">{{ formatPrice(order.total) }}</div>
-          </div>
-        </div>
-        
-        <div class="order-details">
-          <div class="order-items">
-            @for (detail of order.details; track detail.product.id) {
-              <div class="item-preview">
-                <div class="item-image">
-                  @if (detail.product.imageUrls && detail.product.imageUrls.length > 0) {
-                    <img [src]="detail.product.imageUrls[0]" [alt]="detail.product.name" class="product-thumbnail">
-                  } @else {
-                    <span class="product-icon">📦</span>
-                  }
-                </div>
-                <div class="item-info">
-                  <span class="item-name">{{ detail.product.name }}</span>
-                  <span class="item-details">
-                    {{ detail.product.marca?.name }} - {{ detail.product.size }} - {{ detail.product.color }}
-                  </span>
-                  <span class="item-quantity">Cantidad: {{ detail.quantity }}</span>
-                  <span class="item-price">{{ formatPrice(detail.priceUnit) }} c/u</span>
-                </div>
-                <div class="item-subtotal">
-                  {{ formatPrice(detail.subTotal) }}
-                </div>
-              </div>
-            }
-          </div>
           
-          <div class="order-actions">
-            <button class="btn btn-primary" (click)="viewOrderDetails(order)">
-              <i class="fas fa-eye"></i>
-              Ver Detalles
-            </button>
-            <button class="btn btn-secondary" (click)="printOrder(order)">
-              <i class="fas fa-print"></i>  
-              Imprimir
-            </button>
+          <div class="order-details">
+            <div class="order-items">
+              @for (detail of order.details; track detail.product.id) {
+                <div class="item-preview">
+                  <div class="item-image">
+                    @if (detail.product.imageUrls && detail.product.imageUrls.length > 0) {
+                      <img [src]="detail.product.imageUrls[0]" [alt]="detail.product.name" class="product-thumbnail">
+                    } @else {
+                      <span class="product-icon">📦</span>
+                    }
+                  </div>
+                  <div class="item-info">
+                    <span class="item-name">{{ detail.product.name }}</span>
+                    <span class="item-details">{{ getProductSpecs(detail.product) }}</span>
+                    <span class="item-quantity">Cantidad: {{ detail.quantity }}</span>
+                    <span class="item-price">{{ formatPrice(detail.priceUnit) }} c/u</span>
+                  </div>
+                  <div class="item-subtotal">
+                    {{ formatPrice(detail.subTotal) }}
+                  </div>
+                </div>
+              }
+            </div>
+            
+            <div class="order-actions">
+              <button class="btn btn-primary" (click)="viewOrderDetails(order)">
+                <i class="fas fa-eye"></i>
+                Ver Detalles
+              </button>
+              <button class="btn btn-secondary" (click)="printOrder(order)">
+                <i class="fas fa-print"></i>  
+                Imprimir
+              </button>
+            </div>
           </div>
         </div>
+      }
+    </div>
+
+    <!-- Paginación -->
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        @for (page of getPages(); track page) {
+          <button 
+            class="pagination-btn" 
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        }
+        
+        <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     }
-  </div>
-
-  <!-- Paginación -->
-  <div class="pagination">
-    <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    
-    @for (page of getPages(); track page) {
-      <button 
-        class="pagination-btn" 
-        [class.active]="page === currentPage"
-        (click)="goToPage(page)"
-      >
-        {{ page }}
-      </button>
-    }
-    
-    <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
+  }
 </div>

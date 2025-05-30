@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OrderService } from '../../../services/order.service';
 import { Order, OrderStatus } from '../../../models/order.model';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-vieworders',
@@ -52,15 +53,45 @@ export class ViewordersComponent implements OnInit {
   loadOrders(): void {
     this.orderService.getOrders().subscribe({
       next: (orders) => {
-        this.orders = orders;
+        // ✅ NORMALIZAR DATOS de las órdenes
+        this.orders = orders.map(order => this.normalizeOrder(order));
         this.filteredOrders = [...this.orders];
-        console.log('Órdenes cargadas:', this.orders);
+        console.log('Órdenes cargadas y normalizadas:', this.orders);
         this.calculateStats();
         this.filterOrders();
       },
       error: (error) => {
         console.error('Error al cargar órdenes:', error);
       }
+    });
+  }
+
+  // ✅ NUEVO - Normalizar datos de la orden
+  private normalizeOrder(order: any): Order {
+    // Crear usuario por defecto si es null
+    const normalizedUser = order.user || new User({
+      firstName: 'Usuario',
+      lastName: 'Anónimo',
+      email: 'no-disponible@ejemplo.com'
+    });
+
+    // Normalizar detalles
+    const normalizedDetails = (order.details || []).map((detail: any) => ({
+      ...detail,
+      product: {
+        ...detail.product,
+        // Asegurar que marca tenga un formato consistente
+        marca: detail.product.marca || { name: 'Sin marca' },
+        // Manejar size y color como strings
+        size: detail.product.size || 'N/A',
+        color: detail.product.color || 'N/A'
+      }
+    }));
+
+    return new Order({
+      ...order,
+      user: normalizedUser,
+      details: normalizedDetails
     });
   }
 
@@ -80,9 +111,9 @@ export class ViewordersComponent implements OnInit {
     this.filteredOrders = this.orders.filter(order => {
       const matchesSearch = !this.searchTerm || 
         order.codOrder.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        order.user.firstName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        order.user.lastName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        order.user.email?.toLowerCase().includes(this.searchTerm.toLowerCase());
+        (order.user.firstName || '').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        (order.user.lastName || '').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        (order.user.email || '').toLowerCase().includes(this.searchTerm.toLowerCase());
       
       const matchesStatus = !this.statusFilter || order.status === this.statusFilter;
       
@@ -141,25 +172,68 @@ export class ViewordersComponent implements OnInit {
     return statusClasses[status] || 'status-pending';
   }
 
-  // Formatear fecha
+  // ✅ MEJORADO - Formatear fecha manejando diferentes formatos
   formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Fecha no válida';
+      }
+      return date.toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      return 'Fecha no válida';
+    }
   }
 
   // Formatear precio
   formatPrice(price: number): string {
+    if (isNaN(price) || price === null || price === undefined) {
+      return '$0,00';
+    }
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'ARS',
       minimumFractionDigits: 2
     }).format(price);
+  }
+
+  // ✅ NUEVO - Obtener nombre completo del usuario
+  getUserFullName(user: any): string {
+    if (!user) return 'Usuario no disponible';
+    
+    const firstName = user.firstName || 'Usuario';
+    const lastName = user.lastName || 'Anónimo';
+    return `${firstName} ${lastName}`;
+  }
+
+  // ✅ NUEVO - Obtener email del usuario
+  getUserEmail(user: any): string {
+    return user?.email || 'Email no disponible';
+  }
+
+  // ✅ NUEVO - Obtener specs del producto
+  getProductSpecs(product: any): string {
+    const specs = [];
+    
+    if (product.marca?.name) {
+      specs.push(product.marca.name);
+    }
+    
+    if (product.size && product.size !== 'N/A') {
+      specs.push(`Talla: ${product.size}`);
+    }
+    
+    if (product.color && product.color !== 'N/A') {
+      specs.push(`Color: ${product.color}`);
+    }
+    
+    return specs.length > 0 ? specs.join(' • ') : 'Sin especificaciones';
   }
 
   // Acciones de órdenes

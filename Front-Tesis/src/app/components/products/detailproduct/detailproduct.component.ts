@@ -1,9 +1,10 @@
-
+// detailproduct.component.ts - ACTUALIZADO
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Product } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
+import { CartService } from '../../../services/cart.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({  
@@ -30,13 +31,19 @@ export class DetailproductComponent implements OnInit {
   
   // Formulario para cantidad
   quantityForm: FormGroup;
-
+  
+  // Estado del carrito
+  addingToCart: boolean = false;
+  addedToCart: boolean = false;
+  isInCart: boolean = false;
+  
   readonly Array = Array;
   
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
+    private cartService: CartService, // ← Nuevo servicio
     private fb: FormBuilder
   ) {
     this.quantityForm = this.fb.group({
@@ -71,6 +78,9 @@ export class DetailproductComponent implements OnInit {
           this.isLoading = false;
           return;
         }
+        
+        // Verificar si está en el carrito
+        this.checkIfInCart();
         
         // Configurar la imagen seleccionada
         if (this.product.imageUrls && this.product.imageUrls.length > 0) {
@@ -108,6 +118,7 @@ export class DetailproductComponent implements OnInit {
       }
     });
   }
+  
   selectImage(imageUrl: string, index: number): void {
     this.selectedImage = imageUrl;
     this.currentImageIndex = index;
@@ -115,7 +126,8 @@ export class DetailproductComponent implements OnInit {
   
   incrementQuantity(): void {
     const currentValue = this.quantityForm.get('quantity')?.value || 0;
-    if (currentValue < 10) { // Limitar a 10 unidades
+    const maxStock = Number(this.product?.stock) || 0;
+    if (currentValue < Math.min(10, maxStock)) { // Limitar al stock disponible o 10
       this.quantityForm.patchValue({ quantity: currentValue + 1 });
     }
   }
@@ -127,10 +139,63 @@ export class DetailproductComponent implements OnInit {
     }
   }
   
+  // ✅ NUEVA FUNCIÓN - Agregar al carrito
   addToCart(): void {
-    // Aquí implementarías la lógica para añadir al carrito
-    // Por ahora, solo un mensaje de confirmación
-    alert(`Se agregaron ${this.quantity} unidades de ${this.product?.name} al carrito`);
+    if (!this.product) {
+      console.error('No hay producto seleccionado');
+      return;
+    }
+
+    this.addingToCart = true;
+    
+    const success = this.cartService.addToCart(
+      this.product, 
+      this.quantity, 
+      this.product.size, 
+      this.product.color
+    );
+
+    if (success) {
+      this.addedToCart = true;
+      this.isInCart = true;
+      
+      // Mensaje de éxito temporal
+      setTimeout(() => {
+        this.addedToCart = false;
+      }, 2000);
+      
+      console.log(`✅ Agregado al carrito: ${this.quantity} x ${this.product.name}`);
+    } else {
+      console.error('❌ Error al agregar al carrito');
+    }
+    
+    this.addingToCart = false;
+  }
+  
+  // ✅ NUEVA FUNCIÓN - Verificar si está en carrito
+  private checkIfInCart(): void {
+    if (this.product) {
+      this.isInCart = this.cartService.isInCart(
+        this.product.id!, 
+        this.product.size, 
+        this.product.color
+      );
+    }
+  }
+  
+  // ✅ NUEVA FUNCIÓN - Ir al carrito
+  goToCart(): void {
+    this.router.navigate(['/orders/new']);
+  }
+  
+  // ✅ NUEVA FUNCIÓN - Verificar stock disponible
+  getAvailableStock(): number {
+    return Number(this.product?.stock) || 0;
+  }
+  
+  // ✅ NUEVA FUNCIÓN - Verificar si hay stock
+  hasStock(): boolean {
+    return this.getAvailableStock() > 0;
   }
   
   goBack(): void {
@@ -140,7 +205,7 @@ export class DetailproductComponent implements OnInit {
   
   goToProduct(product: Product): void {
     // Navegar a otro producto
-    this.router.navigate(['/product/detail', product.id]);
+    this.router.navigate(['/products/details', product.id]);
   }
 
   isArray(obj: any): boolean {

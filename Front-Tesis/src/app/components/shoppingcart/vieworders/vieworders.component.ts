@@ -4,17 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OrderService } from '../../../services/order.service';
-import { Order } from '../../../models/order.model';
-
-
-
-export interface OrderItem {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  imageUrl?: string;
-}
+import { Order, OrderStatus } from '../../../models/order.model';
 
 @Component({
   selector: 'app-vieworders',
@@ -31,17 +21,16 @@ export class ViewordersComponent implements OnInit {
   startDate: string = '';
   endDate: string = '';
   
-
   orders: Order[] = [];
   filteredOrders: Order[] = [];
   
-  // Estadísticas
+  // Estadísticas calculadas dinámicamente
   stats = {
-    total: 156,
-    pending: 23,
-    processing: 89,
-    delivered: 44,
-    revenue: 125450
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+    revenue: 0
   };
 
   // Paginación
@@ -49,24 +38,22 @@ export class ViewordersComponent implements OnInit {
   itemsPerPage: number = 10;
   totalPages: number = 0;
 
-
   constructor(
     private orderService: OrderService,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder){
-    }
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
-    this.calculateStats();
-    this.loginOrders();
+    this.loadOrders();
   }
 
-  loginOrders(): void {
+  loadOrders(): void {
     this.orderService.getOrders().subscribe({
       next: (orders) => {
         this.orders = orders;
-        this.filteredOrders = [...this.orders]; // Inicializar órdenes filtradas
+        this.filteredOrders = [...this.orders];
         console.log('Órdenes cargadas:', this.orders);
         this.calculateStats();
         this.filterOrders();
@@ -77,24 +64,25 @@ export class ViewordersComponent implements OnInit {
     });
   }
 
-
-
-  // Calcular estadísticas
+  // Calcular estadísticas basadas en datos reales
   calculateStats(): void {
     this.stats.total = this.orders.length;
-    this.stats.pending = this.orders.filter(order => order.status === 'pending').length;
-    this.stats.processing = this.orders.filter(order => order.status === 'processing').length;
-    this.stats.delivered = this.orders.filter(order => order.status === 'delivered').length;
-    this.stats.revenue = this.orders.reduce((sum, order) => sum + order.total, 0);
+    this.stats.pending = this.orders.filter(order => order.status === OrderStatus.PENDIENTE).length;
+    this.stats.approved = this.orders.filter(order => order.status === OrderStatus.PAGADA).length;
+    this.stats.rejected = this.orders.filter(order => order.status === OrderStatus.RECHAZADA).length;
+    this.stats.revenue = this.orders
+      .filter(order => order.status === OrderStatus.PAGADA)
+      .reduce((sum, order) => sum + order.total, 0);
   }
 
   // Filtrar órdenes
   filterOrders(): void {
     this.filteredOrders = this.orders.filter(order => {
-      const matchesSearch = !this.searchTerm; //|| 
-        //order.orderNumber.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        //order.customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        //order.customer.email.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesSearch = !this.searchTerm || 
+        order.codOrder.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        order.user.firstName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        order.user.lastName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        order.user.email?.toLowerCase().includes(this.searchTerm.toLowerCase());
       
       const matchesStatus = !this.statusFilter || order.status === this.statusFilter;
       
@@ -108,9 +96,10 @@ export class ViewordersComponent implements OnInit {
   }
 
   // Verificar rango de fechas
-  checkDateRange(orderDate: Date): boolean {
+  checkDateRange(orderDateString: string): boolean {
     if (!this.startDate && !this.endDate) return true;
     
+    const orderDate = new Date(orderDateString);
     const start = this.startDate ? new Date(this.startDate) : null;
     const end = this.endDate ? new Date(this.endDate) : null;
     
@@ -132,92 +121,29 @@ export class ViewordersComponent implements OnInit {
     return this.filteredOrders.slice(startIndex, endIndex);
   }
 
-  // Navegar a página
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
-  }
-
-  // Página anterior
-  previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  // Página siguiente
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
-
-  // Obtener páginas para mostrar en la paginación
-  getPages(): number[] {
-    const pages: number[] = [];
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
-    
-    if (endPage - startPage < maxPagesToShow - 1) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
-    
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    
-    return pages;
-  }
-
-  // Acciones de órdenes
-  viewOrderDetails(order: Order): void {
-    console.log('Ver detalles de la orden:', order);
-    // Aquí implementarías la navegación o modal para ver detalles
-  }
-
-  updateOrderStatus(orderId: string, newStatus: Order['status']): void {
-    const orderIndex = this.orders.findIndex(order => order.id === orderId);
-    if (orderIndex !== -1) {
-      this.orders[orderIndex].status = newStatus;
-      this.calculateStats();
-      this.filterOrders();
-      console.log(`Orden ${orderId} actualizada a estado: ${newStatus}`);
-    }
-  }
-
-  printOrder(order: Order): void {
-    console.log('Imprimir orden:', order);
-    // Aquí implementarías la funcionalidad de impresión
-  }
-
-  cancelOrder(orderId: string): void {
-    if (confirm('¿Estás seguro de que deseas cancelar esta orden?')) {
-      this.updateOrderStatus(orderId, 'cancelled');
-    }
+  // Obtener texto del estado en español
+  getStatusText(status: OrderStatus): string {
+    const statusTexts = {
+      [OrderStatus.PENDIENTE]: 'Pendiente',
+      [OrderStatus.PAGADA]: 'Pagada',
+      [OrderStatus.RECHAZADA]: 'Rechazada'
+    };
+    return statusTexts[status] || status;
   }
 
   // Obtener clase CSS para el estado
-  getStatusClass(status: Order['status']): string {
-    return `status-${status}`;
-  }
-
-  // Obtener texto del estado en español
-  getStatusText(status: Order['status']): string {
-    // const statusTexts = {
-    //   'pending': 'Pendiente',
-    //   'processing': 'En Proceso',
-    //   'shipped': 'Enviado',
-    //   'delivered': 'Entregado',
-    //   'cancelled': 'Cancelado'
-    // };
-    // return statusTexts[status];
-    return status.charAt(0).toUpperCase() + status.slice(1);
+  getStatusClass(status: OrderStatus): string {
+    const statusClasses = {
+      [OrderStatus.PENDIENTE]: 'status-pending',
+      [OrderStatus.PAGADA]: 'status-approved',
+      [OrderStatus.RECHAZADA]: 'status-rejected'
+    };
+    return statusClasses[status] || 'status-pending';
   }
 
   // Formatear fecha
-  formatDate(date: Date): string {
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
       day: 'numeric',
       month: 'long',
@@ -236,28 +162,51 @@ export class ViewordersComponent implements OnInit {
     }).format(price);
   }
 
-  // Obtener emoji para el item (función auxiliar para la vista)
-  getItemEmoji(itemName: string): string {
-    const emojiMap: {[key: string]: string} = {
-      'remera': '👕',
-      'jean': '👖',
-      'vestido': '👗',
-      'zapatillas': '👟',
-      'gorra': '🧢',
-      'blusa': '👚',
-      'cartera': '👜',
-      'chaqueta': '🧥',
-      'pantalón': '👖',
-      'zapatos': '👞',
-      'tacones': '👠'
-    };
-    
-    const lowerName = itemName.toLowerCase();
-    for (const key in emojiMap) {
-      if (lowerName.includes(key)) {
-        return emojiMap[key];
-      }
+  // Acciones de órdenes
+  viewOrderDetails(order: Order): void {
+    console.log('Ver detalles de la orden:', order);
+    // Implementar navegación o modal
+  }
+
+  printOrder(order: Order): void {
+    console.log('Imprimir orden:', order);
+    // Implementar funcionalidad de impresión
+  }
+
+  // Navegación
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
     }
-    return '📦'; // emoji por defecto
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+   getPages(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+    
+    // Ajustar si no hay suficientes páginas al final
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    
+    return pages;
   }
 }

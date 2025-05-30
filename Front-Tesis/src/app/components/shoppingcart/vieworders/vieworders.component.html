@@ -5,27 +5,27 @@
     <p class="orders-subtitle">Administra y monitorea todos los pedidos de tu tienda</p>
   </div>
 
-  <!-- Estadísticas rápidas -->
+  <!-- Estadísticas dinámicas -->
   <div class="orders-stats">
     <div class="stat-card">
-      <div class="stat-number">156</div>
+      <div class="stat-number">{{ stats.total }}</div>
       <div class="stat-label">Total Pedidos</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number">23</div>
+      <div class="stat-number">{{ stats.pending }}</div>
       <div class="stat-label">Pendientes</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number">89</div>
-      <div class="stat-label">En Proceso</div>
+      <div class="stat-number">{{ stats.approved }}</div>
+      <div class="stat-label">Pagadas</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number">44</div>
-      <div class="stat-label">Entregados</div>
+      <div class="stat-number">{{ stats.rejected }}</div>
+      <div class="stat-label">Rechazadas</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number">$125,450</div>
-      <div class="stat-label">Ingresos del Mes</div>
+      <div class="stat-number">{{ formatPrice(stats.revenue) }}</div>
+      <div class="stat-label">Ingresos</div>
     </div>
   </div>
 
@@ -36,81 +36,104 @@
       <input 
         type="text" 
         class="search-input" 
-        placeholder="Buscar por número de pedido, cliente o email..."
+        placeholder="Buscar por código, cliente o email..."
+        [(ngModel)]="searchTerm"
+        (input)="filterOrders()"
       >
     </div>
     
-    <select class="filter-select">
+    <select class="filter-select" [(ngModel)]="statusFilter" (change)="filterOrders()">
       <option value="">Todos los estados</option>
-      <option value="pending">Pendiente</option>
-      <option value="processing">En Proceso</option>
-      <option value="shipped">Enviado</option>
-      <option value="delivered">Entregado</option>
-      <option value="cancelled">Cancelado</option>
+      <option value="PENDIENTE">Pendiente</option>
+      <option value="PAGADA">Pagada</option>
+      <option value="RECHAZADA">Rechazada</option>
     </select>
 
     <div class="date-filters">
-      <input type="date" class="date-input">
+      <input type="date" class="date-input" [(ngModel)]="startDate" (change)="filterOrders()">
       <span>-</span>
-      <input type="date" class="date-input">
+      <input type="date" class="date-input" [(ngModel)]="endDate" (change)="filterOrders()">
     </div>
   </div>
 
-
-<!-- Lista de órdenes -->
-    <div class="orders-list">
-    @for (item of orders; track $index) {
-    <div class="order-card">
+  <!-- Lista de órdenes -->
+  <div class="orders-list">
+    @for (order of getPaginatedOrders(); track order.codOrder) {
+      <div class="order-card">
         <div class="order-header">
-        <div class="order-info">
-            <div class="order-number">{{ item.id }}</div>
-            <div class="order-date">{{item.createdAt}}</div>
+          <div class="order-info">
+            <div class="order-number">{{ order.codOrder }}</div>
+            <div class="order-date">{{ formatDate(order.createdAt) }}</div>
             <div class="order-customer">
-            ID de Usuario :{{item.userId}} 
+              {{ order.user.firstName || 'Usuario no disponible' }} {{ order.user.lastName || 'Apellido no disponible' }} - {{ order.user.email || 'Email no disponible' }}
             </div>
-        </div>
-        <div class="order-status">
-            <span class="status-badge status-pending">{{ getStatusText(item.status) }}</span>
-            <div class="order-total">${{ item.total | number: '1.2-2' }}</div>
-        </div>
+          </div>
+          <div class="order-status">
+            <span class="status-badge" [class]="getStatusClass(order.status)">
+              {{ getStatusText(order.status) }}
+            </span>
+            <div class="order-total">{{ formatPrice(order.total) }}</div>
+          </div>
         </div>
         
         <div class="order-details">
-        <div class="order-items">
-            @for (product of item.detalles; track product.id) {
-            <div class="item-preview">
-                <div class="item-image">📦</div>
-                <span>{{ product.idProducto }} - Cantidad: {{ product.cantidad }} - ${{ product.precioUnitario | number: '1.2-2' }}</span>
-            </div>
+          <div class="order-items">
+            @for (detail of order.details; track detail.product.id) {
+              <div class="item-preview">
+                <div class="item-image">
+                  @if (detail.product.imageUrls && detail.product.imageUrls.length > 0) {
+                    <img [src]="detail.product.imageUrls[0]" [alt]="detail.product.name" class="product-thumbnail">
+                  } @else {
+                    <span class="product-icon">📦</span>
+                  }
+                </div>
+                <div class="item-info">
+                  <span class="item-name">{{ detail.product.name }}</span>
+                  <span class="item-details">
+                    {{ detail.product.marca?.name }} - {{ detail.product.size }} - {{ detail.product.color }}
+                  </span>
+                  <span class="item-quantity">Cantidad: {{ detail.quantity }}</span>
+                  <span class="item-price">{{ formatPrice(detail.priceUnit) }} c/u</span>
+                </div>
+                <div class="item-subtotal">
+                  {{ formatPrice(detail.subTotal) }}
+                </div>
+              </div>
             }
-        </div>
-        
-        <div class="order-actions">
-            <button class="btn btn-primary">
-            <i class="fas fa-eye"></i>
-            Ver Detalles
+          </div>
+          
+          <div class="order-actions">
+            <button class="btn btn-primary" (click)="viewOrderDetails(order)">
+              <i class="fas fa-eye"></i>
+              Ver Detalles
             </button>
-            <button class="btn btn-secondary">
-            <i class="fas fa-print"></i>  
-            Imprimir
+            <button class="btn btn-secondary" (click)="printOrder(order)">
+              <i class="fas fa-print"></i>  
+              Imprimir
             </button>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
     }
-    </div>
+  </div>
 
   <!-- Paginación -->
   <div class="pagination">
-    <button class="pagination-btn" disabled>
+    <button class="pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
       <i class="fas fa-chevron-left"></i>
     </button>
-    <button class="pagination-btn active">1</button>
-    <button class="pagination-btn">2</button>
-    <button class="pagination-btn">3</button>
-    <button class="pagination-btn">4</button>
-    <button class="pagination-btn">5</button>
-    <button class="pagination-btn">
+    
+    @for (page of getPages(); track page) {
+      <button 
+        class="pagination-btn" 
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    }
+    
+    <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>

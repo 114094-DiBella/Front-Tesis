@@ -11,6 +11,7 @@ import { AltaproductComponent } from './components/products/altaproduct/altaprod
 import { EditproductComponent } from './components/products/editproduct/editproduct.component';
 import { DetailproductComponent } from './components/products/detailproduct/detailproduct.component';
 import { ViewordersComponent } from './components/shoppingcart/vieworders/vieworders.component';
+import { NeworderComponent } from './components/shoppingcart/neworder/neworder.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/store', pathMatch: 'full' }, // Cambiar de '/login' a '/store'
@@ -26,6 +27,7 @@ export const routes: Routes = [
     { path: 'products/:id', component: ViewproductComponent },
     { path: 'products/details/:id', component: DetailproductComponent },
     { path: 'orders', component: ViewordersComponent },
+    { path: 'orders/new', component: NeworderComponent },   
 
     { path: '**', redirectTo: '/store' }
 ];

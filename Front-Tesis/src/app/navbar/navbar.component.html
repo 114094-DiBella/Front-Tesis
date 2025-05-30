@@ -4,18 +4,21 @@
       <ul>
         <li><a routerLink="store" routerLinkActive="active">Inicio</a></li>
         <li><a routerLink="products" routerLinkActive="active">Productos</a></li>
-        <li><a routerLink="users" routerLinkActive="active" >Usuarios</a></li>
+        <li><a routerLink="users" routerLinkActive="active">Usuarios</a></li>
         @if(isAdmin) {
           <li><a routerLink="orders" routerLinkActive="active">Pedidos</a></li>
           <li><a routerLink="products/new" routerLinkActive="active">Alta Productos</a></li>
         }
-
-
       </ul>
     </nav>
     <div class="header-icons">
       <a href="#"><i class="fas fa-search"></i></a>
       <a routerLink="/profile"><i class="bi bi-person-fill"></i></a>
-      <a routerLink="/cart"><i class="bi bi-cart-fill"></i><span class="badge">0</span></a>
+      <a routerLink="/orders/new" class="cart-link">
+        <i class="bi bi-cart-fill"></i>
+        @if (cartItemCount > 0) {
+          <span class="badge">{{ cartItemCount }}</span>
+        }
+      </a>
     </div>
-  </header>
+</header>

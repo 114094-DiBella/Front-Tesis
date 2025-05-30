@@ -1,0 +1,163 @@
+<div class="cart-container">
+  <!-- Header del carrito -->
+  <div class="cart-header">
+    <h1 class="cart-title">Mi Carrito</h1>
+    <p class="cart-subtitle">Revisa tus productos antes de finalizar la compra</p>
+  </div>
+
+  <!-- Lista de productos en el carrito -->
+  <div class="cart-items">
+    <!-- Carrito vacío -->
+    @if (cartItems.length === 0) {
+      <div class="empty-cart">
+        <div class="empty-cart-icon">🛒</div>
+        <h3>Tu carrito está vacío</h3>
+        <p>Agrega algunos productos para comenzar</p>
+        <button class="continue-shopping-btn" (click)="continueShopping()">
+          Continuar Comprando
+        </button>
+      </div>
+    }
+
+    <!-- Items del carrito -->
+    @for (item of cartItems; track (item.product?.id ?? '') + (item.size ?? '') + (item.color ?? '')) {
+      <div class="cart-item">
+        <div class="item-image">
+          @if (item.product.imageUrls && item.product.imageUrls.length > 0) {
+            <img [src]="item.product.imageUrls[0]" [alt]="item.product.name" class="product-image">
+          } @else {
+            <img src="/images/problemastecnicos.jpeg" [alt]="item.product.name" class="product-image">
+          }
+        </div>
+        
+        <div class="item-details">
+          <h3 class="item-name">{{ item.product.name }}</h3>
+          <div class="item-specs">
+            @if (item.product.marca?.name) {
+              <span class="item-brand">{{ item.product.marca?.name }}</span>
+            }
+            @if (item.size) {
+              <span class="item-size">Talla: {{ item.size }}</span>
+            }
+            @if (item.color) {
+              <span class="item-color">Color: {{ item.color }}</span>
+            }
+          </div>
+          <div class="item-price">{{ formatPrice(item.product.price || 0) }}</div>
+          <div class="item-subtotal-mobile">
+            Subtotal: {{ formatPrice(item.subtotal) }}
+          </div>
+        </div>
+        
+      </div>
+    }
+  </div>
+
+  <!-- Panel lateral - Resumen del pedido -->
+  <div class="cart-summary">
+    <h2 class="summary-title">Resumen del Pedido</h2>
+    
+    <div class="summary-details">
+      <div class="summary-row">
+        <span>Subtotal ({{ cartSummary.itemCount }} items)</span>
+        <span>{{ formatPrice(cartSummary.subtotal) }}</span>
+      </div>
+      
+      <!-- @if (cartSummary.discount > 0) {
+        <div class="summary-row discount">
+          <span>Descuentos y promociones</span>
+          <span>-{{ formatPrice(cartSummary.discount) }}</span>
+        </div>
+      }
+      
+      <div class="summary-row">
+        <span>Envío</span>
+        <span>
+          @if (cartSummary.shipping === 0 && cartSummary.subtotal > 0) {
+            <span class="free-shipping">¡GRATIS!</span>
+          } @else {
+            {{ formatPrice(cartSummary.shipping) }}
+          }
+        </span>
+      </div> -->
+      
+      <div class="payment-section" [formGroup]="checkoutForm">
+      <div class="payment-title">
+        <span>💳</span>
+        <span>Método de pago</span>
+      </div>
+      
+      @if (loadingPaymentMethods) {
+        <div class="loading-payment-methods">
+          <div class="spinner-small"></div>
+          <span>Cargando métodos de pago...</span>
+        </div>
+      } @else {
+        <div class="payment-methods">
+          @for (method of paymentMethods; track method.id) {
+            <div 
+              class="payment-method" 
+              [class.selected]="selectedPaymentMethod?.id === method.id"
+              (click)="selectPaymentMethod(method)"
+            >
+              <div class="payment-icon">
+                {{ method.icon || '💳' }}
+              </div>
+              <div class="payment-info">
+                <span class="payment-name">{{ method.name }}</span>
+                @if (method.description) {
+                  <span class="payment-description">{{ method.description }}</span>
+                }
+              </div>
+              <div class="payment-radio">
+                <input 
+                  type="radio" 
+                  [value]="method.id"
+                  formControlName="paymentMethodId"
+                  [checked]="selectedPaymentMethod?.id === method.id"
+                >
+              </div>
+            </div>
+          }
+        </div>
+        
+        @if (paymentMethods.length === 0) {
+          <div class="no-payment-methods">
+            <span>⚠️ No hay métodos de pago disponibles</span>
+          </div>
+        }
+      }
+    </div>
+
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>{{ formatPrice(cartSummary.total) }}</span>
+      </div>
+    </div>
+    
+
+    <!-- Botones de acción -->
+    @if (cartItems.length > 0) {
+      <button 
+        class="checkout-btn" 
+        (click)="proceedToCheckout()"
+        [disabled]="processingCheckout"
+      >
+        @if (processingCheckout) {
+          <span>Procesando...</span>
+        } @else {
+          INICIAR COMPRA
+        }
+        @if (!selectedPaymentMethod && paymentMethods.length > 0) {
+        <div class="payment-warning">
+          <span>⚠️ Selecciona un método de pago para continuar</span>
+        </div>
+      }
+      </button>
+      
+      <button class="continue-shopping" (click)="continueShopping()">
+        ← Continuar comprando
+      </button>
+    }
+  </div>
+</div>

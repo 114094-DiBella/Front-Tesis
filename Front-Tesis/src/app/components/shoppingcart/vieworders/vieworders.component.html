@@ -115,16 +115,19 @@
               }
             </div>
             
-            <div class="order-actions">
-              <button class="btn btn-primary" (click)="viewOrderDetails(order)">
-                <i class="fas fa-eye"></i>
-                Ver Detalles
-              </button>
-              <button class="btn btn-secondary" (click)="printOrder(order)">
-                <i class="fas fa-print"></i>  
-                Imprimir
-              </button>
-            </div>
+              <div class="order-actions">                
+                <!-- ✅ NUEVOS BOTONES para comprobantes -->
+                @if (order.status === 'PAGADA') {
+                  <button class="btn btn-success" (click)="downloadReceipt(order.codOrder)">
+                    <i class="fas fa-download"></i>
+                    Descargar Comprobante
+                  </button>
+                  <button class="btn btn-secondary" (click)="previewReceipt(order.codOrder)">
+                    <i class="fas fa-file-pdf"></i>
+                    Ver PDF
+                  </button>
+                }
+              </div>
           </div>
         </div>
       }

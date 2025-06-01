@@ -25,7 +25,7 @@ export interface CartSummary {
 export class CartService {
   private readonly CART_STORAGE_KEY = 'shopping_cart';
   private readonly FREE_SHIPPING_THRESHOLD = 69999; // $69.999 para envío gratis
-  private readonly SHIPPING_COST = 9999; // $9.999 de envío
+  private readonly SHIPPING_COST = 0; // $9.999 de envío
 
   // BehaviorSubject para mantener el estado del carrito
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);

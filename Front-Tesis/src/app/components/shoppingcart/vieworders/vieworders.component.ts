@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { OrderService } from '../../../services/order.service';
 import { Order, OrderStatus } from '../../../models/order.model';
 import { User } from '../../../models/user.model';
+import { ReceiptService } from '../../../services/receipt.service'; // ✅ AGREGADO
 
 @Component({
   selector: 'app-vieworders',
@@ -34,16 +35,23 @@ export class ViewordersComponent implements OnInit {
     revenue: 0
   };
 
+  downloadingReceipts: Set<string> = new Set();
+
   // Paginación
   currentPage: number = 1;
   itemsPerPage: number = 10;
   totalPages: number = 0;
 
+  isDownloading = false;
+  isPreviewLoading = false;
+  errorMessage = '';
+
   constructor(
     private orderService: OrderService,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private receiptService: ReceiptService // ✅ AGREGADO
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +61,6 @@ export class ViewordersComponent implements OnInit {
   loadOrders(): void {
     this.orderService.getOrders().subscribe({
       next: (orders) => {
-        // ✅ NORMALIZAR DATOS de las órdenes
         this.orders = orders.map(order => this.normalizeOrder(order));
         this.filteredOrders = [...this.orders];
         console.log('Órdenes cargadas y normalizadas:', this.orders);
@@ -66,23 +73,18 @@ export class ViewordersComponent implements OnInit {
     });
   }
 
-  // ✅ NUEVO - Normalizar datos de la orden
   private normalizeOrder(order: any): Order {
-    // Crear usuario por defecto si es null
     const normalizedUser = order.user || new User({
       firstName: 'Usuario',
       lastName: 'Anónimo',
       email: 'no-disponible@ejemplo.com'
     });
 
-    // Normalizar detalles
     const normalizedDetails = (order.details || []).map((detail: any) => ({
       ...detail,
       product: {
         ...detail.product,
-        // Asegurar que marca tenga un formato consistente
         marca: detail.product.marca || { name: 'Sin marca' },
-        // Manejar size y color como strings
         size: detail.product.size || 'N/A',
         color: detail.product.color || 'N/A'
       }
@@ -95,7 +97,6 @@ export class ViewordersComponent implements OnInit {
     });
   }
 
-  // Calcular estadísticas basadas en datos reales
   calculateStats(): void {
     this.stats.total = this.orders.length;
     this.stats.pending = this.orders.filter(order => order.status === OrderStatus.PENDIENTE).length;
@@ -106,7 +107,6 @@ export class ViewordersComponent implements OnInit {
       .reduce((sum, order) => sum + order.total, 0);
   }
 
-  // Filtrar órdenes
   filterOrders(): void {
     this.filteredOrders = this.orders.filter(order => {
       const matchesSearch = !this.searchTerm || 
@@ -116,7 +116,6 @@ export class ViewordersComponent implements OnInit {
         (order.user.email || '').toLowerCase().includes(this.searchTerm.toLowerCase());
       
       const matchesStatus = !this.statusFilter || order.status === this.statusFilter;
-      
       const matchesDateRange = this.checkDateRange(order.createdAt);
       
       return matchesSearch && matchesStatus && matchesDateRange;
@@ -126,7 +125,6 @@ export class ViewordersComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  // Verificar rango de fechas
   checkDateRange(orderDateString: string): boolean {
     if (!this.startDate && !this.endDate) return true;
     
@@ -140,19 +138,16 @@ export class ViewordersComponent implements OnInit {
     return true;
   }
 
-  // Calcular paginación
   calculatePagination(): void {
     this.totalPages = Math.ceil(this.filteredOrders.length / this.itemsPerPage);
   }
 
-  // Obtener órdenes para la página actual
   getPaginatedOrders(): Order[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredOrders.slice(startIndex, endIndex);
   }
 
-  // Obtener texto del estado en español
   getStatusText(status: OrderStatus): string {
     const statusTexts = {
       [OrderStatus.PENDIENTE]: 'Pendiente',
@@ -162,7 +157,6 @@ export class ViewordersComponent implements OnInit {
     return statusTexts[status] || status;
   }
 
-  // Obtener clase CSS para el estado
   getStatusClass(status: OrderStatus): string {
     const statusClasses = {
       [OrderStatus.PENDIENTE]: 'status-pending',
@@ -172,7 +166,6 @@ export class ViewordersComponent implements OnInit {
     return statusClasses[status] || 'status-pending';
   }
 
-  // ✅ MEJORADO - Formatear fecha manejando diferentes formatos
   formatDate(dateString: string): string {
     try {
       const date = new Date(dateString);
@@ -191,7 +184,6 @@ export class ViewordersComponent implements OnInit {
     }
   }
 
-  // Formatear precio
   formatPrice(price: number): string {
     if (isNaN(price) || price === null || price === undefined) {
       return '$0,00';
@@ -203,7 +195,6 @@ export class ViewordersComponent implements OnInit {
     }).format(price);
   }
 
-  // ✅ NUEVO - Obtener nombre completo del usuario
   getUserFullName(user: any): string {
     if (!user) return 'Usuario no disponible';
     
@@ -212,12 +203,10 @@ export class ViewordersComponent implements OnInit {
     return `${firstName} ${lastName}`;
   }
 
-  // ✅ NUEVO - Obtener email del usuario
   getUserEmail(user: any): string {
     return user?.email || 'Email no disponible';
   }
 
-  // ✅ NUEVO - Obtener specs del producto
   getProductSpecs(product: any): string {
     const specs = [];
     
@@ -236,18 +225,162 @@ export class ViewordersComponent implements OnInit {
     return specs.length > 0 ? specs.join(' • ') : 'Sin especificaciones';
   }
 
-  // Acciones de órdenes
-  viewOrderDetails(order: Order): void {
-    console.log('Ver detalles de la orden:', order);
-    // Implementar navegación o modal
+ downloadReceipt(orderCode: string): void {
+    if (!orderCode || !orderCode.trim()) {
+      this.showError('Código de orden requerido');
+      return;
+    }
+
+    this.isDownloading = true;
+    this.clearError();
+
+    this.receiptService.downloadReceipt(orderCode).subscribe({
+      next: (response) => {
+        this.handleDownloadSuccess(response, orderCode);
+        this.isDownloading = false;
+      },
+      error: (error) => {
+        this.handleDownloadError(error);
+        this.isDownloading = false;
+      }
+    });
   }
 
-  printOrder(order: Order): void {
-    console.log('Imprimir orden:', order);
-    // Implementar funcionalidad de impresión
+  /**
+   * Vista previa del comprobante
+   */
+  previewReceipt(orderCode: string): void {
+    if (!orderCode || !orderCode.trim()) {
+      this.showError('Código de orden requerido');
+      return;
+    }
+
+    this.isPreviewLoading = true;
+    this.clearError();
+
+    this.receiptService.previewReceipt(orderCode).subscribe({
+      next: (response) => {
+        this.handlePreviewSuccess(response);
+        this.isPreviewLoading = false;
+      },
+      error: (error) => {
+        this.handleDownloadError(error);
+        this.isPreviewLoading = false;
+      }
+    });
   }
 
-  // Navegación
+  /**
+   * Verificar disponibilidad del comprobante
+   */
+  checkReceiptAvailability(orderCode: string): void {
+    this.receiptService.checkReceiptStatus(orderCode).subscribe({
+      next: (response) => {
+        if (response.available) {
+          console.log('✅ Comprobante disponible:', response.message);
+        } else {
+          this.showError(response.message);
+        }
+      },
+      error: (error) => {
+        this.handleDownloadError(error);
+      }
+    });
+  }
+
+  /**
+   * Maneja la descarga exitosa del PDF
+   */
+  private handleDownloadSuccess(response: any, orderCode: string): void {
+    const blob = response.body;
+    
+    if (!blob || blob.size === 0) {
+      this.showError('El archivo PDF está vacío');
+      return;
+    }
+
+    // Crear URL temporal para el blob
+    const url = window.URL.createObjectURL(blob);
+    
+    // Crear elemento anchor temporal para descargar
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `comprobante-${orderCode}.pdf`;
+    
+    // Simular click para descargar
+    document.body.appendChild(link);
+    link.click();
+    
+    // Limpiar
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    console.log('✅ Comprobante descargado exitosamente');
+  }
+
+  /**
+   * Maneja la vista previa exitosa del PDF
+   */
+  private handlePreviewSuccess(response: any): void {
+    const blob = response.body;
+    
+    if (!blob || blob.size === 0) {
+      this.showError('El archivo PDF está vacío');
+      return;
+    }
+
+    // Crear URL temporal para el blob
+    const url = window.URL.createObjectURL(blob);
+    
+    // Abrir en nueva ventana
+    window.open(url, '_blank');
+    
+    // Limpiar después de un tiempo
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 1000);
+
+    console.log('✅ Vista previa abierta exitosamente');
+  }
+
+  /**
+   * Maneja errores de descarga
+   */
+  private handleDownloadError(error: any): void {
+    console.error('❌ Error:', error);
+    
+    let errorMsg = 'Error desconocido';
+
+    if (error.status === 400) {
+      errorMsg = 'Solicitud inválida - Verifique el código de orden';
+    } else if (error.status === 404) {
+      errorMsg = 'Comprobante no encontrado';
+    } else if (error.status === 500) {
+      errorMsg = 'Error interno del servidor';
+    } else if (error.error && typeof error.error === 'string') {
+      errorMsg = error.error;
+    } else if (error.message) {
+      errorMsg = error.message;
+    }
+
+    this.showError(errorMsg);
+  }
+
+  /**
+   * Mostrar mensaje de error
+   */
+  private showError(message: string): void {
+    this.errorMessage = message;
+    console.error('❌', message);
+  }
+
+  /**
+   * Limpiar mensaje de error
+   */
+  private clearError(): void {
+    this.errorMessage = '';
+  }
+
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -266,13 +399,12 @@ export class ViewordersComponent implements OnInit {
     }
   }
 
-   getPages(): number[] {
+  getPages(): number[] {
     const pages: number[] = [];
     const maxPagesToShow = 5;
     let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
     
-    // Ajustar si no hay suficientes páginas al final
     if (endPage - startPage < maxPagesToShow - 1) {
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }

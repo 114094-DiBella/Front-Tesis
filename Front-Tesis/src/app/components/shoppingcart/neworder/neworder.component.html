@@ -81,13 +81,13 @@
         </span>
       </div> -->
       
-      <div class="payment-section" [formGroup]="checkoutForm">
+      <!-- <div class="payment-section" [formGroup]="checkoutForm">
       <div class="payment-title">
         <span>💳</span>
         <span>Método de pago</span>
       </div>
       
-      @if (loadingPaymentMethods) {
+       @if (loadingPaymentMethods) {
         <div class="loading-payment-methods">
           <div class="spinner-small"></div>
           <span>Cargando métodos de pago...</span>
@@ -127,7 +127,7 @@
           </div>
         }
       }
-    </div>
+    </div> -->
 
       <div class="summary-row total">
         <span>Total</span>
@@ -146,13 +146,13 @@
         @if (processingCheckout) {
           <span>Procesando...</span>
         } @else {
-          INICIAR COMPRA
+          Pagar con MERCADO PAGO
         }
-        @if (!selectedPaymentMethod && paymentMethods.length > 0) {
+        <!-- @if (!selectedPaymentMethod && paymentMethods.length > 0) {
         <div class="payment-warning">
           <span>⚠️ Selecciona un método de pago para continuar</span>
         </div>
-      }
+      } -->
       </button>
       
       <button class="continue-shopping" (click)="continueShopping()">

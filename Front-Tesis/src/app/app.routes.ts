@@ -12,6 +12,7 @@ import { EditproductComponent } from './components/products/editproduct/editprod
 import { DetailproductComponent } from './components/products/detailproduct/detailproduct.component';
 import { ViewordersComponent } from './components/shoppingcart/vieworders/vieworders.component';
 import { NeworderComponent } from './components/shoppingcart/neworder/neworder.component';
+import { ReportesComponent } from './components/reportes/reportes.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/store', pathMatch: 'full' }, // Cambiar de '/login' a '/store'
@@ -28,6 +29,7 @@ export const routes: Routes = [
     { path: 'products/details/:id', component: DetailproductComponent },
     { path: 'orders', component: ViewordersComponent },
     { path: 'orders/new', component: NeworderComponent },   
+    { path: 'reports', component: ReportesComponent },
 
     { path: '**', redirectTo: '/store' }
 ];

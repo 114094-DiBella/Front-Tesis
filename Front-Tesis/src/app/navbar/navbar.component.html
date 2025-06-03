@@ -4,22 +4,42 @@
       <ul>
         <li><a routerLink="store" routerLinkActive="active">Inicio</a></li>
         <li><a routerLink="products" routerLinkActive="active">Productos</a></li>
-        <li><a routerLink="users" routerLinkActive="active">Usuarios</a></li>
-        @if(isAdmin) {
+        
+        <!-- 🔒 Menús para usuarios logueados -->
+        @if(isLoggedIn && isAdmin) {
+          <li><a routerLink="users" routerLinkActive="active">Usuarios</a></li>
           <li><a routerLink="orders" routerLinkActive="active">Pedidos</a></li>
           <li><a routerLink="products/new" routerLinkActive="active">Alta Productos</a></li>
           <li><a routerLink="reports" routerLinkActive="active">Reportes</a></li>
+          <li><a routerLink="orders" routerLinkActive="active">Mis Pedidos</a></li>
         }
       </ul>
     </nav>
+    
     <div class="header-icons">
       <a href="#"><i class="fas fa-search"></i></a>
-      <a routerLink="/profile"><i class="bi bi-person-fill"></i></a>
-      <a routerLink="/orders/new" class="cart-link">
+      
+      <!-- 👤 Icono de usuario (siempre visible) -->
+      <a (click)="goToProfile()" style="cursor: pointer;">
+        <i class="bi bi-person-fill"></i>
+        @if (isLoggedIn) {
+          <span class="user-indicator">{{ userEmail.split('@')[0] }}</span>
+        }
+      </a>
+      
+      <!-- 🛒 Carrito (siempre visible pero funcionalidad protegida) -->
+      <a (click)="goToCart()" class="cart-link" style="cursor: pointer;">
         <i class="bi bi-cart-fill"></i>
         @if (cartItemCount > 0) {
           <span class="badge">{{ cartItemCount }}</span>
         }
       </a>
+      
+      <!-- 🚪 Logout (solo si está logueado) -->
+      @if (isLoggedIn) {
+        <a (click)="logout()" style="cursor: pointer;" title="Cerrar sesión">
+          <i class="bi bi-box-arrow-right"></i>
+        </a>
+      }
     </div>
 </header>

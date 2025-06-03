@@ -70,9 +70,12 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         console.log('Login exitoso:', response);
         
-        // Guardar token si viene en la respuesta
+        // ✅ NUEVO - Guardar datos del usuario en localStorage
         if (response.token) {
           localStorage.setItem('token', response.token);
+          localStorage.setItem('userEmail', user.email || '');
+          // Si el backend devuelve rol, guardarlo también
+          localStorage.setItem('userRole', response.role || 'USER');
         }
         
         // Redirigir a la tienda
@@ -86,7 +89,6 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-
 
   createUser() {
     this.router.navigate(['/register']);

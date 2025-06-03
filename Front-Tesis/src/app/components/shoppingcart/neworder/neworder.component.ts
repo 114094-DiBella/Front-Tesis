@@ -180,10 +180,10 @@ export class NeworderComponent implements OnInit, OnDestroy {
       return;
     }
     
-    if (!this.selectedPaymentMethod) {
-      alert('Por favor selecciona un método de pago');
-      return;
-    }
+    // if (!this.selectedPaymentMethod) {
+    //   this.selectPaymentMethod(this.paymentMethods[0]); // Seleccionar el primer método si no hay ninguno
+    //   alert('Por favor selecciona un método de pago');
+    //   return;}
     
     this.processingCheckout = true;
     
@@ -194,7 +194,7 @@ export class NeworderComponent implements OnInit, OnDestroy {
         cantidad: item.quantity
       })),
       userId: this.TEMP_USER_ID,
-      idFormaPago: this.selectedPaymentMethod.id
+      idFormaPago: this.selectedPaymentMethod?.id || '11111111-1111-1111-1111-111111111111',
     };
     
     console.log('📋 Datos del checkout:', checkoutData);

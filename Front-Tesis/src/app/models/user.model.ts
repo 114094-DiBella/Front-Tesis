@@ -7,7 +7,7 @@ export class User {
     telephone?: number;
     numberDoc?: number;
     birthday?: Date; 
-    role?: number;
+    role?: string;
     status?: boolean;
     createdAt?: Date;
     updatedAt?: Date;

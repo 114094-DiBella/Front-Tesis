@@ -1,229 +1,422 @@
 <div class="reports-container">
   <!-- Header -->
   <div class="reports-header">
-    <h1 class="reports-title">Dashboard de Productos</h1>
-    <p class="reports-subtitle">Análisis y métricas de tu inventario</p>
+    <h1 class="reports-title">Dashboard de Reportes</h1>
+    <p class="reports-subtitle">Análisis completo de productos y ventas</p>
+    
+    <!-- Tabs Navigation -->
+    <div class="tabs-navigation">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'products'"
+        (click)="setActiveTab('products')"
+      >
+        📦 Productos
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'sales'"
+        (click)="setActiveTab('sales')"
+      >
+        💰 Ventas
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'combined'"
+        (click)="setActiveTab('combined')"
+      >
+        📊 Resumen
+      </button>
+      
+      <button class="refresh-btn" (click)="refreshReports()" [disabled]="isLoading">
+        <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i>
+        Actualizar
+      </button>
+    </div>
   </div>
 
   <!-- Loading -->
   @if (isLoading) {
     <div class="loading-container">
       <div class="loading-spinner"></div>
-      <p>Cargando reportes...</p>
+      <p>Generando reportes...</p>
     </div>
   }
 
-  @if (!isLoading) {
-    <!-- KPIs Grid -->
-    <div class="kpis-grid">
-      <!-- Total Productos -->
-      <div class="kpi-card primary">
-        <div class="kpi-header">
-          <div class="kpi-icon primary">
-            <i class="fas fa-box"></i>
+  <!-- Error -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <p>{{ errorMessage }}</p>
+      <button (click)="refreshReports()">Reintentar</button>
+    </div>
+  }
+
+  <!-- REPORTE DE PRODUCTOS -->
+  @if (!isLoading && productReport && activeTab === 'products') {
+    <div class="tab-content">
+      <!-- KPIs de Productos -->
+      <div class="kpis-grid">
+        <div class="kpi-card primary">
+          <div class="kpi-header">
+            <div class="kpi-icon primary">
+              <i class="fas fa-box"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatNumber(productReport.totalProducts) }}</div>
+          <div class="kpi-label">Total Productos</div>
+          <div class="kpi-description">
+            {{ productReport.activeProducts }} activos, {{ productReport.inactiveProducts }} inactivos
           </div>
         </div>
-        <div class="kpi-value">{{ formatNumber(kpis.totalProducts) }}</div>
-        <div class="kpi-label">Total Productos</div>
-        <div class="kpi-description">
-          {{ kpis.activeProducts }} activos, {{ kpis.inactiveProducts }} inactivos
+
+        <div class="kpi-card success">
+          <div class="kpi-header">
+            <div class="kpi-icon success">
+              <i class="fas fa-warehouse"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatNumber(productReport.totalStock) }}</div>
+          <div class="kpi-label">Total Stock</div>
+          <div class="kpi-description">
+            Promedio: {{ productReport.averageStock }} unidades por producto
+          </div>
+        </div>
+
+        <div class="kpi-card info">
+          <div class="kpi-header">
+            <div class="kpi-icon info">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatCurrency(productReport.totalInventoryValue) }}</div>
+          <div class="kpi-label">Valor Total Inventario</div>
+          <div class="kpi-description">
+            Precio promedio: {{ formatCurrency(productReport.averagePrice) }}
+          </div>
+        </div>
+
+        <div class="kpi-card warning">
+          <div class="kpi-header">
+            <div class="kpi-icon warning">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatNumber(productReport.lowStockProducts) }}</div>
+          <div class="kpi-label">Stock Bajo</div>
+          <div class="kpi-description">
+            {{ productReport.outOfStockProducts }} productos sin stock
+          </div>
         </div>
       </div>
 
-      <!-- Total Stock -->
-      <div class="kpi-card success">
-        <div class="kpi-header">
-          <div class="kpi-icon success">
-            <i class="fas fa-warehouse"></i>
+      <!-- Distribuciones de Productos -->
+      <div class="reports-sections">
+        <!-- Productos por Categoría -->
+        <div class="report-section">
+          <h3 class="section-title">Distribución por Categorías</h3>
+          <div class="distribution-table">
+            @for (item of productReport.productsByCategory; track item.name) {
+              <div class="distribution-item">
+                <span class="distribution-name">{{ item.name }}</span>
+                <div class="distribution-stats">
+                  <span class="distribution-count">{{ item.count }}</span>
+                  <span class="distribution-percentage">{{ formatPercentage(item.percentage) }}</span>
+                </div>
+              </div>
+            }
           </div>
         </div>
-        <div class="kpi-value">{{ formatNumber(kpis.totalStock) }}</div>
-        <div class="kpi-label">Total Stock</div>
-        <div class="kpi-description">
-          Promedio: {{ kpis.averageStock }} unidades por producto
+
+        <!-- Productos por Marca -->
+        <div class="report-section">
+          <h3 class="section-title">Distribución por Marcas</h3>
+          <div class="distribution-table">
+            @for (item of productReport.productsByBrand; track item.name) {
+              <div class="distribution-item">
+                <span class="distribution-name">{{ item.name }}</span>
+                <div class="distribution-stats">
+                  <span class="distribution-count">{{ item.count }}</span>
+                  <span class="distribution-percentage">{{ formatPercentage(item.percentage) }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Rangos de Precio -->
+        <div class="report-section">
+          <h3 class="section-title">Distribución por Precios</h3>
+          <div class="distribution-table">
+            @for (range of productReport.priceRanges; track range.range) {
+              <div class="distribution-item">
+                <span class="distribution-name">{{ range.range }}</span>
+                <div class="distribution-stats">
+                  <span class="distribution-count">{{ range.count }}</span>
+                  <span class="distribution-percentage">{{ formatPercentage(range.percentage) }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Niveles de Stock -->
+        <div class="report-section">
+          <h3 class="section-title">Niveles de Stock</h3>
+          <div class="distribution-table">
+            @for (level of productReport.stockLevels; track level.level) {
+              <div class="distribution-item">
+                <span class="distribution-name">{{ level.level }}</span>
+                <div class="distribution-stats">
+                  <span class="distribution-count">{{ level.count }}</span>
+                  <span class="distribution-percentage">{{ formatPercentage(level.percentage) }}</span>
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </div>
 
-      <!-- Valor Total -->
-      <div class="kpi-card info">
-        <div class="kpi-header">
-          <div class="kpi-icon info">
-            <i class="fas fa-dollar-sign"></i>
-          </div>
+      <!-- Productos con Stock Bajo -->
+      @if (productReport.lowStockItems.length > 0) {
+        <div class="stock-alerts">
+          <h3 class="section-title">⚠️ Productos con Stock Bajo</h3>
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Marca</th>
+                <th>Categoría</th>
+                <th>Stock</th>
+                <th>Precio</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (product of productReport.lowStockItems; track product.id) {
+                <tr>
+                  <td>
+                    <div class="product-name">{{ product.name }}</div>
+                  </td>
+                  <td>{{ product.marca?.name || 'Sin marca' }}</td>
+                  <td>{{ product.category?.name || 'Sin categoría' }}</td>
+                  <td>{{ product.stock }}</td>
+                  <td class="product-price">{{ formatCurrency(product.price || 0) }}</td>
+                  <td>
+                    <span class="stock-badge" [class]="getStockStatusClass(getStockNumber(product.stock))">
+                      {{ getStockStatus(getStockNumber(product.stock)) }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
-        <div class="kpi-value">{{ formatCurrency(kpis.totalValue) }}</div>
-        <div class="kpi-label">Valor Total Inventario</div>
-        <div class="kpi-description">
-          Precio promedio: {{ formatCurrency(kpis.averagePrice) }}
-        </div>
-      </div>
+      }
+    </div>
+  }
 
-      <!-- Alertas de Stock -->
-      <div class="kpi-card warning">
-        <div class="kpi-header">
-          <div class="kpi-icon warning">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-        </div>
-        <div class="kpi-value">{{ formatNumber(kpis.lowStockProducts) }}</div>
-        <div class="kpi-label">Stock Bajo</div>
-        <div class="kpi-description">
-          {{ kpis.outOfStockProducts }} productos sin stock
-        </div>
-      </div>
-
-      <!-- Categorías -->
-      <div class="kpi-card primary">
-        <div class="kpi-header">
-          <div class="kpi-icon primary">
-            <i class="fas fa-tags"></i>
-          </div>
-        </div>
-        <div class="kpi-value">{{ formatNumber(kpis.totalCategories) }}</div>
-        <div class="kpi-label">Categorías Activas</div>
-        <div class="kpi-description">
-          Más popular: {{ kpis.mostPopularCategory }}
-        </div>
-      </div>
-
-      <!-- Marcas -->
-      <div class="kpi-card info">
-        <div class="kpi-header">
-          <div class="kpi-icon info">
-            <i class="fas fa-award"></i>
-          </div>
-        </div>
-        <div class="kpi-value">{{ formatNumber(kpis.totalBrands) }}</div>
-        <div class="kpi-label">Marcas Disponibles</div>
-        <div class="kpi-description">
-          Más productos: {{ kpis.mostPopularBrand }}
-        </div>
-      </div>
-
-      <!-- Ventas (si aplica) -->
-      @if (kpis.totalOrders > 0) {
+  <!-- REPORTE DE VENTAS -->
+  @if (!isLoading && salesReport && activeTab === 'sales') {
+    <div class="tab-content">
+      <!-- KPIs de Ventas -->
+      <div class="kpis-grid">
         <div class="kpi-card success">
           <div class="kpi-header">
             <div class="kpi-icon success">
               <i class="fas fa-chart-line"></i>
             </div>
           </div>
-          <div class="kpi-value">{{ formatCurrency(kpis.totalRevenue) }}</div>
+          <div class="kpi-value">{{ formatCurrency(salesReport.totalRevenue) }}</div>
           <div class="kpi-label">Ingresos Totales</div>
           <div class="kpi-description">
-            {{ kpis.totalOrders }} órdenes - Ticket promedio: {{ formatCurrency(kpis.averageOrderValue) }}
+            {{ salesReport.successfulOrders }} órdenes exitosas
           </div>
         </div>
-      }
 
-      <!-- Precio Promedio -->
-      <div class="kpi-card warning">
-        <div class="kpi-header">
-          <div class="kpi-icon warning">
-            <i class="fas fa-calculator"></i>
+        <div class="kpi-card primary">
+          <div class="kpi-header">
+            <div class="kpi-icon primary">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatNumber(salesReport.totalOrders) }}</div>
+          <div class="kpi-label">Total Pedidos</div>
+          <div class="kpi-description">
+            {{ salesReport.pendingOrders }} pendientes, {{ salesReport.rejectedOrders }} rechazados
           </div>
         </div>
-        <div class="kpi-value">{{ formatCurrency(kpis.averagePrice) }}</div>
-        <div class="kpi-label">Precio Promedio</div>
-        <div class="kpi-description">
-          Por unidad en inventario
-        </div>
-      </div>
-    </div>
 
-    <!-- Sections Grid -->
-    <div class="reports-sections">
-      <!-- Productos por Categoría -->
-      <div class="report-section">
-        <h3 class="section-title">Distribución por Categorías</h3>
-        <div class="distribution-table">
-          @for (item of productsByCategory; track item.name) {
-            <div class="distribution-item">
-              <span class="distribution-name">{{ item.name }}</span>
-              <span class="distribution-count">{{ item.count }}</span>
+        <div class="kpi-card info">
+          <div class="kpi-header">
+            <div class="kpi-icon info">
+              <i class="fas fa-calculator"></i>
             </div>
-          }
+          </div>
+          <div class="kpi-value">{{ formatCurrency(salesReport.averageOrderValue) }}</div>
+          <div class="kpi-label">Ticket Promedio</div>
+          <div class="kpi-description">
+            Valor promedio por pedido
+          </div>
         </div>
-      </div>
 
-      <!-- Productos por Marca -->
-      <div class="report-section">
-        <h3 class="section-title">Distribución por Marcas</h3>
-        <div class="distribution-table">
-          @for (item of productsByBrand; track item.name) {
-            <div class="distribution-item">
-              <span class="distribution-name">{{ item.name }}</span>
-              <span class="distribution-count">{{ item.count }}</span>
+        <div class="kpi-card warning">
+          <div class="kpi-header">
+            <div class="kpi-icon warning">
+              <i class="fas fa-percentage"></i>
             </div>
-          }
+          </div>
+          <div class="kpi-value">{{ formatPercentage((salesReport.successfulOrders / salesReport.totalOrders) * 100) }}</div>
+          <div class="kpi-label">Tasa de Éxito</div>
+          <div class="kpi-description">
+            Pedidos pagados vs totales
+          </div>
         </div>
       </div>
 
-      <!-- Rangos de Precio -->
-      <div class="report-section">
-        <h3 class="section-title">Distribución por Precios</h3>
-        <div class="distribution-table">
-          @for (range of priceRanges; track range.range) {
-            <div class="distribution-item">
-              <span class="distribution-name">{{ range.range }}</span>
-              <span class="distribution-count">{{ range.count }}</span>
-            </div>
-          }
-        </div>
-      </div>
-
-      <!-- Top Productos por Valor -->
-      <div class="report-section">
-        <h3 class="section-title">Productos de Mayor Valor</h3>
-        <div class="distribution-table">
-          @for (product of topValueProducts.slice(0, 5); track product.id) {
-            <div class="distribution-item">
-              <div>
-                <div class="distribution-name">{{ product.name }}</div>
-                <small class="product-brand">{{ product.marca?.name || 'Sin marca' }}</small>
+      <!-- Análisis de Ventas -->
+      <div class="reports-sections">
+        <!-- Top Productos Vendidos -->
+        <div class="report-section">
+          <h3 class="section-title">Productos Más Vendidos</h3>
+          <div class="sales-table">
+            @for (item of salesReport.topSellingProducts.slice(0, 5); track item.product.id) {
+              <div class="sales-item">
+                <div class="sales-product">
+                  <span class="product-name">{{ item.product.name }}</span>
+                  <span class="product-brand">{{ item.product.marca?.name || 'Sin marca' }}</span>
+                </div>
+                <div class="sales-stats">
+                  <span class="quantity-sold">{{ item.quantitySold }} vendidos</span>
+                  <span class="revenue">{{ formatCurrency(item.revenue) }}</span>
+                </div>
               </div>
-              <span class="distribution-count">{{ formatCurrency(product.price || 0) }}</span>
-            </div>
-          }
+            }
+          </div>
+        </div>
+
+        <!-- Top Clientes -->
+        <div class="report-section">
+          <h3 class="section-title">Mejores Clientes</h3>
+          <div class="sales-table">
+            @for (customer of salesReport.topCustomers.slice(0, 5); track customer.user.id) {
+              <div class="sales-item">
+                <div class="customer-info">
+                  <span class="customer-name">{{ customer.user.firstName }} {{ customer.user.lastName }}</span>
+                  <span class="customer-email">{{ customer.user.email }}</span>
+                </div>
+                <div class="customer-stats">
+                  <span class="total-orders">{{ customer.totalOrders }} pedidos</span>
+                  <span class="total-spent">{{ formatCurrency(customer.totalSpent) }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Ventas por Mes -->
+        <div class="report-section">
+          <h3 class="section-title">Ventas por Mes</h3>
+          <div class="time-chart">
+            @for (month of salesReport.salesByMonth; track month.month) {
+              <div class="time-item">
+                <span class="time-period">{{ month.month }}</span>
+                <div class="time-stats">
+                  <span class="time-orders">{{ month.orders }} pedidos</span>
+                  <span class="time-revenue">{{ formatCurrency(month.revenue) }}</span>
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </div>
     </div>
+  }
 
-    <!-- Productos con Stock Bajo -->
-    @if (lowStockProducts.length > 0) {
-      <div class="stock-alerts">
-        <h3 class="section-title">⚠️ Productos con Stock Bajo</h3>
-        <table class="products-table">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Marca</th>
-              <th>Categoría</th>
-              <th>Stock</th>
-              <th>Precio</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (product of lowStockProducts; track product.id) {
-              <tr>
-                <td>
-                  <div class="product-name">{{ product.name }}</div>
-                </td>
-                <td>{{ product.marca?.name || 'Sin marca' }}</td>
-                <td>{{ product.category?.name || 'Sin categoría' }}</td>
-                <td>{{ product.stock }}</td>
-                <td class="product-price">{{ formatCurrency(product.price || 0) }}</td>
-                <td>
-                  <span class="stock-badge" [class]="getStockStatusClass(Number(product.stock))">
-                    {{ getStockStatus(Number(product.stock)) }}
-                  </span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+  <!-- REPORTE COMBINADO -->
+  @if (!isLoading && productReport && salesReport && activeTab === 'combined') {
+    <div class="tab-content">
+      <!-- KPIs Combinados -->
+      <div class="kpis-grid combined">
+        <!-- Productos -->
+        <div class="kpi-card primary">
+          <div class="kpi-header">
+            <div class="kpi-icon primary">
+              <i class="fas fa-box"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatNumber(productReport.totalProducts) }}</div>
+          <div class="kpi-label">Total Productos</div>
+        </div>
+
+        <!-- Inventario -->
+        <div class="kpi-card info">
+          <div class="kpi-header">
+            <div class="kpi-icon info">
+              <i class="fas fa-warehouse"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatCurrency(productReport.totalInventoryValue) }}</div>
+          <div class="kpi-label">Valor Inventario</div>
+        </div>
+
+        <!-- Ventas -->
+        <div class="kpi-card success">
+          <div class="kpi-header">
+            <div class="kpi-icon success">
+              <i class="fas fa-chart-line"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatCurrency(salesReport.totalRevenue) }}</div>
+          <div class="kpi-label">Ingresos Totales</div>
+        </div>
+
+        <!-- Pedidos -->
+        <div class="kpi-card warning">
+          <div class="kpi-header">
+            <div class="kpi-icon warning">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ formatNumber(salesReport.totalOrders) }}</div>
+          <div class="kpi-label">Total Pedidos</div>
+        </div>
       </div>
-    }
+
+      <!-- Resumen Ejecutivo -->
+      <div class="executive-summary">
+        <h3 class="section-title">📊 Resumen Ejecutivo</h3>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <h4>🏪 Estado del Inventario</h4>
+            <ul>
+              <li>{{ productReport.activeProducts }} productos activos de {{ productReport.totalProducts }} totales</li>
+              <li>{{ formatCurrency(productReport.totalInventoryValue) }} en inventario</li>
+              <li>{{ productReport.lowStockProducts }} productos con stock bajo</li>
+              <li>{{ productReport.outOfStockProducts }} productos sin stock</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>💰 Rendimiento de Ventas</h4>
+            <ul>
+              <li>{{ salesReport.totalOrders }} pedidos procesados</li>
+              <li>{{ formatCurrency(salesReport.totalRevenue) }} en ingresos</li>
+              <li>{{ formatPercentage((salesReport.successfulOrders / salesReport.totalOrders) * 100) }} tasa de éxito</li>
+              <li>{{ formatCurrency(salesReport.averageOrderValue) }} ticket promedio</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>🎯 Oportunidades</h4>
+            <ul>
+              <li>Reabastecer {{ productReport.lowStockProducts }} productos con stock bajo</li>
+              <li>Promocionar productos de {{ productReport.productsByCategory[0]?.name }}</li>
+              <li>Fidelizar a los {{ salesReport.topCustomers.length }} mejores clientes</li>
+              <li>Optimizar {{ salesReport.pendingOrders }} pedidos pendientes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 </div>

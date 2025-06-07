@@ -1,90 +1,143 @@
+<!-- store.component.html -->
 <div class="store-container">
-  <!-- Hero Banner -->
-  <div class="hero-banner">
-    <div class="hero-content">
-      <h1>Nueva Colección Primavera-Verano</h1>
-      <p>Descubre las últimas tendencias en moda</p>
-      <button class="primary-button" (click)="viewAllProducts()">Ver Catálogo</button>
+  <!-- Hero Banner Pantalla Completa -->
+  <section class="hero-fullscreen">
+    <div class="hero-background">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <span class="hero-subtitle">Nueva Colección 2025</span>
+          <h1 class="hero-title">MODA ELEGANTE<br>Y CONTEMPORÁNEA</h1>
+          <p class="hero-description">Descubre las últimas tendencias en ropa de alta calidad con diseños únicos que definen tu estilo personal</p>
+          <div class="hero-price">
+            <span class="price-label">Desde</span>
+            <span class="price-amount">$15.990</span>
+          </div>
+          <div class="hero-actions">
+            <button class="primary-button large" (click)="viewAllProducts()">
+              EXPLORAR COLECCIÓN
+            </button>
+            <button class="secondary-button large" (click)="viewCatalog()">
+              VER CATÁLOGO
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+    
+    <!-- Indicador de scroll -->
+    <div class="scroll-indicator">
+      <span>Desliza para explorar</span>
+      <div class="scroll-arrow">
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </div>
+  </section>
 
   <!-- Categorías Destacadas -->
   <section class="featured-categories">
-    <h2 class="section-title">Categorías Destacadas</h2>
-    
-    <div class="product-carousel-container">
-      <button class="carousel-control prev-btn" (click)="scrollCategoryPrev()">
-        <i class="fas fa-chevron-left"></i>
-      </button>
+    <div class="section-container">
+      <h2 class="section-title">FAVORITOS DE LA TEMPORADA</h2>
       
-      <div class="product-carousel" #categoryCarousel>
-        @for (category of featuredCategories; track category.id) {
-          <div class="product-card" (click)="viewProducts(category)">
-            <div class="product-image">
-              <!-- Usando un objeto para mapear categorías a imágenes -->
-              <img 
-                [src]="getCategoryImage(category)" 
-                [alt]="category.name"
-                loading="lazy"
-              >
-            </div>
-            <div class="product-info">
-              <h3 class="product-name">{{category.name}}</h3>
-              <button class="primary-button">Ver Productos</button>
-            </div>
-          </div>
-        }
+      <!-- Navegación de categorías -->
+      <div class="categories-nav">
+        <button class="category-tab active" data-category="abrigos">ABRIGOS Y CAMPERAS</button>
+        <button class="category-tab" data-category="sweaters">SWEATERS</button>
+        <button class="category-tab" data-category="pantalones">PANTALONES Y JEANS</button>
+        <button class="category-tab" data-category="camisas">CAMISAS</button>
+        <button class="category-tab" data-category="remeras">REMERAS Y CHOMBAS</button>
       </div>
       
-      <button class="carousel-control next-btn" (click)="scrollCategoryNext()">
-        <i class="fas fa-chevron-right"></i>
-      </button>
+      <div class="product-carousel-container">
+        <button class="carousel-control prev-btn" (click)="scrollCategoryPrev()" aria-label="Anterior">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div class="product-carousel" #categoryCarousel>
+          @for (category of featuredCategories; track category.id) {
+            <div class="category-card modern" (click)="viewProducts(category)">
+              <div class="category-image">
+                <img 
+                  [src]="getCategoryImage(category)" 
+                  [alt]="category.name"
+                  loading="lazy"
+                >
+                <div class="category-overlay">
+                  <span class="category-name">{{category.name}}</span>
+                  <button class="category-btn">VER PRODUCTOS</button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        
+        <button class="carousel-control next-btn" (click)="scrollCategoryNext()" aria-label="Siguiente">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
     </div>
   </section>
 
   <!-- Productos Destacados -->
   <section class="featured-products">
-    <h2 class="section-title">Productos Destacados</h2>
-    
-    <div class="product-carousel-container">
-      <button class="carousel-control prev-btn" (click)="scrollProductPrev()">
-        <i class="fas fa-chevron-left"></i>
-      </button>
+    <div class="section-container">
+      <h2 class="section-title">PRODUCTOS DESTACADOS</h2>
       
-      <div class="product-carousel" #productCarousel>
-        @for (product of products; track product.id) {
-          <div class="product-card" (click)="viewDetails(product)">
-            <div class="product-image">
-              @if (product.imageUrls && product.imageUrls.length > 0) {
-               <img [src]="product.imageUrls[0]" [alt]="product.name">
-              } @else {
-                <img src="/images/problemastecnicos.jpeg" [alt]="product.name">
-              }
-            </div>
-            
-            <div class="product-info">
-              <h3 class="product-name">{{product.name}}</h3>
-              <p class="product-price">${{product.price?.toFixed(2)}}</p>
-              
-              <p class="product-installments">
-                @if (product.price) {
-                  6 cuotas sin interés de ${{(product.price / 6).toFixed(2)}}
+      <div class="product-carousel-container">
+        <button class="carousel-control prev-btn" (click)="scrollProductPrev()" aria-label="Anterior">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div class="product-carousel" #productCarousel>
+          @for (product of products; track product.id) {
+            <div class="product-card modern" (click)="viewDetails(product)">
+              <div class="product-image">
+                @if (product.imageUrls && product.imageUrls.length > 0) {
+                 <img [src]="product.imageUrls[0]" [alt]="product.name" loading="lazy">
+                } @else {
+                  <img src="/images/problemastecnicos.jpeg" [alt]="product.name" loading="lazy">
                 }
-              </p>
+                <div class="product-overlay">
+                  <button class="quick-view-btn">VISTA RÁPIDA</button>
+                </div>
+              </div>
               
-              <button class="primary-button">Añadir al Carrito</button>
+              <div class="product-info">
+                <h3 class="product-name">{{product.name}}</h3>
+                <p class="product-brand">{{product.marca?.name}}</p>
+                
+                <div class="product-pricing">
+                  <span class="product-price">${{product.price?.toFixed(2)}}</span>
+                  @if (product.price) {
+                    <span class="product-installments">6 cuotas de ${{(product.price / 6).toFixed(2)}}</span>
+                  }
+                </div>
+                
+                <div class="product-actions-modern">
+                  <button class="add-to-cart-modern">AGREGAR AL CARRITO</button>
+                </div>
+              </div>
             </div>
-          </div>
-        }
+          }
+        </div>
+        
+        <button class="carousel-control next-btn" (click)="scrollProductNext()" aria-label="Siguiente">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
       
-      <button class="carousel-control next-btn" (click)="scrollProductNext()">
-        <i class="fas fa-chevron-right"></i>
-      </button>
+      <div class="view-more-modern">
+        <button class="view-all-btn" (click)="viewAllProducts()">VER TODA LA COLECCIÓN</button>
+      </div>
     </div>
-    
-    <div class="view-more">
-      <button class="primary-button" (click)="viewAllProducts()">Ver Catálogo Completo</button>
+  </section>
+
+  <!-- Banner Promocional -->
+  <section class="promo-banner-modern">
+    <div class="promo-content">
+      <h2>ENVÍO GRATIS EN COMPRAS SUPERIORES A $50.000</h2>
+      <p>Aprovecha nuestras promociones especiales</p>
+      <button class="promo-btn">CONOCER MÁS</button>
     </div>
   </section>
 </div>

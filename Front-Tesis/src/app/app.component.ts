@@ -4,10 +4,11 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { StoreComponent } from './store/store.component';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, CommonModule ],
+  imports: [RouterOutlet, NavbarComponent, CommonModule , FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

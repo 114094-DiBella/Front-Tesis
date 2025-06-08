@@ -1,0 +1,137 @@
+<!-- footer.component.html -->
+
+<!-- FAQ Section -->
+<section class="faq-section">
+  <div class="container">
+    <div class="faq-header">
+      <h2 class="section-title">Preguntas Frecuentes</h2>
+      <p class="section-subtitle">
+        Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios
+      </p>
+    </div>
+
+    <div class="faq-grid">
+      @for (faq of faqItems; track faq.id) {
+        <div class="faq-item" [class.active]="faq.isOpen">
+          <button class="faq-question" (click)="toggleFAQ(faq.id)">
+            <span>{{ faq.question }}</span>
+            <span class="faq-icon" [class.rotated]="faq.isOpen">+</span>
+          </button>
+          
+          @if (faq.isOpen) {
+            <div class="faq-answer">
+              <p>{{ faq.answer }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <!-- Footer Content -->
+    <div class="footer-content">
+      <!-- Company Info -->
+      <div class="footer-column">
+        <h3 class="footer-title">TIENDA</h3>
+        <p class="footer-description">
+          Tu tienda de confianza para las mejores prendas de vestir. 
+          Calidad, estilo y tendencia en un solo lugar.
+        </p>
+        <div class="social-icons">
+          <a href="#" class="social-icon" title="Facebook">📘</a>
+          <a href="#" class="social-icon" title="Instagram">📷</a>
+          <a href="#" class="social-icon" title="Twitter">🐦</a>
+          <a href="#" class="social-icon" title="YouTube">📺</a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-column">
+        <h3 class="footer-title">Enlaces Rápidos</h3>
+        <ul class="footer-links">
+          <li><a routerLink="/store">Inicio</a></li>
+          <li><a routerLink="/products">Productos</a></li>
+          <li><a href="#categories">Categorías</a></li>
+          <li><a href="#ofertas">Ofertas</a></li>
+          <li><a routerLink="/profile">Mi Cuenta</a></li>
+          <li><a routerLink="/orders/new">Carrito</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Service -->
+      <div class="footer-column">
+        <h3 class="footer-title">Atención al Cliente</h3>
+        <ul class="footer-links">
+          <li><a href="#faq">Preguntas Frecuentes</a></li>
+          <li><a href="#devoluciones">Política de Devoluciones</a></li>
+          <li><a href="#talles">Guía de Talles</a></li>
+          <li><a href="#pagos">Métodos de Pago</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="#terminos">Términos y Condiciones</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-column">
+        <h3 class="footer-title">Contacto</h3>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <span>Córdoba, Argentina</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <span>+54 351 123-4567</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <span>{{ emailTienda }}</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">🕒</span>
+            <span>Lun - Vie: 9:00 - 18:00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="newsletter-section">
+      <h3 class="newsletter-title">📧 Suscríbete a nuestro Newsletter</h3>
+      <p class="newsletter-description">
+        Recibe las últimas novedades, ofertas exclusivas y tips de moda directamente en tu correo
+      </p>
+      <div class="newsletter-form">
+        <input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="tu.email@ejemplo.com"
+          class="newsletter-input"
+        />
+        <button 
+          class="newsletter-btn" 
+          (click)="subscribeNewsletter()"
+          [disabled]="!email"
+        >
+          Suscribirse
+        </button>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        <span>© 2025 TIENDA. Todos los derechos reservados.</span>
+      </div>
+      <div class="footer-legal">
+        <a href="#privacy">Política de Privacidad</a>
+        <a href="#terms">Términos de Uso</a>
+        <a href="#cookies">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>

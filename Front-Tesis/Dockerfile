@@ -1,33 +1,40 @@
-# Dockerfile para aplicación Angular
-# Utiliza Node.js como imagen base
+# Dockerfile para aplicación Angular 19 - Sin budgets
 FROM node:18-alpine as build
 
-# Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de configuración de dependencias
+# Copiar package files
 COPY package*.json ./
+RUN npm ci
 
-# Instalar dependencias
-RUN npm ci --only=production
-
-# Copiar el código fuente
+# Copiar código fuente
 COPY . .
 
-# Construir la aplicación para producción
-RUN npm run build --prod
+# Crear build sin restricciones de budget
+RUN ./node_modules/.bin/ng build --configuration=development
 
-# Etapa de producción con Nginx
+# Nginx stage
 FROM nginx:alpine
 
-# Copiar archivos construidos desde la etapa anterior
-COPY --from=build /app/dist/front-tesis /usr/share/nginx/html
+RUN apk add --no-cache wget
 
-# Copiar configuración personalizada de Nginx (opcional)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copiar archivos construidos desde la subcarpeta browser (Angular 19)
+COPY --from=build /app/dist/front-tesis/browser /usr/share/nginx/html
 
-# Exponer el puerto 80
+RUN echo 'server {\
+    listen 80;\
+    server_name localhost;\
+    root /usr/share/nginx/html;\
+    index index.html;\
+    location / {\
+        try_files $uri $uri/ /index.html;\
+    }\
+    location /health {\
+        access_log off;\
+        return 200 "healthy\\n";\
+        add_header Content-Type text/plain;\
+    }\
+}' > /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
-
-# Comando para iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]

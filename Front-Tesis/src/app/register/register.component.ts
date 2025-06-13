@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
@@ -12,10 +12,32 @@ import { User } from '../models/user.model';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+
+  // Listener para mensajes del popup de términos
+  private messageListener = (event: MessageEvent) => {
+    // Verificar que el mensaje venga del origen correcto
+    if (event.origin !== window.location.origin) return;
+    
+    if (event.data.type === 'TERMS_ACCEPTED' && event.data.accepted) {
+      // Marcar el checkbox de términos como aceptado
+      this.registerForm.patchValue({ terms: true });
+      console.log('Términos aceptados desde popup');
+    }
+  };
+
+  ngOnInit() {
+    // Escuchar mensajes del popup de términos
+    window.addEventListener('message', this.messageListener);
+  }
+
+  ngOnDestroy() {
+    // Limpiar el listener
+    window.removeEventListener('message', this.messageListener);
+  }
 
   // Validador personalizado para confirmar contraseña
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -37,7 +59,8 @@ export class RegisterComponent {
     confirmPassword: ['', Validators.required],
     phone: ['', Validators.required],
     numberDocument: ['', Validators.required],
-    birthday: [null, Validators.required]
+    birthday: [null, Validators.required],
+    terms: [false, Validators.requiredTrue]
   }, { validators: this.passwordMatchValidator });
   
   errorMessage: string = '';
@@ -94,5 +117,9 @@ export class RegisterComponent {
       console.error('Exception during user creation:', error);
       this.errorMessage = 'Error al procesar el formulario: ' + (error.message || 'Error desconocido');
     }
+  }
+
+  openTerms() {
+    window.open('/terminos', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
   }
 }

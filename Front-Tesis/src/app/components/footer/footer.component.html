@@ -1,37 +1,45 @@
 <!-- footer.component.html -->
 
-<!-- FAQ Section -->
-<section class="faq-section">
-  <div class="container">
-    <div class="faq-header">
-      <h2 class="section-title">Preguntas Frecuentes</h2>
-      <p class="section-subtitle">
-        Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios
-      </p>
-    </div>
-
-    <div class="faq-grid">
-      @for (faq of faqItems; track faq.id) {
-        <div class="faq-item" [class.active]="faq.isOpen">
-          <button class="faq-question" (click)="toggleFAQ(faq.id)">
-            <span>{{ faq.question }}</span>
-            <span class="faq-icon" [class.rotated]="faq.isOpen">+</span>
-          </button>
-          
-          @if (faq.isOpen) {
-            <div class="faq-answer">
-              <p>{{ faq.answer }}</p>
-            </div>
-          }
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- Footer -->
+<!-- Footer Principal -->
 <footer class="footer">
   <div class="container">
+    <!-- FAQ Modal/Section (se muestra solo cuando showFAQ es true) -->
+    @if (showFAQ) {
+      <div class="faq-modal-overlay" (click)="hideFAQ()" (keydown)="onKeyDown($event)" tabindex="0">>
+        <div class="faq-modal" (click)="$event.stopPropagation()">
+          <div class="faq-header">
+            <h2 class="faq-title">Preguntas Frecuentes</h2>
+            <button class="faq-close-btn" (click)="hideFAQ()">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+          
+          <div class="faq-content">
+            <p class="faq-subtitle">
+              Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios
+            </p>
+            
+            <div class="faq-list">
+              @for (faq of faqItems; track faq.id) {
+                <div class="faq-item" [class.active]="faq.isOpen">
+                  <button class="faq-question" (click)="toggleFAQ(faq.id)">
+                    <span>{{ faq.question }}</span>
+                    <span class="faq-icon" [class.rotated]="faq.isOpen">+</span>
+                  </button>
+                  
+                  @if (faq.isOpen) {
+                    <div class="faq-answer">
+                      <p>{{ faq.answer }}</p>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- Footer Content -->
     <div class="footer-content">
       <!-- Company Info -->
@@ -42,10 +50,9 @@
           Calidad, estilo y tendencia en un solo lugar.
         </p>
         <div class="social-icons">
-          <a href="#" class="social-icon" title="Facebook">📘</a>
-          <a href="#" class="social-icon" title="Instagram">📷</a>
-          <a href="#" class="social-icon" title="Twitter">🐦</a>
-          <a href="#" class="social-icon" title="YouTube">📺</a>
+          <a href="{{facebookUrl}}" class="social-icon" title="Facebook">📘</a>
+          <a href="{{instagramUrl}}" class="social-icon" title="Instagram">📷</a>
+          <a href="{{twitterUrl}}" class="social-icon" title="Twitter">🐦</a>
         </div>
       </div>
 
@@ -66,7 +73,7 @@
       <div class="footer-column">
         <h3 class="footer-title">Atención al Cliente</h3>
         <ul class="footer-links">
-          <li><a href="#faq">Preguntas Frecuentes</a></li>
+          <li><a href="#" (click)="showFAQModal(); $event.preventDefault()">Preguntas Frecuentes</a></li>
           <li><a href="#devoluciones">Política de Devoluciones</a></li>
           <li><a href="#talles">Guía de Talles</a></li>
           <li><a href="#pagos">Métodos de Pago</a></li>
@@ -81,11 +88,11 @@
         <div class="contact-info">
           <div class="contact-item">
             <span class="contact-icon">📍</span>
-            <span>Córdoba, Argentina</span>
+            <span>{{ direccionTienda }}</span>
           </div>
           <div class="contact-item">
             <span class="contact-icon">📞</span>
-            <span>+54 351 123-4567</span>
+            <span>{{ telefonoTienda }}</span>
           </div>
           <div class="contact-item">
             <span class="contact-icon">✉️</span>
@@ -93,13 +100,13 @@
           </div>
           <div class="contact-item">
             <span class="contact-icon">🕒</span>
-            <span>Lun - Vie: 9:00 - 18:00</span>
+            <span>{{ horarioAtencion }}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Newsletter -->
+    <!-- Newsletter Section -->
     <div class="newsletter-section">
       <h3 class="newsletter-title">📧 Suscríbete a nuestro Newsletter</h3>
       <p class="newsletter-description">
@@ -111,6 +118,7 @@
           [(ngModel)]="email"
           placeholder="tu.email@ejemplo.com"
           class="newsletter-input"
+          (keypress)="onNewsletterKeyPress($event)"
         />
         <button 
           class="newsletter-btn" 
@@ -125,12 +133,10 @@
     <!-- Copyright -->
     <div class="footer-bottom">
       <div class="copyright">
-        <span>© 2025 TIENDA. Todos los derechos reservados.</span>
+        <span> © {{ currentYear }} TIENDA. Todos los derechos reservados.</span>
       </div>
       <div class="footer-legal">
         <a href="#privacy">Política de Privacidad</a>
-        <a href="#terms">Términos de Uso</a>
-        <a href="#cookies">Cookies</a>
       </div>
     </div>
   </div>

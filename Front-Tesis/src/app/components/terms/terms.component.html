@@ -1,0 +1,387 @@
+<!-- terminos.component.html -->
+<div class="container-fluid bg-light min-vh-100">
+  
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-bottom sticky-top">
+    <div class="container">
+      <div class="row align-items-center py-3">
+        <div class="col-auto">
+          <button 
+            class="btn btn-outline-secondary btn-sm" 
+            (click)="goBack()"
+            title="Volver atrás"
+          >
+            <i class="fas fa-arrow-left me-2"></i>Volver
+          </button>
+        </div>
+        
+        <div class="col text-center">
+          <h1 class="h3 mb-0 fw-bold text-primary">Términos y Condiciones</h1>
+        </div>
+        
+        <div class="col-auto">
+          <div class="btn-group">
+            <button 
+              class="btn btn-outline-info btn-sm" 
+              (click)="printPage()"
+              title="Imprimir página"
+            >
+              <i class="fas fa-print me-1"></i>Imprimir
+            </button>
+            
+            <button 
+              class="btn btn-outline-danger btn-sm" 
+              (click)="closeWindow()"
+              title="Cerrar"
+            >
+            <i class="bi bi-x-circle-fill"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        
+        <!-- Info de versión -->
+        <div class="alert alert-info d-flex align-items-center mb-4">
+          <i class="fas fa-info-circle me-2"></i>
+          <small>
+            <strong>Última actualización:</strong> {{ getCurrentDate() }} | 
+            <strong>Versión:</strong> 1.0
+          </small>
+        </div>
+
+        <!-- Contenido de Términos -->
+        <div class="bg-white rounded shadow-sm p-4">
+          
+          <!-- Generalidades -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-clipboard-list me-2"></i>
+              Generalidades sobre los Términos de Servicio
+            </h2>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item px-0 border-0">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Permiso para utilizar el Servicio
+              </li>
+              <li class="list-group-item px-0 border-0">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Reserva de derechos
+              </li>
+              <li class="list-group-item px-0 border-0">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Descripción del Servicio
+              </li>
+            </ul>
+          </div>
+
+          <!-- Bienvenida -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-store me-2"></i>
+              Bienvenido a Mi Tienda Online
+            </h2>
+            <div class="text-muted">
+              <p class="lead">
+                Bienvenido a <strong class="text-dark">Mi Tienda Online</strong> (tesis) proporcionado por 
+                <strong class="text-primary">BellaTech</strong> (Proyecto de Tesis). 
+                Nos complace ofrecerle acceso al Servicio (como se define más abajo), sujeto a estos 
+                términos y condiciones (los "Términos de Servicio") y a la Política de Privacidad 
+                correspondiente de BellaTech.
+              </p>
+              
+              <p>
+                Al acceder y utilizar el Servicio, usted expresa su consentimiento, acuerdo y 
+                entendimiento de los Términos de Servicio y la Política de Privacidad. Si no está 
+                de acuerdo con los Términos de Servicio o la Política de Privacidad, no utilice el Servicio.
+              </p>
+
+              <p>
+                Si utiliza el servicio está aceptando las modalidades operativas en vigencia descriptas más 
+                adelante, las declara conocer y aceptar, las que se habiliten en el futuro y en los términos y 
+                condiciones que a continuación se detallan:
+              </p>
+            </div>
+          </div>
+
+          <!-- Operaciones habilitadas -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-cogs me-2"></i>
+              Operaciones Habilitadas
+            </h2>
+            <p class="text-muted mb-4">
+              Las operaciones habilitadas son aquellas que estarán disponibles para los clientes, 
+              quienes deberán cumplir los requisitos que se encuentren vigentes en su momento para 
+              operar el Servicio. Las mismas podrán ser ampliadas o restringidas por el proveedor, 
+              comunicándolo previamente con una antelación no menor a 60 días.
+            </p>
+            
+            <div class="card border-0 bg-light">
+              <div class="card-body">
+                <h5 class="card-title text-secondary mb-3">
+                  <i class="fas fa-list-ul me-2"></i>
+                  Operaciones disponibles:
+                </h5>
+                <div class="row">
+                  <div class="col-md-6">
+                    <ul class="list-unstyled">
+                      <li class="mb-2">
+                        <i class="fas fa-user-plus text-primary me-2"></i>
+                        Registro de usuario con datos personales
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-search text-primary me-2"></i>
+                        Navegación y búsqueda de productos
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-tags text-primary me-2"></i>
+                        Selección por categorías (Jeans, Remeras, Vestidos)
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-filter text-primary me-2"></i>
+                        Filtrado por marca (Nike, Adidas, Puma, etc.)
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <ul class="list-unstyled">
+                      <li class="mb-2">
+                        <i class="fas fa-shopping-cart text-primary me-2"></i>
+                        Gestión de carrito de compras
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-credit-card text-primary me-2"></i>
+                        Proceso de checkout y compra
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-money-bill text-primary me-2"></i>
+                        Selección de métodos de pago
+                      </li>
+                      <li class="mb-2">
+                        <i class="fas fa-receipt text-primary me-2"></i>
+                        Generación de comprobantes
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transacciones -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-exchange-alt me-2"></i>
+              Transacciones
+            </h2>
+            <div class="text-muted">
+              <p>
+                En ningún caso debe entenderse que la solicitud de un producto o servicio implica obligación 
+                alguna para el Acceso y uso del Servicio.
+              </p>
+              
+              <p>
+                Para operar el Servicio se requerirá siempre que se trate de clientes de <strong class="text-dark">Mi Tienda Online</strong>, 
+                quienes podrán acceder mediante cualquier dispositivo con conexión a la Red Internet. El cliente 
+                deberá proporcionar el número de documento de identidad y la clave personal, que será provista por 
+                la aplicación como requisito previo a la primera operación.
+              </p>
+              
+              <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Importante:</strong> La clave personal tiene carácter de secreto e intransferible. 
+                BellaTech nunca solicitará información personal completa por email.
+              </div>
+            </div>
+          </div>
+
+          <!-- Costo del Servicio -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-dollar-sign me-2"></i>
+              Costo del Servicio
+            </h2>
+            <p class="text-muted mb-4">
+              La empresa BellaTech podrá cobrar comisiones por el mantenimiento y/o uso de este Servicio 
+              o los que en el futuro implemente, con comunicación previa de al menos 60 días de antelación.
+            </p>
+
+            <h5 class="text-secondary mb-3">Métodos de pago disponibles:</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="card h-100 border-success">
+                  <div class="card-body text-center">
+                    <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
+                    <h6 class="card-title">Efectivo</h6>
+                    <p class="card-text small text-muted">Descuento del 15% sobre el total</p>
+                    <span class="badge bg-success">Descuento</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card h-100 border-info">
+                  <div class="card-body text-center">
+                    <i class="fas fa-university fa-2x text-info mb-3"></i>
+                    <h6 class="card-title">Transferencia Bancaria</h6>
+                    <p class="card-text small text-muted">Pago directo mediante transferencia</p>
+                    <span class="badge bg-info">Directo</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card h-100 border-warning">
+                  <div class="card-body text-center">
+                    <i class="fas fa-credit-card fa-2x text-warning mb-3"></i>
+                    <h6 class="card-title">Mercado Pago</h6>
+                    <p class="card-text small text-muted">Tarjetas de crédito y débito</p>
+                    <span class="badge bg-warning text-dark">Tarjetas</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vigencia -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-calendar-alt me-2"></i>
+              Vigencia
+            </h2>
+            <div class="text-muted">
+              <p>
+                El Usuario podrá dejar sin efecto la relación que surja de la presente, en forma inmediata, sin 
+                otra responsabilidad que la derivada de los gastos originados hasta ese momento.
+              </p>
+              
+              <p>
+                BellaTech podrá dejar sin efecto la relación con un preaviso mínimo de 60 días, 
+                sin otra responsabilidad.
+              </p>
+            </div>
+          </div>
+
+          <!-- Validez de operaciones -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-stamp me-2"></i>
+              Validez de Operaciones y Notificaciones
+            </h2>
+            <div class="text-muted">
+              <p>
+                Los registros emitidos por la app serán prueba suficiente de las operaciones cursadas. 
+                Se otorga a las notificaciones por este medio el mismo alcance de las notificaciones 
+                mediante documento escrito.
+              </p>
+            </div>
+          </div>
+
+          <!-- Propiedad intelectual -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-copyright me-2"></i>
+              Propiedad Intelectual
+            </h2>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>
+              El software en Argentina está protegido por la ley 11.723, que regula la propiedad intelectual 
+              y los derechos de autor de todos aquellos creadores de obras artísticas, literarias y científicas.
+            </div>
+          </div>
+
+          <!-- Privacidad -->
+          <div class="mb-4">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-shield-alt me-2"></i>
+              Privacidad de la Información
+            </h2>
+            <div class="text-muted">
+              <p>
+                Para utilizar los Servicios ofrecidos por <strong class="text-dark">BellaTech</strong>, los Usuarios deberán facilitar 
+                determinados datos de carácter personal. Su información se procesa y almacena en servidores 
+                con altos estándares de seguridad y protección física y tecnológica.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer fijo -->
+  <div class="bg-white shadow-lg border-top mt-5">
+    <div class="container py-4">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-lg-8">
+          
+          <!-- Checkbox de aceptación -->
+          <div class="d-flex align-items-center justify-content-center mb-3">
+            <div class="form-check form-check-lg">
+              <input 
+                type="checkbox" 
+                id="acceptTerms" 
+                [checked]="termsAccepted"
+                (change)="onTermsChange($event)"
+                class="form-check-input border-2"
+              >
+              <label for="acceptTerms" class="form-check-label fw-semibold">
+                He leído y acepto los términos y condiciones
+              </label>
+            </div>
+          </div>
+          
+             <!-- Enlaces y Acciones -->
+          <div class="text-center mb-3">
+            <div class="d-flex flex-column flex-md-row gap-2 justify-content-center align-items-center">
+              <a 
+                [routerLink]="['/privacidad']" 
+                class="btn btn-outline-primary btn-sm"
+                target="_blank"
+              >
+                <i class="fas fa-external-link-alt me-1"></i>
+                Ver Política de Privacidad
+              </a>
+              
+              <button 
+                class="btn btn-success btn-sm px-4" 
+                (click)="continuar()"
+                [disabled]="!termsAccepted"
+                [class.btn-secondary]="!termsAccepted"
+                [class.btn-success]="termsAccepted"
+              >
+                <i class="fas fa-arrow-right me-1"></i>
+                Continuar
+              </button>
+            </div>
+            
+            <div class="mt-2" *ngIf="!termsAccepted">
+              <small class="text-danger">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Debes aceptar los términos para continuar
+              </small>
+            </div>
+          </div>
+          <!-- Info legal -->
+          <div class="text-center">
+            <small class="text-muted">
+              <i class="fas fa-university me-1"></i>
+              Este documento cumple con los requisitos de la UTN para productos de software.
+              <br>
+              <i class="fas fa-gavel me-1"></i>
+              Basado en la Ley 11.723 de Propiedad Intelectual (Argentina)
+            </small>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

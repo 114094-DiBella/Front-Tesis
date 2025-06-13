@@ -14,6 +14,8 @@ import { ViewordersComponent } from './components/shoppingcart/vieworders/viewor
 import { NeworderComponent } from './components/shoppingcart/neworder/neworder.component';
 import { ReportesComponent } from './components/reportes/reportes.component';
 import { AuthGuard } from './components/guards/auth.guard';
+import { TermsComponent } from './components/terms/terms.component';
+import { PrivacidadComponent } from './components/privacidad/privacidad.component';
 
 export const routes: Routes = [
     // ✅ TIENDA PÚBLICA: Redirigir al store por defecto (acceso público)
@@ -43,6 +45,8 @@ export const routes: Routes = [
     
     // 🔧 OTRAS RUTAS DE ADMINISTRACIÓN
     { path: 'images', component: ImageUploadComponent, canActivate: [AuthGuard] },
+    { path: 'terminos', component: TermsComponent }, // Términos y condiciones (pública)
+    { path: 'privacidad', component: PrivacidadComponent }, // Política de privacidad (pública)
 
     // Cualquier ruta no encontrada redirige al store
     { path: '**', redirectTo: '/store' }

@@ -78,7 +78,17 @@
             <div *ngIf="registerForm.controls['birthday'].invalid && registerForm.controls['birthday'].touched" class="error-message">
               La fecha de nacimiento es requerida
             </div>
-          </div>          
+          </div>  
+          <div class="form-group">
+            <label for="terms">
+              <input type="checkbox" id="terms" formControlName="terms" class="form-check-input">
+              Acepto los <a href="/terminos" (click)="openTerms()" target="_blank">términos y condiciones</a>
+            </label>
+            <div *ngIf="registerForm.controls['terms'].invalid && registerForm.controls['terms'].touched" class="error-message">
+              Debes aceptar los términos y condiciones
+            </div>
+
+          </div>        
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="close()">Cancelar</button>
             <button type="button" class="btn btn-primary" (click)="createUser()">Crear Cuenta</button>

@@ -47,8 +47,13 @@
           <div class="item-subtotal-mobile">
             Subtotal: {{ formatPrice(item.subtotal) }}
           </div>
+          <div class="item-actions">
+            <button (click)="removeItem(item)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
         </div>
-        
+
       </div>
     }
   </div>

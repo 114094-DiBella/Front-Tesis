@@ -1,0 +1,588 @@
+<!-- privacidad.component.html -->
+<div class="container-fluid bg-light min-vh-100">
+  
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-bottom sticky-top">
+    <div class="container">
+      <div class="row align-items-center py-3">
+        <div class="col-auto">
+          <button 
+            class="btn btn-outline-secondary btn-sm" 
+            (click)="goBack()"
+            title="Volver atrás"
+          >
+            <i class="fas fa-arrow-left me-2"></i>Volver
+          </button>
+        </div>
+        
+        <div class="col text-center">
+          <h1 class="h3 mb-0 fw-bold text-primary">Protección de Datos Personales</h1>
+        </div>
+        
+        <div class="col-auto">
+          <div class="btn-group">
+            <button 
+              class="btn btn-outline-info btn-sm" 
+              (click)="printPage()"
+              title="Imprimir página"
+            >
+              <i class="fas fa-print me-1"></i>Imprimir
+            </button>
+            
+            <button 
+              class="btn btn-outline-danger btn-sm" 
+              (click)="closeWindow()"
+              title="Cerrar"
+              *ngIf="isPopup()"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        
+        <!-- Info de versión -->
+        <div class="alert alert-info d-flex align-items-center mb-4">
+          <i class="fas fa-info-circle me-2"></i>
+          <small>
+            <strong>Última actualización:</strong> {{ getCurrentDate() }} | 
+            <strong>Versión:</strong> 1.0 | 
+            <strong>Legislación:</strong> Ley 25.326 (Argentina)
+          </small>
+        </div>
+
+        <!-- Contenido de Política de Privacidad -->
+        <div class="bg-white rounded shadow-sm p-4">
+          
+          <!-- Definición y Derechos del Usuario -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-shield-alt me-2"></i>
+              Definición y Derechos del Usuario
+            </h2>
+            
+            <div class="card border-primary mb-3">
+              <div class="card-body">
+                <p class="card-text">
+                  <strong>Protección de datos personales:</strong> Es el derecho del usuario de una aplicación de software, 
+                  a decidir o autorizar de forma libre, previa, expresa e informada la recolección, uso o tratamiento de 
+                  los datos personales, así como de conocer, actualizar, rectificar, suprimir o controlar lo que se hace 
+                  con la información.
+                </p>
+              </div>
+            </div>
+            
+            <div class="alert alert-warning">
+              <i class="fas fa-mobile-alt me-2"></i>
+              <strong>Importante:</strong> Toda aplicación publicada y disponible para descargar, tiene que incluir 
+              una forma de que el usuario en caso de dejar de usar la app, pueda gestionar la eliminación de sus datos 
+              personales, capturados por la misma, además de la desinstalación.
+            </div>
+          </div>
+
+          <!-- Datos Personales Recopilados -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-clipboard-list me-2"></i>
+              Datos Personales Recopilados
+            </h2>
+            
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <div class="card h-100 border-info">
+                  <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                      <i class="fas fa-user me-2"></i>
+                      Datos de Registro y Cuenta
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Nombre y apellido</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Número de documento de identidad</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Correo electrónico</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Número de teléfono</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Fecha de nacimiento</strong></li>
+                      <li class="mb-0"><i class="fas fa-check text-info me-2"></i><strong>Contraseña</strong> (encriptada)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <div class="card h-100 border-success">
+                  <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                      <i class="fas fa-credit-card me-2"></i>
+                      Datos de Transacciones
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Productos comprados</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Montos de las transacciones</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Métodos de pago utilizados</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Fechas y horarios de las compras</strong></li>
+                      <li class="mb-0"><i class="fas fa-check text-success me-2"></i><strong>Comprobantes generados</strong></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <div class="card h-100 border-warning">
+                  <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">
+                      <i class="fas fa-chart-bar me-2"></i>
+                      Datos de Uso de la Aplicación
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2"><i class="fas fa-check text-warning me-2"></i><strong>Historial de navegación</strong> dentro de la aplicación</li>
+                      <li class="mb-2"><i class="fas fa-check text-warning me-2"></i><strong>Productos visualizados</strong></li>
+                      <li class="mb-2"><i class="fas fa-check text-warning me-2"></i><strong>Búsquedas realizadas</strong></li>
+                      <li class="mb-0"><i class="fas fa-check text-warning me-2"></i><strong>Tiempo de uso de la aplicación</strong></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Finalidad del Tratamiento de Datos -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-target me-2"></i>
+              Finalidad del Tratamiento de Datos
+            </h2>
+            <p class="text-muted mb-4">Los datos personales son utilizados para:</p>
+            
+            <div class="row g-3">
+              <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center p-3 bg-light rounded">
+                  <span class="badge bg-primary rounded-circle me-3 fs-6">1</span>
+                  <strong>Gestión de la cuenta de usuario</strong>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center p-3 bg-light rounded">
+                  <span class="badge bg-primary rounded-circle me-3 fs-6">2</span>
+                  <strong>Procesamiento de pedidos y transacciones</strong>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center p-3 bg-light rounded">
+                  <span class="badge bg-primary rounded-circle me-3 fs-6">3</span>
+                  <strong>Generación de comprobantes de compra</strong>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center p-3 bg-light rounded">
+                  <span class="badge bg-primary rounded-circle me-3 fs-6">4</span>
+                  <strong>Comunicación con el usuario</strong> sobre pedidos
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center p-3 bg-light rounded">
+                  <span class="badge bg-primary rounded-circle me-3 fs-6">5</span>
+                  <strong>Mejora del servicio</strong> mediante análisis de uso
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center p-3 bg-light rounded">
+                  <span class="badge bg-primary rounded-circle me-3 fs-6">6</span>
+                  <strong>Cumplimiento de obligaciones legales</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Base Legal para el Tratamiento -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-balance-scale me-2"></i>
+              Base Legal para el Tratamiento
+            </h2>
+            <p class="text-muted mb-4">El tratamiento de sus datos personales se fundamenta en:</p>
+            
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="card border-success h-100">
+                  <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                    <h5 class="card-title">Consentimiento expreso</h5>
+                    <p class="card-text">del usuario al aceptar estos términos</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-info h-100">
+                  <div class="card-body text-center">
+                    <i class="fas fa-file-contract fa-2x text-info mb-3"></i>
+                    <h5 class="card-title">Ejecución contractual</h5>
+                    <p class="card-text">para procesar compras y brindar servicios</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-warning h-100">
+                  <div class="card-body text-center">
+                    <i class="fas fa-university fa-2x text-warning mb-3"></i>
+                    <h5 class="card-title">Cumplimiento de obligaciones legales</h5>
+                    <p class="card-text">fiscales y contables</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-secondary h-100">
+                  <div class="card-body text-center">
+                    <i class="fas fa-lock fa-2x text-secondary mb-3"></i>
+                    <h5 class="card-title">Interés legítimo</h5>
+                    <p class="card-text">para la seguridad y mejora del servicio</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medidas de Seguridad -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-shield-alt me-2"></i>
+              Medidas de Seguridad
+            </h2>
+            
+            <div class="row g-4">
+              <div class="col-lg-6">
+                <div class="card border-primary h-100">
+                  <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                      <i class="fas fa-laptop me-2"></i>
+                      Protección Técnica
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2"><i class="fas fa-key text-primary me-2"></i><strong>Encriptación de contraseñas</strong> mediante algoritmos seguros</li>
+                      <li class="mb-2"><i class="fas fa-shield-alt text-primary me-2"></i><strong>Conexiones seguras HTTPS</strong> para todas las comunicaciones</li>
+                      <li class="mb-2"><i class="fas fa-user-lock text-primary me-2"></i><strong>Acceso restringido</strong> a los datos por personal autorizado</li>
+                      <li class="mb-2"><i class="fas fa-database text-primary me-2"></i><strong>Respaldos seguros</strong> de la información</li>
+                      <li class="mb-0"><i class="fas fa-sync-alt text-primary me-2"></i><strong>Actualizaciones regulares</strong> de seguridad del sistema</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="card border-secondary h-100">
+                  <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">
+                      <i class="fas fa-building me-2"></i>
+                      Protección Física
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2"><i class="fas fa-server text-secondary me-2"></i><strong>Servidores seguros</strong> con acceso controlado</li>
+                      <li class="mb-2"><i class="fas fa-lock text-secondary me-2"></i><strong>Medidas de protección</strong> contra accesos no autorizados</li>
+                      <li class="mb-0"><i class="fas fa-eye text-secondary me-2"></i><strong>Monitoreo continuo</strong> de la seguridad del sistema</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Derechos del Usuario -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-user-shield me-2"></i>
+              Sus Derechos
+            </h2>
+            <p class="text-muted mb-4"><strong>Usted tiene derecho a:</strong></p>
+            
+            <div class="row g-3">
+              <div class="col-md-6 col-lg-4">
+                <div class="card border-info h-100">
+                  <div class="card-body">
+                    <h6 class="card-title text-info">
+                      <i class="fas fa-search me-2"></i>
+                      Derecho de Acceso
+                    </h6>
+                    <ul class="list-unstyled small mb-0">
+                      <li class="mb-1"><strong>Conocer qué datos</strong> personales tenemos sobre usted</li>
+                      <li><strong>Solicitar una copia</strong> de su información personal</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="card border-warning h-100">
+                  <div class="card-body">
+                    <h6 class="card-title text-warning">
+                      <i class="fas fa-edit me-2"></i>
+                      Derecho de Rectificación
+                    </h6>
+                    <ul class="list-unstyled small mb-0">
+                      <li class="mb-1"><strong>Corregir datos incorrectos</strong> o desactualizados</li>
+                      <li><strong>Completar información</strong> incompleta</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="card border-danger h-100">
+                  <div class="card-body">
+                    <h6 class="card-title text-danger">
+                      <i class="fas fa-trash me-2"></i>
+                      Derecho de Supresión
+                    </h6>
+                    <ul class="list-unstyled small mb-0">
+                      <li class="mb-1"><strong>Solicitar la eliminación</strong> de sus datos personales</li>
+                      <li><strong>Derecho al olvido</strong> cuando los datos ya no sean necesarios</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="card border-success h-100">
+                  <div class="card-body">
+                    <h6 class="card-title text-success">
+                      <i class="fas fa-download me-2"></i>
+                      Derecho de Portabilidad
+                    </h6>
+                    <ul class="list-unstyled small mb-0">
+                      <li class="mb-1"><strong>Recibir sus datos</strong> en formato estructurado</li>
+                      <li><strong>Transferir sus datos</strong> a otro responsable</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="card border-secondary h-100">
+                  <div class="card-body">
+                    <h6 class="card-title text-secondary">
+                      <i class="fas fa-ban me-2"></i>
+                      Derecho de Oposición
+                    </h6>
+                    <ul class="list-unstyled small mb-0">
+                      <li class="mb-1"><strong>Oponerse al tratamiento</strong> de sus datos</li>
+                      <li><strong>Retirar el consentimiento</strong> en cualquier momento</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Procedimiento para Ejercer sus Derechos -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-clipboard-check me-2"></i>
+              Procedimiento para Ejercer sus Derechos
+            </h2>
+            
+            <div class="row g-3">
+              <div class="col-md-6 col-lg-3">
+                <div class="card border-primary h-100 text-center">
+                  <div class="card-body">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                      <strong>1</strong>
+                    </div>
+                    <h6 class="card-title">Envíe su solicitud</h6>
+                    <p class="card-text small">por correo electrónico a: <strong>{{ mailTienda }}</strong></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-3">
+                <div class="card border-info h-100 text-center">
+                  <div class="card-body">
+                    <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                      <strong>2</strong>
+                    </div>
+                    <h6 class="card-title">Incluya información:</h6>
+                    <ul class="list-unstyled small text-start">
+                      <li>• Nombre completo y documento</li>
+                      <li>• Descripción de su solicitud</li>
+                      <li>• Copia del documento de identidad</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-3">
+                <div class="card border-success h-100 text-center">
+                  <div class="card-body">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                      <strong>3</strong>
+                    </div>
+                    <h6 class="card-title">Plazo de respuesta:</h6>
+                    <p class="card-text"><strong>Máximo 10 días hábiles</strong></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-3">
+                <div class="card border-warning h-100 text-center">
+                  <div class="card-body">
+                    <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                      <strong>4</strong>
+                    </div>
+                    <h6 class="card-title">Sin costo:</h6>
+                    <p class="card-text">El ejercicio de estos derechos es <strong>completamente gratuito</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Eliminación de Cuenta y Datos -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-user-times me-2"></i>
+              Eliminación de Cuenta y Datos
+            </h2>
+            
+            <div class="row g-4 mb-4">
+              <div class="col-lg-6">
+                <div class="card border-success h-100">
+                  <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                      <i class="fas fa-mobile-alt me-2"></i>
+                      Desde la Aplicación
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ol class="mb-0">
+                      <li>Acceder a <strong>"Mi Perfil"</strong> en la aplicación</li>
+                      <li>Seleccionar <strong>"Configuración de Cuenta"</strong></li>
+                      <li>Elegir <strong>"Eliminar Cuenta"</strong></li>
+                      <li>Confirmar la eliminación mediante contraseña</li>
+                      <li>Confirmar definitivamente la eliminación</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="card border-info h-100">
+                  <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                      <i class="fas fa-envelope me-2"></i>
+                      Por Contacto Directo
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ol class="mb-0">
+                      <li>Enviar solicitud de eliminación a nuestro email de soporte</li>
+                      <li>Proporcionar datos de identificación para verificar identidad</li>
+                      <li>Confirmar la eliminación de forma expresa</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-4">
+              <div class="col-lg-6">
+                <div class="card border-success h-100">
+                  <div class="card-header bg-success text-white">
+                    <h6 class="card-title mb-0">
+                      <i class="fas fa-check-circle me-2"></i>
+                      Qué se Elimina
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2"><i class="fas fa-trash text-success me-2"></i><strong>Datos de identificación personal</strong></li>
+                      <li class="mb-2"><i class="fas fa-trash text-success me-2"></i><strong>Historial de navegación y uso</strong></li>
+                      <li class="mb-2"><i class="fas fa-trash text-success me-2"></i><strong>Preferencias y configuraciones</strong></li>
+                      <li class="mb-0"><i class="fas fa-trash text-success me-2"></i><strong>Datos de contacto</strong></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="card border-warning h-100">
+                  <div class="card-header bg-warning text-dark">
+                    <h6 class="card-title mb-0">
+                      <i class="fas fa-balance-scale me-2"></i>
+                      Qué se Conserva (por obligación legal)
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                      <li class="mb-2"><i class="fas fa-archive text-warning me-2"></i><strong>Datos de transacciones</strong> (ley fiscal - 10 años)</li>
+                      <li class="mb-2"><i class="fas fa-archive text-warning me-2"></i><strong>Comprobantes de compra</strong> (obligación contable)</li>
+                      <li class="mb-0"><i class="fas fa-archive text-warning me-2"></i><strong>Registros de seguridad</strong> (sin datos identificatorios)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Autoridad de Control -->
+          <div class="mb-5 pb-3 border-bottom">
+            <h2 class="h4 text-primary mb-3">
+              <i class="fas fa-university me-2"></i>
+              Autoridad de Control
+            </h2>
+            <p class="text-muted mb-4">Puede presentar reclamos ante:</p>
+            
+            <div class="card border-primary">
+              <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Agencia de Acceso a la Información Pública (AAIP)</h5>
+              </div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-globe text-primary me-2"></i>
+                      <div>
+                        <strong>Sitio web:</strong><br>
+                        <small>www.argentina.gob.ar/aaip</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-envelope text-primary me-2"></i>
+                      <div>
+                        <strong>Email:</strong><br>
+                        <small>{{ emailAAIP }}</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-phone text-primary me-2"></i>
+                      <div>
+                        <strong>Teléfono:</strong><br>
+                        <small>0800-222-DATO (3286)</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

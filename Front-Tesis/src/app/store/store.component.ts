@@ -13,7 +13,11 @@ import { CategoryService } from '../services/category.services';
 export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
   products: Product[] = [];
   featuredCategories: Category[] = [];
-  
+  lowPriceHero : number = 20000.00; // Precio mínimo para el hero
+  heroTitle: string = 'Moda y Estilo';
+  heroSubtitle: string = 'Nueva colección de otoño 2025';
+  heroDescription: string = 'Explora nuestra colección de productos destacados y encuentra lo que amas.';
+
   @ViewChild('productCarousel') productCarousel!: ElementRef<HTMLDivElement>;
   @ViewChild('categoryCarousel') categoryCarousel!: ElementRef<HTMLDivElement>;
   
@@ -28,8 +32,8 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     'Remeras': '/images/remeras.jpg',
     'Vestidos': '/images/vestidos.jpg',
     'Casual': '/images/casual.jpg',
-    'Abrigos': '/images/abrigos.jpg',
-    'Sweaters': '/images/sweaters.jpg',
+    'Abrigos': '/images/abrigos.jpeg',
+    'Sweaters': '/images/sweeater.jpg',
     'Pantalones': '/images/pantalones.jpg',
     'Camisas': '/images/camisas.jpg',
     'Chombas': '/images/chombas.jpg',
@@ -265,7 +269,19 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   viewProducts(category: Category) {
+    console.log('Navegando a productos con categoría:', category);
+    // Opción 1: Usar la ruta con parámetro que ya tienes configurada
     this.router.navigate(['/products', category.id]);
+    
+    // Opción 2: Si prefieres query params, descomenta esto y comenta la línea anterior:
+    // this.router.navigate(['/products'], { queryParams: { categoryId: category.id } });
+  }
+
+  // Filtrar productos por texto de búsqueda
+  filterProducts(searchText: string) {
+    console.log('Filtrando productos por:', searchText);
+    // Navegar a productos con parámetro de búsqueda
+    this.router.navigate(['/products'], { queryParams: { search: searchText } });
   }
 
   viewDetails(product: Product) {

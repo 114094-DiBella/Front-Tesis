@@ -182,4 +182,160 @@ export class FooterComponent implements OnDestroy {
     // Restaurar scroll del body si el componente se destruye con el modal abierto
     document.body.style.overflow = 'auto';
   }
+
+  showPrivacyPolicy(): void {
+    window.open('/privacidad', '_blank', 'width=800,height=600');
+  }
+
+  // Reemplaza los métodos existentes por estos:
+
+showDevolutionPolicy(): void {
+  this.faqItems = [
+    {
+      id: 1,
+      question: "¿Cuánto tiempo tengo para devolver un producto?",
+      answer: "Tienes 30 días desde la fecha de compra para realizar cambios o devoluciones.",
+      isOpen: false
+    },
+    {
+      id: 2,
+      question: "¿En qué estado debe estar el producto para devolverlo?",
+      answer: "El producto debe estar en perfecto estado, sin uso y con todas las etiquetas originales.",
+      isOpen: false
+    },
+    {
+      id: 3,
+      question: "¿Necesito el comprobante de compra?",
+      answer: "Sí, es obligatorio presentar el comprobante de compra o boleta para procesar la devolución.",
+      isOpen: false
+    },
+    {
+      id: 4,
+      question: "¿Hay productos que no se pueden devolver?",
+      answer: "No se pueden devolver productos de uso íntimo, productos personalizados o productos en oferta especial.",
+      isOpen: false
+    }
+  ];
+  this.showFAQModal();
+}
+
+showSizeGuide(): void {
+  this.faqItems = [
+    {
+      id: 1,
+      question: "¿Cómo debo tomar mis medidas?",
+      answer: "Usa una cinta métrica flexible. Mide contorno de pecho, cintura y cadera en ropa interior ajustada.",
+      isOpen: false
+    },
+    {
+      id: 2,
+      question: "¿Qué talle debo elegir si estoy entre dos medidas?",
+      answer: "Recomendamos elegir el talle mayor para mayor comodidad, especialmente en prendas ajustadas.",
+      isOpen: false
+    },
+    {
+      id: 3,
+      question: "¿Las medidas son las mismas para todas las marcas?",
+      answer: "No, cada marca puede tener ligeras variaciones. Siempre consulta la tabla específica de cada producto.",
+      isOpen: false
+    },
+    {
+      id: 4,
+      question: "¿Puedo cambiar si el talle no me queda bien?",
+      answer: "Sí, puedes cambiar por otro talle dentro de los 30 días, siempre que el producto esté sin uso.",
+      isOpen: false
+    }
+  ];
+  this.showFAQModal();
+}
+
+showPaymentMethods(): void {
+  this.faqItems = [
+    {
+      id: 1,
+      question: "¿Qué métodos de pago aceptan?",
+      answer: "Aceptamos efectivo, tarjetas de crédito y débito (Visa, Mastercard), transferencias bancarias y MercadoPago.",
+      isOpen: false
+    },
+    {
+      id: 2,
+      question: "¿Puedo pagar en cuotas?",
+      answer: "Sí, con tarjetas de crédito puedes pagar hasta en 6 cuotas sin interés, o más cuotas con interés según tu banco.",
+      isOpen: false
+    },
+    {
+      id: 3,
+      question: "¿Es seguro pagar con tarjeta?",
+      answer: "Absolutamente. Usamos sistemas de encriptación seguros y no almacenamos datos de tarjetas.",
+      isOpen: false
+    },
+    {
+      id: 4,
+      question: "¿Puedo pagar contraentrega?",
+      answer: "Actualmente solo aceptamos pago al momento del retiro en tienda, no ofrecemos contraentrega.",
+      isOpen: false
+    }
+  ];
+  this.showFAQModal();
+}
+
+showContactInfo(): void {
+  this.faqItems = [
+    {
+      id: 1,
+      question: "¿Cuál es la dirección de la tienda?",
+      answer: "Nos encontramos en Tomas de Archondo 2877 Yofre Norte, Córdoba, Argentina.",
+      isOpen: false
+    },
+    {
+      id: 2,
+      question: "¿Cuáles son los horarios de atención?",
+      answer: "Atendemos de Lunes a Sábados: 9:00 - 13:00 y 17:00 - 21:00. Domingos cerrado.",
+      isOpen: false
+    },
+    {
+      id: 3,
+      question: "¿Cómo puedo contactarlos por WhatsApp?",
+      answer: "Nuestro WhatsApp es +351 6533654. Respondemos consultas en horario comercial.",
+      isOpen: false
+    },
+    {
+      id: 4,
+      question: "¿Tienen email de contacto?",
+      answer: "Sí, puedes escribirnos a info@tienda.com para consultas generales o reclamos.",
+      isOpen: false
+    }
+  ];
+  this.showFAQModal();
+}
+
+showTermsAndConditions(): void {
+  this.faqItems = [
+    {
+      id: 1,
+      question: "¿Qué acepto al comprar en la tienda?",
+      answer: "Al comprar aceptas nuestros precios, política de devoluciones, términos de garantía y uso responsable de nuestros servicios.",
+      isOpen: false
+    },
+    {
+      id: 2,
+      question: "¿Los precios pueden cambiar?",
+      answer: "Sí, los precios están sujetos a cambios sin previo aviso. El precio válido es el mostrado al momento de la compra.",
+      isOpen: false
+    },
+    {
+      id: 3,
+      question: "¿Qué pasa si hay un problema con mi compra?",
+      answer: "Contactanos inmediatamente. Evaluaremos cada caso y buscaremos la mejor solución según nuestros términos.",
+      isOpen: false
+    },
+    {
+      id: 4,
+      question: "¿Cómo manejan mis datos personales?",
+      answer: "Protegemos tu información personal y solo la usamos para procesar compras y comunicaciones relacionadas.",
+      isOpen: false
+    }
+  ];
+  this.showFAQModal();
+}
 }

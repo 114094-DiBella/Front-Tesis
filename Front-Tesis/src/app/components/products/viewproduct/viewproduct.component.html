@@ -33,7 +33,7 @@
         </select>
         
         <button class="reset-filter-btn" (click)="resetFilters()" title="Restablecer filtros">
-          <i class="fas fa-undo"></i>
+          <i class="bi bi-trash-fill"></i> 
         </button>
       </div>
     </div>
@@ -151,7 +151,13 @@
       <div class="no-products">
         <i class="fas fa-shopping-bag"></i>
         <p>No hay productos disponibles</p>
-        <button class="btn-add-first" (click)="onAddProduct()">Añadir nuevo producto</button>
+        @if (isAdmin) {
+          <p>Como administrador, puedes añadir nuevos productos.</p>
+          <p>Haz clic en el botón "Añadir nuevo producto" para comenzar.</p>
+        } @else {
+          <p>Vuelve más tarde para ver nuevos productos.</p>
+        }
+
       </div>
     }
   </div>
@@ -166,9 +172,11 @@
   }
   
   <!-- Controles de administrador -->
-  <div class="admin-controls">
-    <button class="add-product-btn" (click)="onAddProduct()">
-      <i class="fas fa-plus"></i> Añadir Nuevo Producto
-    </button>
-  </div>
+  @if (isAdmin) {
+    <div class="admin-controls">
+      <button class="add-product-btn" (click)="onAddProduct()">
+        <i class="fas fa-plus"></i> Añadir Nuevo Producto
+      </button>
+    </div>
+  }
 </div>

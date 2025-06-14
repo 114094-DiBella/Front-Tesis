@@ -45,37 +45,89 @@ export class ViewproductComponent implements OnInit {
   ) {
     this.filterForm = this.createFilterForm();
   }
-  
   ngOnInit(): void {
     this.isLoading = true;
-    
+     this.checkAdminStatus(); 
     // Primero cargar las categorías
     this.loadCategories().then(() => {
-      // Después, examinar los parámetros de la ruta
-      this.route.params.subscribe(params => {
-        const categoryId = params['id'];
-        console.log('ID de categoría desde URL:', categoryId);
+      // Cargar productos primero
+      this.getAllProductsSync().then(() => {
+        // Una vez que los productos están cargados, procesar parámetros
+        this.processRouteParams();
         
-        if (categoryId) {
-          // Si hay un ID de categoría en la URL, aplicarlo al formulario
-          this.selectedCategory = categoryId;
-          this.filterForm.patchValue({
-            categoryId: categoryId
-          });
-          console.log('Formulario actualizado con categoría:', this.filterForm.value);
-        }
-        
-        // Finalmente, cargar todos los productos
-        this.getAllProducts();
+        // Suscribirse a los cambios en el formulario de filtros
+        this.filterForm.valueChanges.subscribe(filters => {
+          console.log('Formulario cambió:', filters);
+          this.applyFilters();
+        });
       });
     });
-    
-    // Suscribirse a los cambios en el formulario de filtros
-    this.filterForm.valueChanges.subscribe(filters => {
-      console.log('Formulario cambió:', filters);
-      this.applyFilters();
+  }
+
+  // Nuevo método para cargar productos de forma sincrónica
+  private getAllProductsSync(): Promise<void> {
+    return new Promise((resolve) => {
+      this.productService.getAllProducts().subscribe({
+        next: (products) => {
+          this.products = products;
+          this.filteredProducts = [...this.products];
+          console.log('Productos cargados:', this.products);
+          this.isLoading = false;
+          resolve();
+        },
+        error: (error) => {
+          console.error('Error al cargar productos:', error);
+          this.errorMessage = 'Error al cargar productos. Por favor, intente de nuevo.';
+          this.isLoading = false;
+          resolve();
+        }
+      });
     });
   }
+
+  // Método para procesar todos los parámetros de ruta
+  private processRouteParams(): void {
+    // Procesar parámetros de ruta (para categorías)
+    this.route.params.subscribe(params => {
+      const categoryId = params['id'];
+      console.log('ID de categoría desde URL:', categoryId);
+      
+      if (categoryId) {
+        this.filterForm.patchValue({ categoryId: categoryId }, { emitEvent: false });
+      }
+      
+      // Procesar query params después de los parámetros de ruta
+      this.processQueryParams();
+    });
+  }
+
+  // Método para procesar query params
+  private processQueryParams(): void {
+    this.route.queryParams.subscribe(queryParams => {
+      console.log('Query params recibidos:', queryParams);
+      
+      const updates: any = {};
+      
+      if (queryParams['search']) {
+        console.log('Aplicando búsqueda desde query:', queryParams['search']);
+        updates.searchTerm = queryParams['search'];
+      }
+      
+      if (queryParams['categoryId']) {
+        console.log('Aplicando categoría desde query:', queryParams['categoryId']);
+        updates.categoryId = queryParams['categoryId'];
+      }
+      
+      // Aplicar todos los updates de una vez
+      if (Object.keys(updates).length > 0) {
+        this.filterForm.patchValue(updates);
+      } else {
+        // Si no hay parámetros, aplicar filtros con los valores actuales
+        this.applyFilters();
+      }
+    });
+  } 
+
   
   createFilterForm(): FormGroup {
     return this.fb.group({
@@ -266,4 +318,15 @@ export class ViewproductComponent implements OnInit {
   isActive(product: Product): boolean {
     return !!product.active && product.active === true;
   }
+
+  private checkAdminStatus(): void {
+  // Obtener el rol del usuario desde localStorage
+  const userRole = localStorage.getItem('userRole');
+  this.isAdmin = userRole === 'ADMIN';
+  
+  console.log('Estado de admin verificado:', {
+    userRole: userRole,
+    isAdmin: this.isAdmin
+  });
+}
 }

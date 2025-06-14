@@ -31,28 +31,38 @@
         </div>
         
         <div class="item-details">
-          <h3 class="item-name">{{ item.product.name }}</h3>
-          <div class="item-specs">
-            @if (item.product.marca?.name) {
-              <span class="item-brand">{{ item.product.marca?.name }}</span>
-            }
-            @if (item.size) {
-              <span class="item-size">Talla: {{ item.size }}</span>
-            }
-            @if (item.color) {
-              <span class="item-color">Color: {{ item.color }}</span>
-            }
-          </div>
-          <div class="item-price">{{ formatPrice(item.product.price || 0) }}</div>
-          <div class="item-subtotal-mobile">
-            Subtotal: {{ formatPrice(item.subtotal) }}
-          </div>
-          <div class="item-actions">
-            <button (click)="removeItem(item)">
-              <i class="bi bi-trash"></i>
+            <h3 class="item-name">{{ item.product.name }}</h3>
+            <div class="item-specs">
+              @if (item.product.marca?.name) {
+                <span class="item-brand">{{ item.product.marca?.name }}</span>
+              }
+              @if (item.size) {
+                <span class="item-size">Talla: {{ item.size }}</span>
+              }
+              @if (item.color) {
+                <span class="item-color">Color: {{ item.color }}</span>
+              }
+            </div>
+            <div class="item-pricing">
+              <div class="item-price">{{ formatPrice(item.product.price || 0) }}</div>
+              <div class="item-subtotal">Subtotal: {{ formatPrice(item.subtotal) }}</div>
+              <div class="item-actions">
+                <button (click)="removeItem(item)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+        </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" (click)="decrementQuantity(item)" [disabled]="item.quantity <= 1">
+              -
+            </button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="incrementQuantity(item)">
+              +
             </button>
           </div>
-        </div>
+
 
       </div>
     }

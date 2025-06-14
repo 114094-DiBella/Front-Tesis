@@ -62,7 +62,6 @@
         <ul class="footer-links">
           <li><a routerLink="/store">Inicio</a></li>
           <li><a routerLink="/products">Productos</a></li>
-          <li><a href="#categories">Categorías</a></li>
           <li><a href="#ofertas">Ofertas</a></li>
           <li><a routerLink="/profile">Mi Cuenta</a></li>
           <li><a routerLink="/orders/new">Carrito</a></li>
@@ -74,11 +73,11 @@
         <h3 class="footer-title">Atención al Cliente</h3>
         <ul class="footer-links">
           <li><a href="#" (click)="showFAQModal(); $event.preventDefault()">Preguntas Frecuentes</a></li>
-          <li><a href="#devoluciones">Política de Devoluciones</a></li>
-          <li><a href="#talles">Guía de Talles</a></li>
-          <li><a href="#pagos">Métodos de Pago</a></li>
-          <li><a href="#contacto">Contacto</a></li>
-          <li><a href="#terminos">Términos y Condiciones</a></li>
+          <li><a href="#" (click)="showDevolutionPolicy(); $event.preventDefault()">Política de Devoluciones</a></li>
+          <li><a href="#" (click)="showSizeGuide(); $event.preventDefault()">Guía de Talles</a></li>
+          <li><a href="#" (click)="showPaymentMethods(); $event.preventDefault()">Métodos de Pago</a></li>
+          <li><a href="#" (click)="showContactInfo(); $event.preventDefault()">Contacto</a></li>
+          <li><a href="#" (click)="showTermsAndConditions(); $event.preventDefault()">Términos y Condiciones</a></li>
         </ul>
       </div>
 
@@ -136,7 +135,7 @@
         <span> © {{ currentYear }} TIENDA. Todos los derechos reservados.</span>
       </div>
       <div class="footer-legal">
-        <a href="#privacy">Política de Privacidad</a>
+        <a (click)="showPrivacyPolicy()">Política de Privacidad</a>
       </div>
     </div>
   </div>

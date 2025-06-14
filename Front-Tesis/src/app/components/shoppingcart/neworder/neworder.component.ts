@@ -60,6 +60,15 @@ export class NeworderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscribeToCart();
     this.loadPaymentMethods();
+
+    console.log('🛒 Items del carrito:', this.cartItems);
+      this.cartItems.forEach((item, index) => {
+        console.log(`Item ${index}:`, {
+          product: item.product,
+          imageUrls: item.product?.imageUrls,
+          hasImages: item.product?.imageUrls?.length
+        });
+      });
   }
   
   ngOnDestroy(): void {

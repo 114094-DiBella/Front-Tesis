@@ -1,0 +1,263 @@
+<div class="categories-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">Gestión de Categorías</h1>
+    <p class="page-subtitle">Administra las categorías de productos de tu tienda</p>
+  </div>
+
+  <!-- Mensajes de estado -->
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <i class="bi bi-check-circle"></i>
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ errorMessage }}
+    </div>
+  }
+
+  <div class="content-grid">
+    <!-- Formulario -->
+    <div class="form-section">
+      <div class="form-card">
+        <div class="form-header">
+          <h2 class="form-title">
+            @if (isEditing) {
+              <i class="bi bi-pencil-square"></i> Editar Categoría
+            } @else {
+              <i class="bi bi-plus-circle"></i> Nueva Categoría
+            }
+          </h2>
+        </div>
+
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="category-form">
+          <!-- Campo Nombre -->
+          <div class="form-group">
+            <label for="name" class="form-label">
+              Nombre de la Categoría <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-input"
+              [class.error]="hasError('name')"
+              placeholder="Ej: Remeras, Pantalones, Vestidos..."
+              maxlength="50"
+            >
+            @if (hasError('name')) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-circle"></i>
+                {{ getErrorMessage('name') }}
+              </span>
+            }
+          </div>
+
+          <!-- Campo URL de Imagen -->
+          <div class="form-group">
+            <label for="image_url" class="form-label">
+              URL de Imagen <span class="optional">(opcional)</span>
+            </label>
+            <div class="image-input-group">
+              <input
+                type="url"
+                id="image_url"
+                formControlName="image_url"
+                class="form-input"
+                [class.error]="hasError('image_url')"
+                placeholder="https://ejemplo.com/imagen.jpg"
+              >
+              @if (categoryForm.get('image_url')?.value && isValidImageUrl(categoryForm.get('image_url')?.value)) {
+                <button
+                  type="button"
+                  class="preview-btn"
+                  (click)="previewImage(categoryForm.get('image_url')?.value)"
+                  title="Vista previa"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              }
+            </div>
+            @if (hasError('image_url')) {
+              <span class="error-message">
+                <i class="bi bi-exclamation-circle"></i>
+                {{ getErrorMessage('image_url') }}
+              </span>
+            }
+            <small class="form-hint">
+              <i class="bi bi-info-circle"></i>
+              Formatos admitidos: JPG, PNG, GIF, WebP
+            </small>
+          </div>
+
+          <!-- Vista previa de imagen -->
+          @if (categoryForm.get('image_url')?.value && isValidImageUrl(categoryForm.get('image_url')?.value)) {
+            <div class="image-preview">
+              <label class="form-label">Vista Previa:</label>
+              <div class="preview-container">
+                <img 
+                  [src]="categoryForm.get('image_url')?.value" 
+                  [alt]="categoryForm.get('name')?.value || 'Vista previa'"
+                  class="preview-image"
+                  >
+              </div>
+            </div>
+          }
+
+          <!-- Botones -->
+          <div class="form-actions">
+            @if (isEditing) {
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="cancelEdit()"
+                [disabled]="isSubmitting"
+              >
+                <i class="bi bi-x-circle"></i>
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="categoryForm.invalid || isSubmitting"
+              >
+                @if (isSubmitting) {
+                  <i class="bi bi-arrow-clockwise spin"></i>
+                  Actualizando...
+                } @else {
+                  <i class="bi bi-check-circle"></i>
+                  Actualizar Categoría
+                }
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="resetForm()"
+                [disabled]="isSubmitting"
+              >
+                <i class="bi bi-arrow-clockwise"></i>
+                Limpiar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="categoryForm.invalid || isSubmitting"
+              >
+                @if (isSubmitting) {
+                  <i class="bi bi-arrow-clockwise spin"></i>
+                  Creando...
+                } @else {
+                  <i class="bi bi-plus-circle"></i>
+                  Crear Categoría
+                }
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de categorías -->
+    <div class="list-section">
+      <div class="list-card">
+        <div class="list-header">
+          <h2 class="list-title">
+            <i class="bi bi-grid-3x3-gap"></i>
+            Categorías Registradas
+            <span class="count-badge">{{ categories.length }}</span>
+          </h2>
+        </div>
+
+        <!-- Loading -->
+        @if (isLoading) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Cargando categorías...</p>
+          </div>
+        }
+
+        <!-- Lista de categorías -->
+        @if (!isLoading && categories.length > 0) {
+          <div class="categories-list">
+            @for (category of categories; track category.id) {
+              <div class="category-item" [class.editing]="editingCategory?.id === category.id">
+                <div class="category-main">
+                  <!-- Imagen de categoría -->
+                  <div class="category-image">
+                    @if (category.image_url && isValidImageUrl(category.image_url)) {
+                      <img 
+                        [src]="category.image_url" 
+                        [alt]="category.name"
+                        class="category-img"
+                        
+                      >
+                    } @else {
+                      <div class="placeholder-image">
+                        <i class="bi bi-image"></i>
+                      </div>
+                    }
+                  </div>
+                  
+                  <!-- Info de categoría -->
+                  <div class="category-info">
+                    <div class="category-name">{{ category.name }}</div>
+                    <div class="category-id">ID: {{ category.id }}</div>
+                    @if (category.image_url) {
+                      <div class="category-url">
+                        <i class="bi bi-link-45deg"></i>
+                        <span>{{ category.image_url.length > 30 ? category.image_url.substring(0, 30) + '...' : category.image_url }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+                
+                <div class="category-actions">
+                  @if (category.image_url && isValidImageUrl(category.image_url)) {
+                    <button
+                      class="btn-icon btn-preview"
+                      (click)="previewImage(category.image_url!)"
+                      title="Vista previa"
+                      [disabled]="isSubmitting"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  }
+                  <button
+                    class="btn-icon btn-edit"
+                    (click)="editCategory(category)"
+                    title="Editar categoría"
+                    [disabled]="isSubmitting"
+                  >
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button
+                    class="btn-icon btn-delete"
+                    (click)="deleteCategory(category)"
+                    title="Eliminar categoría"
+                    [disabled]="isSubmitting"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Estado vacío -->
+        @if (!isLoading && categories.length === 0) {
+          <div class="empty-state">
+            <i class="bi bi-grid-3x3-gap empty-icon"></i>
+            <h3>No hay categorías registradas</h3>
+            <p>Comienza agregando tu primera categoría usando el formulario</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

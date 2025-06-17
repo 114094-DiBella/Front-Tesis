@@ -122,4 +122,90 @@ export class RegisterComponent implements OnInit, OnDestroy {
   openTerms() {
     window.open('/terminos', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
   }
+
+  // Solo permite letras básicas y espacios (SIN acentos ni ñ)
+  allowOnlyLetters(event: any) {
+    const value = event.target.value;
+    const filtered = value.replace(/[^a-zA-Z\s]/g, ''); // Sin acentos ni ñ
+    
+    if (value !== filtered) {
+      event.target.value = filtered;
+      this.updateFormControl(event.target.id, filtered);
+    }
+  }
+
+  // Solo permite números
+  allowOnlyNumbers(event: any) {
+    const value = event.target.value;
+    const filtered = value.replace(/[^0-9]/g, '');
+    
+    if (value !== filtered) {
+      event.target.value = filtered;
+      this.updateFormControl(event.target.id, filtered);
+    }
+  }
+
+  // Permite números, espacios, guiones, paréntesis y +
+  allowPhoneChars(event: any) {
+    const value = event.target.value;
+    const filtered = value.replace(/[^0-9\s\-\(\)\+]/g, '');
+    
+    if (value !== filtered) {
+      event.target.value = filtered;
+      this.updateFormControl(event.target.id, filtered);
+    }
+  }
+
+  // Previene teclas no permitidas
+  onKeyPress(event: KeyboardEvent, type: string) {
+    const char = event.key;
+    
+    if (type === 'numbers') {
+      if (!/[0-9]/.test(char) && !['Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight'].includes(char)) {
+        event.preventDefault();
+      }
+    }
+  }
+
+  // Maneja el pegado de contenido
+  onPaste(event: ClipboardEvent, type: string) {
+    event.preventDefault();
+    const clipboardData = event.clipboardData?.getData('text') || '';
+    let filtered = '';
+    
+    switch(type) {
+      case 'letters':
+        filtered = clipboardData.replace(/[^a-zA-Z\s]/g, ''); // Sin acentos ni ñ
+        break;
+      case 'numbers':
+        filtered = clipboardData.replace(/[^0-9]/g, '');
+        break;
+      case 'phone':
+        filtered = clipboardData.replace(/[^0-9\s\-\(\)\+]/g, '');
+        break;
+    }
+    
+    const target = event.target as HTMLInputElement;
+    target.value = filtered;
+    this.updateFormControl(target.id, filtered);
+  }
+
+    private updateFormControl(fieldId: string, value: string) {
+      const fieldMap: { [key: string]: string } = {
+        'name': 'name',
+        'lastName': 'lastName', 
+        'email': 'email',
+        'password': 'password',
+        'confirmPassword': 'confirmPassword',
+        'phone': 'phone',
+        'numberDocument': 'numberDocument',
+        'birthday': 'birthday',
+        'terms': 'terms'
+      };
+      
+      const controlName = fieldMap[fieldId];
+      if (controlName) {
+        (this.registerForm.controls as any)[controlName]?.setValue(value);
+      }
+    }
 }

@@ -24,7 +24,7 @@
       <a (click)="goToProfile()" style="cursor: pointer;">
         <i class="bi bi-person-fill"></i>
         @if (isLoggedIn) {
-          <span class="user-indicator">{{ userEmail.split('@')[0] }}</span>
+          <span class="user-indicator">{{ userName.split('@')[0] }}</span>
         }
       </a>
       

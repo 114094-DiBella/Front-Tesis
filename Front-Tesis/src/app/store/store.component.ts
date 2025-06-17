@@ -1,6 +1,5 @@
-import { Component, inject, ViewChild, ElementRef, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
 import { Category, Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.services';
@@ -10,23 +9,26 @@ import { CategoryService } from '../services/category.services';
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.css']
 })
-export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
+export class StoreComponent implements OnInit, OnDestroy {
+  // === DATOS === //
   products: Product[] = [];
   featuredCategories: Category[] = [];
-  lowPriceHero : number = 20000.00; // Precio mínimo para el hero
-  heroTitle: string = 'Moda y Estilo';
-  heroSubtitle: string = 'Nueva colección de otoño 2025';
-  heroDescription: string = 'Explora nuestra colección de productos destacados y encuentra lo que amas.';
+  lowPriceHero: number = 20000.00;
 
-  @ViewChild('productCarousel') productCarousel!: ElementRef<HTMLDivElement>;
+  // === CARRUSEL AUTO-SCROLL === //
+  currentCategoryIndex = 0;
+  autoScrollInterval: any;
+  isAutoScrollPaused = false;
+
+  // === VIEW CHILDREN === //
   @ViewChild('categoryCarousel') categoryCarousel!: ElementRef<HTMLDivElement>;
-  
+
+  // === SERVICIOS === //
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
   private router = inject(Router);
-  private fb = inject(FormBuilder);
 
-  // Mapeo de imágenes para categorías (ampliado)
+  // === MAPEO DE IMÁGENES === //
   private categoryImages: {[key: string]: string} = {
     'Jeans': '/images/jeans.jpg',
     'Remeras': '/images/remeras.jpg',
@@ -40,174 +42,30 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     'Camperas': '/images/camperas.jpg'
   };
 
-  // Variables para efectos modernos
-  private scrollListener?: () => void;
-  private intersectionObserver?: IntersectionObserver;
-  private isScrolling = false;
-
   constructor() { }
 
   ngOnInit(): void {
     this.getAllProducts();
     this.getFeaturedCategories();
-    this.initializeModernEffects();
-  }
-  
-  ngAfterViewInit(): void {
-    // Configuración adicional después de que la vista se ha iniciado
-    this.setupIntersectionObserver();
-    this.initializeCarouselEffects();
+    this.startAutoScroll();
   }
 
   ngOnDestroy(): void {
-    // Limpiar listeners y observers
-    if (this.scrollListener) {
-      window.removeEventListener('scroll', this.scrollListener);
-    }
-    if (this.intersectionObserver) {
-      this.intersectionObserver.disconnect();
-    }
+    this.stopAutoScroll();
   }
 
-  // ===== EFECTOS MODERNOS =====
-  initializeModernEffects(): void {
-    // Configurar scroll listener para efectos parallax
-    this.scrollListener = this.handleScroll.bind(this);
-    window.addEventListener('scroll', this.scrollListener, { passive: true });
-    
-    // Configurar smooth scroll para navegación
-    this.setupSmoothScrolling();
-  }
-
-  handleScroll(): void {
-    if (this.isScrolling) return;
-    
-    this.isScrolling = true;
-    requestAnimationFrame(() => {
-      const scrolled = window.pageYOffset;
-      const hero = document.querySelector('.hero-background') as HTMLElement;
-      
-      if (hero) {
-        // Efecto parallax sutil en el hero
-        hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-      }
-      
-      // Efecto fade en el scroll indicator
-      const scrollIndicator = document.querySelector('.scroll-indicator') as HTMLElement;
-      if (scrollIndicator) {
-        const opacity = Math.max(0, 1 - (scrolled / 300));
-        scrollIndicator.style.opacity = opacity.toString();
-      }
-      
-      this.isScrolling = false;
-    });
-  }
-
-  setupSmoothScrolling(): void {
-    // Configurar scroll suave para los links internos
-    document.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.matches('[data-scroll-to]')) {
-        e.preventDefault();
-        const targetId = target.getAttribute('data-scroll-to');
-        const targetElement = document.getElementById(targetId!);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    });
-  }
-
-  setupIntersectionObserver(): void {
-    const options = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    this.intersectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
-          
-          // Agregar delay escalonado para elementos en grid
-          const index = Array.from(entry.target.parentNode?.children || []).indexOf(entry.target);
-          (entry.target as HTMLElement).style.animationDelay = `${index * 0.1}s`;
-        }
-      });
-    }, options);
-
-    // Observar elementos para animaciones
-    setTimeout(() => {
-      document.querySelectorAll('.product-card, .category-card, .section-title, .kpi-card').forEach(el => {
-        this.intersectionObserver?.observe(el);
-      });
-    }, 100);
-  }
-
-  initializeCarouselEffects(): void {
-    // Configurar auto-scroll para carruseles (opcional)
-    this.setupCarouselAutoScroll();
-  }
-
-  setupCarouselAutoScroll(): void {
-    // Auto-scroll sutil cada 5 segundos (se pausa en hover)
-    const carousels = [this.productCarousel, this.categoryCarousel];
-    
-    carousels.forEach(carousel => {
-      if (carousel?.nativeElement) {
-        let autoScrollInterval: any;
-        
-        const startAutoScroll = () => {
-          autoScrollInterval = setInterval(() => {
-            const element = carousel.nativeElement;
-            const maxScroll = element.scrollWidth - element.clientWidth;
-            
-            if (element.scrollLeft >= maxScroll) {
-              element.scrollLeft = 0;
-            } else {
-              element.scrollLeft += 320; // Ancho de una tarjeta aprox
-            }
-          }, 5000);
-        };
-        
-        const stopAutoScroll = () => {
-          if (autoScrollInterval) {
-            clearInterval(autoScrollInterval);
-          }
-        };
-        
-        // Eventos para pausar/reanudar auto-scroll
-        carousel.nativeElement.addEventListener('mouseenter', stopAutoScroll);
-        carousel.nativeElement.addEventListener('mouseleave', startAutoScroll);
-        
-        // Iniciar auto-scroll
-        startAutoScroll();
-      }
-    });
-  }
-
-  // ===== MÉTODOS DE DATOS =====
+  // ===== OBTENER DATOS ===== //
+  
   getAllProducts() {
     this.productService.getAllProducts().subscribe({
       next: (response) => {
         if (response.length === 0) {
-          console.warn('No se encontraron productos.');
           this.products = [];
           return;
         }
         
-        // Filtrar productos activos y tomar una muestra para destacados
         const activeProducts = response.filter((product: Product) => product.active === true);
-        
-        if (activeProducts.length === 0) {
-          console.warn('No se encontraron productos activos.');
-          this.products = [];
-          return;
-        }
-        
-        // Tomar los primeros 8 productos para la sección destacados
-        this.products = activeProducts.slice(0, 8);
-        console.log('Productos destacados obtenidos:', this.products);
+        this.products = activeProducts.slice(0, 8); // Solo 8 productos destacados
       },
       error: (error) => {
         console.error('Error obteniendo productos:', error);
@@ -219,68 +77,120 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
   getFeaturedCategories() {
     this.categoryService.getAllCategories().subscribe({
       next: (response) => {
-        // Tomar todas las categorías disponibles
-        this.featuredCategories = response.slice(0, 6); // Limitar a 6 para mejor UX
-        console.log('Categorías destacadas:', this.featuredCategories);
+        this.featuredCategories = response.slice(0, 6); // Máximo 6 categorías
       },
       error: (error) => {
-        console.error('Error obtaining categories:', error);
+        console.error('Error obteniendo categorías:', error);
         this.featuredCategories = [];
       }
     });
   }
 
-  // ===== MÉTODOS DE CARRUSEL =====
-  scrollCategoryPrev() {
-    if (this.categoryCarousel?.nativeElement) {
-      const element = this.categoryCarousel.nativeElement;
-      const scrollAmount = element.clientWidth * 0.8; // Scroll 80% del ancho visible
-      element.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  // ===== AUTO-SCROLL CARRUSEL ===== //
+  
+  startAutoScroll() {
+    this.autoScrollInterval = setInterval(() => {
+      if (!this.isAutoScrollPaused) {
+        this.nextSlide();
+      }
+    }, 5000);
+  }
+  
+  stopAutoScroll() {
+    if (this.autoScrollInterval) {
+      clearInterval(this.autoScrollInterval);
     }
+  }
+  
+  pauseAutoScroll() {
+    this.isAutoScrollPaused = true;
+    setTimeout(() => {
+      this.isAutoScrollPaused = false;
+    }, 10000);
+  }
+
+  // ===== NAVEGACIÓN CARRUSEL ===== //
+  
+  nextSlide() {
+    const totalSlides = this.featuredCategories.length;
+    this.currentCategoryIndex = (this.currentCategoryIndex + 1) % totalSlides;
+    this.updateCarouselPosition();
+  }
+  
+  prevSlide() {
+    const totalSlides = this.featuredCategories.length;
+    this.currentCategoryIndex = this.currentCategoryIndex === 0 
+      ? totalSlides - 1 
+      : this.currentCategoryIndex - 1;
+    this.updateCarouselPosition();
+  }
+  
+  goToSlide(index: number) {
+    this.currentCategoryIndex = index;
+    this.updateCarouselPosition();
+    this.pauseAutoScroll();
+  }
+  
+  updateCarouselPosition() {
+    if (this.categoryCarousel?.nativeElement) {
+      const carousel = this.categoryCarousel.nativeElement;
+      const cardWidth = 350;
+      const gap = 30;
+      const scrollPosition = this.currentCategoryIndex * (cardWidth + gap);
+      
+      carousel.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  // ===== CONTROLES MANUALES CARRUSEL ===== //
+  
+  scrollCategoryPrev() {
+    this.prevSlide();
+    this.pauseAutoScroll();
   }
 
   scrollCategoryNext() {
+    this.nextSlide();
+    this.pauseAutoScroll();
+  }
+
+  // ===== EVENTOS DE MOUSE ===== //
+  
+  onCarouselMouseEnter() {
+    this.isAutoScrollPaused = true;
+  }
+  
+  onCarouselMouseLeave() {
+    this.isAutoScrollPaused = false;
+  }
+
+  onCarouselScroll() {
     if (this.categoryCarousel?.nativeElement) {
-      const element = this.categoryCarousel.nativeElement;
-      const scrollAmount = element.clientWidth * 0.8;
-      element.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      const carousel = this.categoryCarousel.nativeElement;
+      const cardWidth = 350 + 30;
+      const scrollLeft = carousel.scrollLeft;
+      const newIndex = Math.round(scrollLeft / cardWidth);
+      
+      if (newIndex !== this.currentCategoryIndex && newIndex < this.featuredCategories.length) {
+        this.currentCategoryIndex = newIndex;
+      }
     }
   }
 
-  scrollProductPrev() {
-    if (this.productCarousel?.nativeElement) {
-      const element = this.productCarousel.nativeElement;
-      const scrollAmount = element.clientWidth * 0.8;
-      element.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    }
-  }
-
-  scrollProductNext() {
-    if (this.productCarousel?.nativeElement) {
-      const element = this.productCarousel.nativeElement;
-      const scrollAmount = element.clientWidth * 0.8;
-      element.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  }
-
-  // ===== MÉTODOS DE NAVEGACIÓN =====
+  // ===== NAVEGACIÓN ===== //
+  
   viewCatalog() {
     this.router.navigate(['/products']);
   }
 
   viewProducts(category: Category) {
-    console.log('Navegando a productos con categoría:', category);
-    // Opción 1: Usar la ruta con parámetro que ya tienes configurada
     this.router.navigate(['/products', category.id]);
-    
-    // Opción 2: Si prefieres query params, descomenta esto y comenta la línea anterior:
-    // this.router.navigate(['/products'], { queryParams: { categoryId: category.id } });
   }
 
-  // Filtrar productos por texto de búsqueda
   filterProducts(searchText: string) {
-    console.log('Filtrando productos por:', searchText);
-    // Navegar a productos con parámetro de búsqueda
     this.router.navigate(['/products'], { queryParams: { search: searchText } });
   }
 
@@ -292,67 +202,25 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['/products']);
   }
 
-  // ===== MÉTODOS AUXILIARES =====
+  // ===== UTILIDADES ===== //
+  
   getCategoryImage(category: Category): string {
-    if (!category || !category.name) {
-      console.warn('Categoría inválida o sin nombre:', category);
+    if (!category?.name) {
       return '/images/default-category.png';
     }
-  
+    
     const image = this.categoryImages[category.name];
-    if (!image) {
-      console.warn(`No se encontró una imagen para la categoría: ${category.name}`);
-      return '/images/default-category.png';
-    }
+    return image || '/images/default-category.png';
+  }
+
+  // ===== FUNCIONES ADICIONALES OPCIONALES ===== //
   
-    return image;
-  }
-
-  isActive(product: Product): boolean {
-    return !!product.active && product.active === true;
-  }
-
-  // ===== MÉTODOS PARA NAVEGACIÓN DE TABS =====
-  selectCategoryTab(categoryName: string, event: Event) {
-    // Remover clase active de todos los tabs
-    document.querySelectorAll('.category-tab').forEach(tab => {
-      tab.classList.remove('active');
-    });
-    
-    // Agregar clase active al tab seleccionado
-    (event.target as HTMLElement).classList.add('active');
-    
-    // Aquí podrías filtrar productos por categoría si quisieras
-    console.log('Categoría seleccionada:', categoryName);
-  }
-
-  // ===== MÉTODOS PARA ANÁLITICS (OPCIONAL) =====
-  trackProductView(product: Product) {
-    // Aquí podrías enviar eventos a Google Analytics
-    console.log('Producto visto:', product.name);
-  }
-
-  trackCategoryClick(category: Category) {
-    // Tracking de clicks en categorías
-    console.log('Categoría clickeada:', category.name);
-  }
-
-  // ===== MÉTODO PARA SCROLL TO TOP =====
-  scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }
-
-  // ===== MÉTODO PARA AGREGAR AL CARRITO RÁPIDO =====
   quickAddToCart(product: Product, event: Event) {
-    event.stopPropagation(); // Evitar navegación al detalle
+    event.stopPropagation();
     
-    // Aquí implementarías la lógica del carrito
     console.log('Agregando al carrito:', product.name);
     
-    // Mostrar feedback visual
+    // Feedback visual
     const button = event.target as HTMLElement;
     const originalText = button.textContent;
     button.textContent = '¡AGREGADO!';

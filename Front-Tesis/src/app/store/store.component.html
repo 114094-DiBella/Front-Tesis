@@ -2,135 +2,153 @@
 <div class="store-container">
   <!-- Hero Banner Pantalla Completa -->
   <section class="hero-fullscreen">
-    <div class="hero-background">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-text">
-          <span class="hero-subtitle">Nueva Colección 2025</span>
-          <h1 class="hero-title">MODA ELEGANTE<br>Y CONTEMPORÁNEA</h1>
-          <p class="hero-description">Descubre las últimas tendencias en ropa de alta calidad con diseños únicos que definen tu estilo personal</p>
-          <div class="hero-price">
-            <span class="price-label">Desde</span>
-            <span class="price-amount"> ${{ lowPriceHero }}</span>
+  <!-- Lado izquierdo - Imagen con máxima calidad -->
+  <div class="hero-image-side">
+    <img src="/images/banner3.jpeg" 
+         alt="Nueva Colección 2025" 
+         class="hero-background-image"
+         loading="eager">
+  </div>
+  
+  <!-- Lado derecho - Contenido del texto -->
+  <div class="hero-content-side">
+    <div class="hero-content">
+      <div class="hero-text">
+        <span class="hero-subtitle">Nueva Colección 2025</span>
+        <h1 class="hero-title">MODA ELEGANTE<br>Y CONTEMPORÁNEA</h1>
+        <p class="hero-description">Descubre las últimas tendencias en ropa de alta calidad con diseños únicos que definen tu estilo personal</p>
+        <div class="hero-price">
+          <span class="price-label">Desde</span>
+          <span class="price-amount"> ${{ lowPriceHero }}</span>
+        </div>
+        <div class="hero-actions">
+          <button class="primary-button large" (click)="viewAllProducts()">
+            EXPLORAR COLECCIÓN
+          </button>
+          <button class="primary-button large" (click)="viewCatalog()">
+            VER CATÁLOGO
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Indicador de scroll -->
+  <div class="scroll-indicator">
+    <span>Desliza para explorar</span>
+    <div class="scroll-arrow">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </div>
+</section>
+
+    <!-- Categorías Destacadas con indicadores -->
+    <section class="featured-categories">
+      <div class="section-container">
+        <h2 class="section-title">FAVORITOS DE LA TEMPORADA</h2>
+        
+        <!-- Navegación de categorías -->
+        <div class="categories-nav">
+          <button class="category-tab" data-category="abrigos" (click)="filterProducts('abrigos')">ABRIGOS Y CAMPERAS</button>
+          <button class="category-tab" data-category="sweaters" (click)="filterProducts('sweaters')">SWEATERS</button>
+          <button class="category-tab" data-category="pantalones" (click)="filterProducts('pantalones')">PANTALONES Y JEANS</button>
+          <button class="category-tab" data-category="camisas" (click)="filterProducts('camisas')">CAMISAS</button>
+          <button class="category-tab" data-category="remeras" (click)="filterProducts('remeras')">REMERAS Y CHOMBAS</button>
+        </div>
+        
+        <div class="product-carousel-container">
+          <button class="carousel-control prev-btn" (click)="scrollCategoryPrev()" aria-label="Anterior">
+            <i class="bi bi-arrow-left-short"></i>
+          </button>
+          
+          
+          <div class="product-carousel" 
+              #categoryCarousel
+              (mouseenter)="onCarouselMouseEnter()"
+              (mouseleave)="onCarouselMouseLeave()"
+              (scroll)="onCarouselScroll()">
+            @for (category of featuredCategories; track category.id; let i = $index) {
+              <div class="category-card modern" 
+                  (click)="viewProducts(category)"
+                  [attr.data-index]="i">
+                <div class="category-image">
+                  <img 
+                    [src]="getCategoryImage(category)" 
+                    [alt]="category.name"
+                    loading="lazy"
+                  >
+                  <div class="category-overlay">
+                    <span class="category-name">{{category.name}}</span>
+                    <button class="category-btn">VER PRODUCTOS</button>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
-          <div class="hero-actions">
-            <button class="primary-button large" (click)="viewAllProducts()">
-              EXPLORAR COLECCIÓN
-            </button>
-            <button class="primary-button large" (click)="viewCatalog()">
-              VER CATÁLOGO
-            </button>
+          
+          <button class="carousel-control next-btn" (click)="scrollCategoryNext()" aria-label="Siguiente">
+          <i class="bi bi-arrow-right"></i>
+          </button>
+          
+          <!-- NUEVOS INDICADORES -->
+          <div class="carousel-indicators">
+            @for (category of featuredCategories; track category.id; let i = $index) {
+              <button 
+                class="indicator-dot"
+                [class.active]="currentCategoryIndex === i"
+                (click)="goToSlide(i)"
+                [attr.aria-label]="'Ir a ' + category.name">
+              </button>
+            }
           </div>
         </div>
       </div>
+    </section>
+<!-- Productos Destacados - Solo Grid -->
+<section class="featured-products">
+  <div class="section-container">
+    <h2 class="section-title">PRODUCTOS DESTACADOS</h2>
+    
+    <!-- GRID DIRECTO - SIN carrusel -->
+    <div class="products-grid">
+      @for (product of products; track product.id) {
+        <div class="product-card modern" (click)="viewDetails(product)">
+          <div class="product-image">
+            @if (product.imageUrls && product.imageUrls.length > 0) {
+              <img [src]="product.imageUrls[0]" [alt]="product.name" loading="lazy">
+            } @else {
+              <img src="/images/problemastecnicos.jpeg" [alt]="product.name" loading="lazy">
+            }
+            <div class="product-overlay">
+              <button class="quick-view-btn">VISTA RÁPIDA</button>
+            </div>
+          </div>
+          
+          <div class="product-info">
+            <h3 class="product-name">{{product.name}}</h3>
+            <p class="product-brand">{{product.marca?.name}}</p>
+            
+            
+            <div class="product-pricing">
+              <span class="product-price">${{product.price?.toFixed(2)}}</span>
+              @if (product.price) {
+                <span class="product-installments">6 cuotas de ${{(product.price / 6).toFixed(2)}}</span>
+              }
+            </div>
+            
+            <div class="product-actions-modern">
+              <button class="add-to-cart-modern">AGREGAR AL CARRITO</button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
     
-    <!-- Indicador de scroll -->
-    <div class="scroll-indicator">
-      <span>Desliza para explorar</span>
-      <div class="scroll-arrow">
-        <i class="fas fa-chevron-down"></i>
-      </div>
+    <div class="view-more-modern">
+      <button class="view-all-btn" (click)="viewAllProducts()">VER TODA LA COLECCIÓN</button>
     </div>
-  </section>
-
-  <!-- Categorías Destacadas -->
-  <section class="featured-categories">
-    <div class="section-container">
-      <h2 class="section-title">FAVORITOS DE LA TEMPORADA</h2>
-      
-      <!-- Navegación de categorías -->
-      <div class="categories-nav">
-        <button class="category-tab active" data-category="abrigos" (click)="filterProducts('abrigos')">ABRIGOS Y CAMPERAS</button>
-        <button class="category-tab" data-category="sweaters" (click)="filterProducts('sweaters')">SWEATERS</button>
-        <button class="category-tab" data-category="pantalones" (click)="filterProducts('pantalones')">PANTALONES Y JEANS</button>
-        <button class="category-tab" data-category="camisas" (click)="filterProducts('camisas')">CAMISAS</button>
-        <button class="category-tab" data-category="remeras" (click)="filterProducts('remeras')">REMERAS Y CHOMBAS</button>
-      </div>
-      
-      <div class="product-carousel-container">
-        <button class="carousel-control prev-btn" (click)="scrollCategoryPrev()" aria-label="Anterior">
-          <i class="bi bi-arrow-left-short"></i>
-        </button>
-        
-        <div class="product-carousel" #categoryCarousel>
-          @for (category of featuredCategories; track category.id) {
-            <div class="category-card modern" (click)="viewProducts(category)">
-              <div class="category-image">
-                <img 
-                  [src]="getCategoryImage(category)" 
-                  [alt]="category.name"
-                  loading="lazy"
-                >
-                <div class="category-overlay">
-                  <span class="category-name">{{category.name}}</span>
-                  <button class="category-btn">VER PRODUCTOS</button>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
-        
-        <button class="carousel-control next-btn" (click)="scrollCategoryNext()" aria-label="Siguiente">
-         <i class="bi bi-arrow-right"></i>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Productos Destacados -->
-  <section class="featured-products">
-    <div class="section-container">
-      <h2 class="section-title">PRODUCTOS DESTACADOS</h2>
-      
-      <div class="product-carousel-container">
-        <button class="carousel-control prev-btn" (click)="scrollProductPrev()" aria-label="Anterior">
-          <i class="bi bi-arrow-left-short"></i>
-        </button>
-        
-        <div class="product-carousel" #productCarousel>
-          @for (product of products; track product.id) {
-            <div class="product-card modern" (click)="viewDetails(product)">
-              <div class="product-image">
-                @if (product.imageUrls && product.imageUrls.length > 0) {
-                 <img [src]="product.imageUrls[0]" [alt]="product.name" loading="lazy">
-                } @else {
-                  <img src="/images/problemastecnicos.jpeg" [alt]="product.name" loading="lazy">
-                }
-                <div class="product-overlay">
-                  <button class="quick-view-btn">VISTA RÁPIDA</button>
-                </div>
-              </div>
-              
-              <div class="product-info">
-                <h3 class="product-name">{{product.name}}</h3>
-                <p class="product-brand">{{product.marca?.name}}</p>
-                
-                <div class="product-pricing">
-                  <span class="product-price">${{product.price?.toFixed(2)}}</span>
-                  @if (product.price) {
-                    <span class="product-installments">6 cuotas de ${{(product.price / 6).toFixed(2)}}</span>
-                  }
-                </div>
-                
-                <div class="product-actions-modern">
-                  <button class="add-to-cart-modern">AGREGAR AL CARRITO</button>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
-        
-        <button class="carousel-control next-btn" (click)="scrollProductNext()" aria-label="Siguiente">
-          <i class="bi bi-arrow-right"></i>
-        </button>
-      </div>
-      
-      <div class="view-more-modern">
-        <button class="view-all-btn" (click)="viewAllProducts()">VER TODA LA COLECCIÓN</button>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
   <!-- Banner Promocional -->
   <section class="promo-banner-modern">

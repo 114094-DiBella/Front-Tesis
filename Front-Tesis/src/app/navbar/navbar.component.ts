@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   
   // Estado de autenticación
   isLoggedIn: boolean = false;
+  userName: string = ''; // ✅ CORREGIDO - Cambiado a userName
   userEmail: string = '';
   userId: string = ''; // ✅ NUEVO - ID del usuario
   isAdmin: boolean = false;
@@ -54,10 +55,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   checkLoginStatus(): void {
     const token = localStorage.getItem('token');
     const userEmail = localStorage.getItem('userEmail');
+    const userName = localStorage.getItem('userName'); // ✅ CORREGIDO - Cambiado a userName
     const userId = localStorage.getItem('userId'); // ✅ NUEVO
     const userRole = localStorage.getItem('userRole');
     
     this.isLoggedIn = !!token;
+    this.userName = userName || ''; // ✅ CORREGIDO - Cambiado a userName
     this.userEmail = userEmail || '';
     this.userId = userId || ''; // ✅ NUEVO
     this.isAdmin = userRole === 'ADMIN';

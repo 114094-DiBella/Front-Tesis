@@ -1,0 +1,34 @@
+    <div class="social-fab-container">
+      <!-- Botones de redes sociales (aparecen con animación) -->
+      <div class="social-buttons" [class.expanded]="isExpanded">
+        <button 
+          class="social-btn facebook-btn"
+          (click)="openFacebook()"
+          title="Síguenos en Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </button>
+        
+        <button 
+          class="social-btn instagram-btn"
+          (click)="openInstagram()"
+          title="Síguenos en Instagram">
+          <i class="fab fa-instagram"></i>
+        </button>
+        
+        <button 
+          class="social-btn whatsapp-btn"
+          (click)="openWhatsApp()"
+          title="Contactanos por WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+      </div>
+      
+      <!-- Botón principal (siempre visible) -->
+      <button 
+        class="main-fab"
+        (click)="toggleExpansion()"
+        [class.rotated]="isExpanded"
+        title="Redes Sociales">
+        <i class="fas fa-share-alt"></i>
+      </button>
+    </div>

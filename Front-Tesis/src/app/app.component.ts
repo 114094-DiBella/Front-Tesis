@@ -5,10 +5,12 @@ import { StoreComponent } from './store/store.component';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from './components/footer/footer.component';
+import { WhatsappButtonComponentComponent } from "./components/whatsapp-button-component/whatsapp-button-component.component";
+import { SocialMediaFabComponent } from "./components/social-media-fab-component/social-media-fab-component.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, CommonModule , FooterComponent],
+  imports: [RouterOutlet, NavbarComponent, CommonModule, FooterComponent, SocialMediaFabComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

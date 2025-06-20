@@ -182,61 +182,113 @@ export class NeworderComponent implements OnInit, OnDestroy {
     }
   }
   
-  // ✅ CORREGIDO - Proceder al checkout con formato correcto
-  proceedToCheckout(): void {
-    if (this.cartItems.length === 0) {
-      alert('Tu carrito está vacío');
-      return;
-    }
-    
-    // if (!this.selectedPaymentMethod) {
-    //   this.selectPaymentMethod(this.paymentMethods[0]); // Seleccionar el primer método si no hay ninguno
-    //   alert('Por favor selecciona un método de pago');
-    //   return;}
-    
-    this.processingCheckout = true;
-    
-    // ✅ FORMATO CORRECTO según el backend
-    const checkoutData = {
-      detalles: this.cartItems.map(item => ({
-        idProducto: item.product.id!,
-        cantidad: item.quantity
-      })),
-      userId: this.TEMP_USER_ID,
-      idFormaPago: this.selectedPaymentMethod?.id || '11111111-1111-1111-1111-111111111111',
-    };
-    
-    console.log('📋 Datos del checkout:', checkoutData);
-    console.log('💳 Método de pago:', this.selectedPaymentMethod);
-    
-    // ✅ USAR CHECKOUT SERVICE
-    this.checkoutService.createCheckout(checkoutData).subscribe({
-      next: (response) => {
-        console.log('✅ Checkout creado exitosamente:', response);
-        
-        // Limpiar carrito
-        this.cartService.clearCart();
-        
-        // Manejar respuesta según needsPayment
-        if (response.needsPayment && response.paymentUrl) {
-          // Redirigir a MercadoPago
-          alert(`¡Orden creada! Serás redirigido al pago.\nTotal: $${response.total}`);
-          window.location.href = response.paymentUrl;
+proceedToCheckout(): void {
+  if (this.cartItems.length === 0) {
+    alert('Tu carrito está vacío');
+    return;
+  }
+  
+  this.processingCheckout = true;
+  
+  const checkoutData = {
+    detalles: this.cartItems.map(item => ({
+      idProducto: item.product.id!,
+      cantidad: item.quantity
+    })),
+    userId: this.TEMP_USER_ID,
+    idFormaPago: this.selectedPaymentMethod?.id || '11111111-1111-1111-1111-111111111111',
+  };
+  
+  console.log('📋 Datos del checkout:', checkoutData);
+  
+  this.checkoutService.createCheckout(checkoutData).subscribe({
+    next: (response) => {
+      console.log('✅ Checkout creado exitosamente:', response);
+      
+      // 🔍 DEBUG: Imprimir TODA la estructura de respuesta
+      console.log('🔍 Estructura completa de respuesta:', JSON.stringify(response, null, 2));
+      console.log('🔍 Claves de la respuesta:', Object.keys(response));
+      
+      // Limpiar carrito
+      this.cartService.clearCart();
+      
+      // 🔍 Buscar el ID de la orden en diferentes posibles campos
+      let orderIdentifier = null;
+      
+      // Intentar diferentes posibles nombres de campos
+      const possibleIdFields = [
+        'orderId', 'id', 'codOrder', 'orderCode', 'codigo', 'codigoOrden',
+        'facturaId', 'factura', 'numeroOrden', 'orderNumber'
+      ];
+      
+      for (const field of possibleIdFields) {
+        if (response[field]) {
+          orderIdentifier = response[field];
+          console.log(`✅ ID de orden encontrado en campo '${field}':`, orderIdentifier);
+          break;
+        }
+      }
+      
+      // Si no encontramos ID en campos simples, buscar en objetos anidados
+      if (!orderIdentifier) {
+        console.log('🔍 Buscando en objetos anidados...');
+        if (response.order) {
+          orderIdentifier = response.order.id || response.order.codOrder || response.order.codigo;
+          console.log('🔍 ID encontrado en response.order:', orderIdentifier);
+        }
+        if (response.factura && !orderIdentifier) {
+          orderIdentifier = response.factura.id || response.factura.codigo || response.factura.codOrder;
+          console.log('🔍 ID encontrado en response.factura:', orderIdentifier);
+        }
+      }
+      
+      console.log('🆔 ID final de orden a usar:', orderIdentifier);
+      
+      // Manejar respuesta según needsPayment
+      if (response.needsPayment && response.paymentUrl) {
+        // Para MercadoPago - guardar el ID de la orden para después del pago
+        if (orderIdentifier) {
+          localStorage.setItem('pendingOrderId', orderIdentifier.toString());
+          console.log('💾 ID de orden pendiente guardado:', orderIdentifier);
         } else {
-          // Pago en efectivo o ya procesado
-          alert(`¡Orden creada exitosamente!\nTotal: $${response.total}\nEstado: ${response.status}`);
-          this.router.navigate(['/orders']);
+          console.error('❌ No se pudo encontrar un identificador de orden válido');
+          // Usar un timestamp como fallback temporal
+          const fallbackId = 'temp_' + Date.now();
+          localStorage.setItem('pendingOrderId', fallbackId);
+          console.log('⚠️ Usando ID temporal como fallback:', fallbackId);
         }
         
-        this.processingCheckout = false;
-      },
-      error: (error) => {
-        console.error('❌ Error al crear el checkout:', error);
-        alert('Error al procesar la orden. Intenta de nuevo.');
-        this.processingCheckout = false;
+        // Abrir MercadoPago en nueva pestaña
+        window.open(response.paymentUrl, '_blank');
+        console.log('🌐 Abriendo MercadoPago en nueva pestaña');
+        
+        // Redirigir a página de éxito (mostrará "pendiente" si es necesario)
+        this.router.navigate(['/payment/success'], {
+          queryParams: {
+            orderId: orderIdentifier || 'pending',
+            pending: true // Flag para indicar que el pago está pendiente
+          }
+        });
+        
+      } else {
+        // Pago completado o en efectivo - redirigir directamente a la página de éxito
+        this.router.navigate(['/payment/success'], {
+          queryParams: {
+            orderId: orderIdentifier || 'completed_' + Date.now()
+          }
+        });
       }
-    });
-  }
+      
+      this.processingCheckout = false;
+    },
+    error: (error) => {
+      console.error('❌ Error al crear el checkout:', error);
+      console.error('❌ Detalles del error:', JSON.stringify(error, null, 2));
+      alert('Error al procesar la orden. Intenta de nuevo.');
+      this.processingCheckout = false;
+    }
+  });
+}
   
   // Continuar comprando
   continueShopping(): void {

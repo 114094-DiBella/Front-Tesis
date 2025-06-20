@@ -1,0 +1,165 @@
+.social-fab-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .social-buttons {
+      display: flex;
+      gap: 12px;
+      margin-right: 12px;
+      transform: translateX(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      pointer-events: none;
+    }
+
+    .social-buttons.expanded {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .social-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: scale(0.8);
+    }
+
+    .social-buttons.expanded .social-btn {
+      transform: scale(1);
+    }
+
+    .social-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .whatsapp-btn {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      animation-delay: 0.1s;
+    }
+
+    .instagram-btn {
+      background: linear-gradient(135deg, #E4405F, #C13584, #833AB4);
+      animation-delay: 0.2s;
+    }
+
+    .facebook-btn {
+      background: linear-gradient(135deg, #1877F2, #42A5F5);
+      animation-delay: 0.3s;
+    }
+
+    .main-fab {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .main-fab:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    .main-fab.rotated {
+      transform: rotate(180deg);
+    }
+
+    .main-fab.rotated:hover {
+      transform: rotate(180deg) scale(1.1);
+    }
+
+    /* Animación de entrada secuencial */
+    .social-buttons.expanded .social-btn:nth-child(1) {
+      animation: slideInLeft 0.3s ease forwards;
+      animation-delay: 0.1s;
+    }
+
+    .social-buttons.expanded .social-btn:nth-child(2) {
+      animation: slideInLeft 0.3s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    .social-buttons.expanded .social-btn:nth-child(3) {
+      animation: slideInLeft 0.3s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(20px) scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .social-fab-container {
+        bottom: 15px;
+        right: 15px;
+      }
+      
+      .social-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+      
+      .main-fab {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+      }
+      
+      .social-buttons {
+        gap: 10px;
+        margin-right: 10px;
+      }
+    }
+
+    /* Efecto de backdrop cuando está expandido */
+    .social-fab-container::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .social-buttons.expanded ~ .main-fab::before {
+      opacity: 1;
+      pointer-events: all;
+    }

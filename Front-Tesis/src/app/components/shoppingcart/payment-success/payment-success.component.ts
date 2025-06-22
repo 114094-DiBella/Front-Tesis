@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../../services/order.service';
 import { Order, OrderStatus } from '../../../models/order.model';
+import { ShipmentResponse, ShippingService } from '../../../services/shipping.service';
 
 @Component({
   selector: 'app-payment-success',
@@ -14,11 +15,16 @@ export class PaymentSuccessComponent implements OnInit {
   orderData: Order | null = null;
   isLoading = true;
   orderId: string | null = null;
+  shipmentData: ShipmentResponse | null = null;
+  trackingNumber: string | null = null;
+  hasShipment: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private orderService: OrderService
+    private orderService: OrderService,
+
+    private shippingService: ShippingService
   ) {}
 
   ngOnInit() {
@@ -60,6 +66,7 @@ export class PaymentSuccessComponent implements OnInit {
         this.orderData = order;
         this.isLoading = false;
         console.log('✅ Orden cargada exitosamente:', order);
+        this.loadShipmentData();
       },
       error: (error) => {
         console.error('❌ Error al cargar la orden:', error);
@@ -144,5 +151,102 @@ export class PaymentSuccessComponent implements OnInit {
 
   continueShopping(): void {
     this.router.navigate(['/store']);
+  }
+
+    /**
+   * Cargar información del envío
+   */
+  loadShipmentData(): void {
+    if (!this.orderId) {
+      this.isLoading = false;
+      return;
+    }
+
+    console.log('📦 Buscando información de envío para orden:', this.orderId);
+    
+    this.shippingService.getShipmentByOrderCode(this.orderId).subscribe({
+      next: (shipment) => {
+        this.shipmentData = shipment;
+        this.trackingNumber = shipment.trackingNumber || null;
+        this.hasShipment = true;
+        console.log('✅ Información de envío encontrada:', shipment);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.log('ℹ️ No se encontró información de envío para esta orden (normal si es retiro en tienda)');
+        this.hasShipment = false;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  /**
+   * Redirigir al tracking de Andreani
+   */
+  trackOnAndreani(): void {
+    if (!this.trackingNumber) {
+      alert('No hay número de seguimiento disponible');
+      return;
+    }
+
+    // URL de tracking de Andreani
+    const andreaniTrackingUrl = `https://www.andreani.com/seguimiento?codigo=${this.trackingNumber}`;
+    
+    // Abrir en nueva pestaña
+    window.open(andreaniTrackingUrl, '_blank');
+    
+    console.log('🔗 Redirigiendo a Andreani tracking:', andreaniTrackingUrl);
+  }
+
+  /**
+   * Ir al tracking interno
+   */
+  goToInternalTracking(): void {
+    if (this.trackingNumber) {
+      this.router.navigate(['/tracking'], { 
+        queryParams: { search: this.trackingNumber } 
+      });
+    } else if (this.orderId) {
+      this.router.navigate(['/tracking'], { 
+        queryParams: { search: this.orderId } 
+      });
+    }
+  }
+
+  /**
+   * Obtener estado del envío en texto legible
+   */
+  getShipmentStatusText(): string {
+    if (!this.shipmentData) return 'Sin información';
+    
+    const statusMap: { [key: string]: string } = {
+      'PENDING': '⏳ Pendiente',
+      'CREATED': '📋 Creado',
+      'PICKED_UP': '📦 Retirado',
+      'IN_TRANSIT': '🚛 En Tránsito',
+      'OUT_FOR_DELIVERY': '🚚 En Reparto',
+      'DELIVERED': '✅ Entregado',
+      'RETURNED': '↩️ Devuelto',
+      'ERROR': '❌ Error'
+    };
+    
+    return statusMap[this.shipmentData.status] || this.shipmentData.status;
+  }
+
+  /**
+   * Obtener clase CSS para el estado del envío
+   */
+  getShipmentStatusClass(): string {
+    if (!this.shipmentData) return '';
+    
+    switch (this.shipmentData.status) {
+      case 'DELIVERED': return 'status-delivered';
+      case 'IN_TRANSIT':
+      case 'OUT_FOR_DELIVERY': return 'status-in-transit';
+      case 'CREATED':
+      case 'PICKED_UP': return 'status-created';
+      case 'ERROR': return 'status-error';
+      default: return 'status-pending';
+    }
   }
 }

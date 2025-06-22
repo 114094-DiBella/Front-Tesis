@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { StoreComponent } from './store/store.component';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from './components/footer/footer.component';
-import { WhatsappButtonComponentComponent } from "./components/whatsapp-button-component/whatsapp-button-component.component";
 import { SocialMediaFabComponent } from "./components/social-media-fab-component/social-media-fab-component.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,8 @@ import { SocialMediaFabComponent } from "./components/social-media-fab-component
 export class AppComponent {
   showNavbar: boolean = true;
   showFooter: boolean = true;
-  
+  private toastrService = inject(ToastrService);
+
   // Lista de rutas donde no queremos mostrar navbar/footer
   private authRoutes: string[] = ['/login', '/register', '/forgot-password'];
   

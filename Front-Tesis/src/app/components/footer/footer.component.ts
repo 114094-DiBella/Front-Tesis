@@ -3,6 +3,7 @@ import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 interface FAQItem {
   id: number;
@@ -32,6 +33,8 @@ export class FooterComponent implements OnDestroy {
   telefonoTienda: string = '+351 6533654';
   horarioAtencion: string = 'Lunes a Sabados: 9:00 - 13:00 || 17:00 - 21:00';
   currentYear: number = new Date().getFullYear();
+
+  constructor(private toastr: ToastrService) {}
 
   faqItems: FAQItem[] = [
     {
@@ -118,33 +121,23 @@ export class FooterComponent implements OnDestroy {
   }
 
   // Newsletter con mejor validación
-  subscribeNewsletter(): void {
-    if (!this.email) {
-      this.showAlert('Por favor ingresa tu email', 'warning');
-      return;
+// REEMPLAZAR DESDE subscribeNewsletter(): void { HASTA el final del método
+    subscribeNewsletter(): void {
+      if (!this.email) {
+        this.toastr.warning('Por favor ingresa tu email', 'Campo requerido');
+        return;
+      }
+
+      if (!this.isValidEmail(this.email)) {
+        this.toastr.error('Por favor ingresa un email válido', 'Email inválido');
+        return;
+      }
+
+      console.log('✅ Suscripción al newsletter:', this.email);
+      this.toastr.success('¡Gracias por suscribirte! Recibirás nuestras novedades pronto.', '¡Éxito!');
+      this.email = '';
     }
 
-    if (!this.isValidEmail(this.email)) {
-      this.showAlert('Por favor ingresa un email válido', 'error');
-      return;
-    }
-
-    // Simular suscripción
-    console.log('✅ Suscripción al newsletter:', this.email);
-    this.showAlert('¡Gracias por suscribirte! Recibirás nuestras novedades pronto.', 'success');
-    this.email = '';
-  }
-
-  // Función para mostrar alertas
-  private showAlert(message: string, type: 'success' | 'error' | 'warning'): void {
-    const icons = {
-      success: '✅',
-      error: '❌',
-      warning: '⚠️'
-    };
-    
-    alert(`${icons[type]} ${message}`);
-  }
 
   // Validación de email
   private isValidEmail(email: string): boolean {

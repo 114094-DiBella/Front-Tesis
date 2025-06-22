@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common'; 
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private toastr = inject(ToastrService);
   
   loading = signal(false);
   errorMessage = signal('');
@@ -38,6 +40,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     // Si quieres cargar los usuarios al iniciar el componente
     // this.getAllUsers();
+
   }
 
   getAllUsers() {

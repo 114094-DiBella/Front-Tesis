@@ -1,175 +1,247 @@
-    <div class="payment-success-container">
-      <!-- Loading state -->
-      <div *ngIf="isLoading" class="loading-container">
-        <div class="loading-spinner">
-          <div class="spinner"></div>
-          <p>Cargando información del pedido...</p>
+<div class="payment-success-container">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Cargando información del pedido...</p>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="!isLoading && !orderData" class="error-container">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h2>Error al cargar el pedido</h2>
+    <p>No se pudo cargar la información del pedido. Por favor, inténtalo de nuevo.</p>
+    <button class="retry-button" (click)="loadOrderData()">
+      <i class="fas fa-redo"></i>
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading && orderData" class="success-content">
+    <!-- Header de éxito -->
+    <div class="success-header">
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h1>¡Pedido confirmado!</h1>
+      <p class="success-message">Tu orden ha sido procesada exitosamente</p>
+    </div>
+
+    <!-- Información del pedido -->
+    <div class="order-info-card">
+      <div class="order-header">
+        <div class="order-number">
+          <h2>{{ orderData.codOrder }}</h2>
+          <span class="order-label">Número de orden</span>
+        </div>
+        <div class="order-status">
+          <span class="status-badge" [ngClass]="getStatusClass()">
+            {{ getStatusText() }}
+          </span>
         </div>
       </div>
 
-      <!-- Error state -->
-      <div *ngIf="!isLoading && !orderData" class="error-container">
-        <div class="error-icon">
-          <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <h2>Error al cargar el pedido</h2>
-        <p>No se pudo cargar la información del pedido. Por favor, inténtalo de nuevo.</p>
-        <button class="retry-button" (click)="loadOrderData()">
-          <i class="fas fa-redo"></i>
-          Reintentar
-        </button>
-      </div>
-
-      <!-- Contenido principal -->
-      <div *ngIf="!isLoading && orderData" class="success-content">
-        <!-- Header de éxito -->
-        <div class="success-header">
-          <div class="success-icon">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <h1>¡Pedido confirmado!</h1>
-          <p class="success-message">Tu orden ha sido procesada exitosamente</p>
+      <div class="order-details">
+        <div class="detail-row">
+          <span class="detail-label">
+            <i class="fas fa-calendar"></i>
+            Fecha del pedido
+          </span>
+          <span class="detail-value">{{ getFormattedDate() }}</span>
         </div>
 
-        <!-- Información del pedido -->
-        <div class="order-info-card">
-          <div class="order-header">
-            <div class="order-number">
-              <h2>{{ orderData.codOrder }}</h2>
-              <span class="order-label">Número de orden</span>
-            </div>
-            <div class="order-status">
-              <span class="status-badge" [ngClass]="getStatusClass()">
-                {{ getStatusText() }}
-              </span>
-            </div>
-          </div>
-
-          <div class="order-details">
-            <div class="detail-row">
-              <span class="detail-label">
-                <i class="fas fa-calendar"></i>
-                Fecha del pedido
-              </span>
-              <span class="detail-value">{{ getFormattedDate() }}</span>
-            </div>
-
-            <div class="detail-row">
-              <span class="detail-label">
-                <i class="fas fa-user"></i>
-                Cliente
-              </span>
-              <span class="detail-value">{{ getCustomerName() }}</span>
-            </div>
-
-            <div class="detail-row">
-              <span class="detail-label">
-                <i class="fas fa-store"></i>
-                Modalidad
-              </span>
-              <span class="detail-value pickup-highlight">
-                <i class="fas fa-shopping-bag"></i>
-                Retiro en tienda
-              </span>
-            </div>
-
-            <div class="detail-row">
-              <span class="detail-label">
-                <i class="fas fa-dollar-sign"></i>
-                Total pagado
-              </span>
-              <span class="detail-value total-amount">{{ formatPrice(orderData.total) }}</span>
-            </div>
-          </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <i class="fas fa-user"></i>
+            Cliente
+          </span>
+          <span class="detail-value">{{ getCustomerName() }}</span>
         </div>
 
-        <!-- Productos pedidos -->
-        <div class="products-card">
-          <h3>Productos en tu pedido</h3>
-          <div class="products-list">
-            <div class="product-item" *ngFor="let detail of orderData.details">
-              <div class="product-image">
-                <img [src]="getProductImage(detail.product)" 
-                     [alt]="detail.product.name"
-                     onerror="this.src='/images/problemastecnicos.jpeg'">
-              </div>
-              <div class="product-info">
-                <h4>{{ detail.product.name }}</h4>
-                <div class="product-specs">
-                  <span *ngIf="detail.product.marca?.name" class="spec-item">
-                    <i class="fas fa-tag"></i>
-                    {{ detail.product.marca?.name }}
-                  </span>
-                  <span *ngIf="detail.product.size" class="spec-item">
-                    <i class="fas fa-ruler"></i>
-                    Talle {{ detail.product.size }}
-                  </span>
-                  <span *ngIf="detail.product.color" class="spec-item">
-                    <i class="fas fa-palette"></i>
-                    {{ detail.product.color }}
-                  </span>
-                </div>
-              </div>
-              <div class="product-quantity">
-                <span class="quantity-label">Cantidad</span>
-                <span class="quantity-value">{{ detail.quantity }}</span>
-              </div>
-              <div class="product-price">
-                <span class="price-label">Subtotal</span>
-                <span class="price-value">{{ formatPrice(detail.subTotal) }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Total -->
-          <div class="order-total">
-            <div class="total-row">
-              <span>Total del pedido</span>
-              <span class="total-amount">{{ formatPrice(orderData.total) }}</span>
-            </div>
-          </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <i class="fas fa-store"></i>
+            Modalidad
+          </span>
+          <span class="detail-value pickup-highlight">
+            <i class="fas fa-shopping-bag"></i>
+            Retiro en tienda
+          </span>
         </div>
 
-        <!-- Información de retiro -->
-        <div class="pickup-info-card">
-          <div class="pickup-header">
-            <i class="fas fa-map-marker-alt"></i>
-            <h3>Información para el retiro</h3>
-          </div>
-          <div class="pickup-details">
-            <div class="info-item">
-              <strong>Dirección de la tienda:</strong>
-              <p>Av. Principal 123, Centro, Ciudad</p>
-            </div>
-            <div class="info-item">
-              <strong>Horarios de atención:</strong>
-              <p>Lunes a Viernes: 9:00 - 18:00<br>Sábados: 9:00 - 14:00</p>
-            </div>
-            <div class="info-item">
-              <strong>¿Qué necesitas traer?</strong>
-              <p>• Documento de identidad<br>• Número de orden: <strong>{{ orderData.codOrder }}</strong></p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Acciones -->
-        <div class="actions-container">
-          <button class="primary-button" (click)="goToOrders()">
-            <i class="fas fa-list"></i>
-            Ver mis pedidos
-          </button>
-          <button class="secondary-button" (click)="continueShopping()">
-            <i class="fas fa-shopping-cart"></i>
-            Seguir comprando
-          </button>
-        </div>
-
-        <!-- Ayuda -->
-        <div class="help-section">
-          <p>
-            <i class="fas fa-question-circle"></i>
-            ¿Necesitas ayuda? <a href="mailto:ayuda@tutienda.com" class="help-link">Contáctanos</a>
-          </p>
+        <div class="detail-row">
+          <span class="detail-label">
+            <i class="fas fa-dollar-sign"></i>
+            Total pagado
+          </span>
+          <span class="detail-value total-amount">{{ formatPrice(orderData.total) }}</span>
         </div>
       </div>
     </div>
+
+    <!-- Productos pedidos -->
+    <div class="products-card">
+      <h3>Productos en tu pedido</h3>
+      <div class="products-list">
+        <div class="product-item" *ngFor="let detail of orderData.details">
+          <div class="product-image">
+            <img [src]="getProductImage(detail.product)" 
+                 [alt]="detail.product.name"
+                 onerror="this.src='/images/problemastecnicos.jpeg'">
+          </div>
+          <div class="product-info">
+            <h4>{{ detail.product.name }}</h4>
+            <div class="product-specs">
+              <span *ngIf="detail.product.marca?.name" class="spec-item">
+                <i class="fas fa-tag"></i>
+                {{ detail.product.marca?.name }}
+              </span>
+              <span *ngIf="detail.product.size" class="spec-item">
+                <i class="fas fa-ruler"></i>
+                Talle {{ detail.product.size }}
+              </span>
+              <span *ngIf="detail.product.color" class="spec-item">
+                <i class="fas fa-palette"></i>
+                {{ detail.product.color }}
+              </span>
+            </div>
+          </div>
+          <div class="product-quantity">
+            <span class="quantity-label">Cantidad</span>
+            <span class="quantity-value">{{ detail.quantity }}</span>
+          </div>
+          <div class="product-price">
+            <span class="price-label">Subtotal</span>
+            <span class="price-value">{{ formatPrice(detail.subTotal) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="order-total">
+        <div class="total-row">
+          <span>Total del pedido</span>
+          <span class="total-amount">{{ formatPrice(orderData.total) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ INFORMACIÓN DE ENVÍO -->
+    <div *ngIf="hasShipment && shipmentData" class="shipping-info-card">
+      <div class="shipping-header">
+        <h3>
+          <i class="fas fa-shipping-fast"></i>
+          Información de Envío
+        </h3>
+      </div>
+      
+      <div class="shipping-details">
+        <div class="shipping-row">
+          <span class="shipping-label">
+            <i class="fas fa-barcode"></i>
+            Número de seguimiento
+          </span>
+          <span class="shipping-value tracking-number">
+            {{ trackingNumber || 'Será asignado próximamente' }}
+          </span>
+        </div>
+        
+        <div class="shipping-row">
+          <span class="shipping-label">
+            <i class="fas fa-info-circle"></i>
+            Estado del envío
+          </span>
+          <span class="shipping-value">
+            <span class="shipment-status-badge" [ngClass]="getShipmentStatusClass()">
+              {{ getShipmentStatusText() }}
+            </span>
+          </span>
+        </div>
+        
+        <div *ngIf="shipmentData.estimatedDeliveryDate" class="shipping-row">
+          <span class="shipping-label">
+            <i class="fas fa-calendar-alt"></i>
+            Entrega estimada
+          </span>
+          <span class="shipping-value">
+            {{ shipmentData.estimatedDeliveryDate | date:'dd/MM/yyyy' }}
+          </span>
+        </div>
+        
+        <div class="shipping-row">
+          <span class="shipping-label">
+            <i class="fas fa-user"></i>
+            Destinatario
+          </span>
+          <span class="shipping-value">
+            {{ shipmentData.recipientName }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ BOTONES DE ACCIÓN PARA SEGUIMIENTO -->
+    <div class="action-buttons">
+      <!-- Botón principal: Seguir en Andreani -->
+      <div *ngIf="trackingNumber" class="tracking-actions">
+        <button class="btn-track-andreani" (click)="trackOnAndreani()">
+          <i class="fas fa-external-link-alt"></i>
+          <span>🚚 Seguir mi pedido en Andreani</span>
+          <small>Seguimiento oficial del transportista</small>
+        </button>
+        
+        <button class="btn-track-internal" (click)="goToInternalTracking()">
+          <i class="fas fa-search"></i>
+          Seguimiento interno
+        </button>
+      </div>
+      
+      <!-- Si no hay tracking number aún -->
+      <div *ngIf="hasShipment && !trackingNumber" class="tracking-pending">
+        <div class="pending-message">
+          <i class="fas fa-clock"></i>
+          <h4>Tu envío está siendo procesado</h4>
+          <p>En las próximas horas recibirás el número de seguimiento por email</p>
+        </div>
+        
+        <button class="btn-track-internal" (click)="goToInternalTracking()">
+          <i class="fas fa-info-circle"></i>
+          Ver estado del pedido
+        </button>
+      </div>
+      
+      <!-- Si no hay envío (retiro en tienda) -->
+      <div *ngIf="!hasShipment" class="pickup-info">
+        <div class="pickup-message">
+          <i class="fas fa-store"></i>
+          <h4>Retiro en tienda</h4>
+          <p>Tu pedido estará listo para retirar en nuestro local</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ ACCIONES GENERALES (CORREGIDO - SIN DUPLICADOS) -->
+    <div class="actions-container">
+      <button class="primary-button" (click)="goToOrders()">
+        <i class="fas fa-list"></i>
+        Ver mis pedidos
+      </button>
+      <button class="secondary-button" (click)="continueShopping()">
+        <i class="fas fa-shopping-cart"></i>
+        Seguir comprando
+      </button>
+    </div>
+
+    <!-- Ayuda -->
+    <div class="help-section">
+      <p>
+        <i class="fas fa-question-circle"></i>
+        ¿Necesitas ayuda? <a href="mailto:ayuda@tutienda.com" class="help-link">Contáctanos</a>
+      </p>
+    </div>
+  </div>
+</div>

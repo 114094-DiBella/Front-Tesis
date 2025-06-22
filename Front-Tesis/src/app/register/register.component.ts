@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, Validati
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { User } from '../models/user.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +17,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private toastr = inject(ToastrService);
 
   // Listener para mensajes del popup de términos
   private messageListener = (event: MessageEvent) => {
@@ -106,6 +108,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.authService.createUser(user).subscribe({
         next: (response) => {
           console.log('User created successfully:', response);
+          console.log('🔥 EJECUTANDO TOAST');
+          this.toastr.success('Usuario creado exitosamente', 'Éxito');
           this.router.navigate(['/login']);
         },
         error: (error) => {

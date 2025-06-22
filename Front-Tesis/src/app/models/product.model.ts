@@ -10,6 +10,7 @@ export class Product {
     stock?: BigInteger;
     active?: boolean;
     imageUrls?: string[];
+    weight?: number; // Peso en kg
     
     constructor(data?: Partial<Product>) {
         this.id = data?.id;
@@ -22,6 +23,7 @@ export class Product {
         this.stock = data?.stock;
         this.active = data?.active;
         this.imageUrls = data?.imageUrls;
+        this.weight = data?.weight;
     }
 }
 export class Marca {

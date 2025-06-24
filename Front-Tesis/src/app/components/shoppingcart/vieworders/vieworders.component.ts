@@ -415,4 +415,12 @@ export class ViewordersComponent implements OnInit {
     
     return pages;
   }
+
+  // viewUrlPago(order: Order): void {
+  //   if (order && order.urlPago) {
+  //     window.open(order.urlPago, '_blank');
+  //   } else {
+  //     this.showError('URL de pago no disponible para esta orden');
+  //   }
+  // }
 }

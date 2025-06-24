@@ -274,8 +274,9 @@ proceedToCheckout(): void {
         }
         
         // Abrir MercadoPago en nueva pestaña
-        window.open(response.paymentUrl, '_blank');
         console.log('🌐 Abriendo MercadoPago en nueva pestaña');
+        window.open(response.paymentUrl, '_blank');
+
         
         // Redirigir a página de éxito (mostrará "pendiente" si es necesario)
         this.router.navigate(['/payment/success'], {

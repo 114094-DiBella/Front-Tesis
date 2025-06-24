@@ -1,588 +1,212 @@
-<!-- privacidad.component.html -->
-<div class="container-fluid bg-light min-vh-100">
-  
-  <!-- Header -->
-  <div class="bg-white shadow-sm border-bottom sticky-top">
-    <div class="container">
-      <div class="row align-items-center py-3">
-        <div class="col-auto">
-          <button 
-            class="btn btn-outline-secondary btn-sm" 
-            (click)="goBack()"
-            title="Volver atrás"
-          >
-            <i class="fas fa-arrow-left me-2"></i>Volver
-          </button>
+<head>
+  <title>Política de Privacidad</title>
+</head>
+<body>
+  <div class="document-container">
+    <!-- Header -->
+    <div class="header-section">
+      <h1 class="document-title">Política de Privacidad de Datos</h1>
+      <div class="document-meta">
+        <strong>Sitio web:</strong> {{ sitioWeb }}<br>
+        <strong>Empresa:</strong> {{ nombreEmpresa }}<br>
+        <strong>Última actualización:</strong> {{ getCurrentDate() }} | <strong>Versión:</strong> {{ version }}<br>
+        <strong>Legislación aplicable:</strong> {{ legislacionAplicable }}
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content-body">
+      
+      <!-- Introducción -->
+      <div class="main-section">
+        <div class="paragraph">
+          {{ nombreEmpresa }} como encargado del tratamiento de datos personales del sitio, mediante la presente Política de Privacidad de Datos, pone en conocimiento de los Usuarios los alcances de la protección integral de sus datos personales asentados en los archivos; registros; bancos o bases de datos; u otros medios técnicos de tratamiento de datos implementados por {{ nombreEmpresa }}, asegurando el respeto al derecho a la intimidad de las personas, así como también al libre acceso a la información que sobre las mismas pueda eventualmente registrarse.
         </div>
         
-        <div class="col text-center">
-          <h1 class="h3 mb-0 fw-bold text-primary">Protección de Datos Personales</h1>
+        <div class="paragraph">
+          {{ nombreEmpresa }} considera que cualquier tipo de información relativa a un Usuario es información de carácter personal, y por consiguiente vela en todo momento por la privacidad y confidencialidad de la misma. La confidencialidad de la información relativa a los Usuarios implicará su mantenimiento en archivos y/o bancos o bases de datos seguros, de modo tal que el acceso por parte de terceros que no se encuentren autorizados a tal efecto, se encuentre restringido.
         </div>
         
-        <div class="col-auto">
-          <div class="btn-group">
-            <button 
-              class="btn btn-outline-info btn-sm" 
-              (click)="printPage()"
-              title="Imprimir página"
-            >
-              <i class="fas fa-print me-1"></i>Imprimir
-            </button>
-            
-            <button 
-              class="btn btn-outline-danger btn-sm" 
-              (click)="closeWindow()"
-              title="Cerrar"
-              *ngIf="isPopup()"
-            >
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
+        <div class="important-clause">
+          <strong>Para preguntas sobre esta Política o cualquier circunstancia relativa al tratamiento de información de carácter personal, los Usuarios podrán contactarse a través del siguiente medio de contacto: E-mail: {{ emailSoporte }}</strong>
+        </div>
+      </div>
+
+      <!-- Sección 1 -->
+      <div class="main-section">
+        <h2 class="section-title">Voluntariedad en la entrega de datos</h2>
+        <div class="paragraph">
+          La presente Política está destinada a informar a los usuarios acerca del tratamiento de datos personales llevado adelante por {{ nombreEmpresa }}, con el objeto que libre y voluntariamente determinen la entrega o no, de sus datos personales cuando les sean requeridos o que se puedan obtener a partir de la utilización de alguno de los servicios disponibles en el sitio.
+        </div>
+        
+        <div class="paragraph">
+          Por regla general, cuando para utilizar un servicio o acceder a cierto contenido se solicite algún dato personal, la entrega del mismo no es obligatoria, con excepción de aquellos casos donde específicamente se indicara que es un dato requerido para la prestación del servicio o el acceso al contenido.
+        </div>
+      </div>
+
+      <!-- Sección 2 -->
+      <div class="main-section">
+        <h2 class="section-title">Autorización de uso de la información personal</h2>
+        <div class="paragraph">
+          El usuario que facilitara sus datos personales, autoriza expresamente a {{ nombreEmpresa }} para el uso de los datos aportados con los fines aquí expuestos. Implica ello además la aceptación de todos los términos contenidos en esta Política, y en los Términos y Condiciones Generales.
+        </div>
+      </div>
+
+      <!-- Sección 3 -->
+      <div class="main-section">
+        <h2 class="section-title">Recolección y uso de Información</h2>
+        <div class="paragraph">
+          La recolección y tratamiento de datos de carácter personal tiene por finalidad la prestación, gestión, administración, personalización, actualización y mejora de los servicios y contenidos puestos a disposición de los usuarios por parte de {{ nombreEmpresa }}.
+        </div>
+        
+        <h3 class="subsection-title">Tipos de datos recopilados:</h3>
+        <div class="list-item">• <strong>Datos de identificación:</strong> Nombre y apellido, número de documento de identidad, correo electrónico, número de teléfono, fecha de nacimiento.</div>
+        <div class="list-item">• <strong>Datos de transacciones:</strong> Productos comprados, montos de las transacciones, métodos de pago utilizados, fechas y horarios de las compras, comprobantes generados.</div>
+        <div class="list-item">• <strong>Datos de uso de la aplicación:</strong> Historial de navegación dentro de la aplicación, productos visualizados, búsquedas realizadas, tiempo de uso de la aplicación.</div>
+      </div>
+
+      <!-- Sección 4 -->
+      <div class="main-section">
+        <h2 class="section-title">Comunicaciones del Sitio</h2>
+        <div class="paragraph">
+          Ocasionalmente los datos podrán ser utilizados para el envío de comunicaciones a los Usuarios, en lo referente a los servicios y contenidos brindados por {{ nombreEmpresa }} y/o sus socios comerciales, tales como newsletter y/o encuestas, y/o promociones, y/o información comercial, entre otros. Cuando un Usuario prefiera no ser contactado con estos fines, podrá:
+        </div>
+        
+        <div class="list-item">a) Comunicarse con {{ nombreEmpresa }} según los datos de contacto aquí suministrados, y solicitar que no le sea enviada información sobre los productos y servicios.</div>
+        <div class="list-item">b) Ingresar en su propia cuenta de usuario "Mi Cuenta" (haciendo uso de correo y contraseña) y modificar la opción de recibir notificaciones por correo electrónico.</div>
+        <div class="list-item">c) Ejecutar las instrucciones a ese efecto incluidas en los correos enviados por {{ nombreEmpresa }}.</div>
+        
+        <div class="paragraph">
+          Finalmente se enviarán a los Usuarios mensajes relacionados con el estado o cambios relativos a los productos o servicios de {{ nombreEmpresa }} siempre que ello sea necesario. Así por ejemplo, si nuestro servicio es interrumpido temporalmente por mantenimiento.
+        </div>
+      </div>
+
+      <!-- Sección 5 -->
+      <div class="main-section">
+        <h2 class="section-title">Intransferibilidad de los datos</h2>
+        <div class="paragraph">
+          Todos los datos personales recolectados de los Usuarios, son de uso exclusivo de {{ nombreEmpresa }}. Toda vez que se recabe información personal como parte de la relación directa con un Usuario, en respeto a la privacidad y confidencialidad de los Usuarios, {{ nombreEmpresa }} no cederá ni transferirá esa información personal a ningún tercero que no sea parte de {{ nombreEmpresa }} o sus asociados. Únicamente se compartirá con terceros la información personal de los Usuarios, en los siguientes casos:
+        </div>
+        
+        <div class="list-item">a) Cuando exista obligación legal de hacerlo.</div>
+        <div class="list-item">b) Cuando exista una orden emanada de un Tribunal de Justicia competente.</div>
+        <div class="list-item">c) Cuando resulte necesario para la investigación de un delito.</div>
+      </div>
+
+      <!-- Sección 6 -->
+      <div class="main-section">
+        <h2 class="section-title">Encuestas o Concursos</h2>
+        <div class="paragraph">
+          Esporádicamente {{ nombreEmpresa }} ofrece a sus Usuarios la oportunidad de participar en sorteos y concursos. Como requisito para la participación, podrá requerirse datos adicionales de los Usuarios. La participación en estos eventos es enteramente voluntaria, y la información requerida típicamente incluye datos de contacto y de orden demográfico, a efectos de hacer posible la notificación de los ganadores y entrega de premios.
+        </div>
+      </div>
+
+      <!-- Sección 7 -->
+      <div class="main-section">
+        <h2 class="section-title">Derechos de los titulares de los datos</h2>
+        <div class="paragraph">
+          A su vez, y como consecuencia de la garantía de los derechos amparados, se expresa también como finalidad, la de permitir en todo momento el acceso a la información por parte de las personas vinculadas a los datos registrados. De este modo, el Usuario podrá ejercitar los derechos de acceso, rectificación o cancelación de datos y oposición, que más adelante se mencionarán.
+        </div>
+        
+        <div class="paragraph">
+          El ejercicio de dichos derechos podrá ser efectivizado por cada usuario mediante comunicación dirigida a {{ nombreEmpresa }}, según la información de contacto aquí brindada.
+        </div>
+        
+        <div class="paragraph">
+          Efectuado el ingreso de los datos por los usuarios, {{ nombreEmpresa }}, procederá a la rectificación, supresión o actualización de los datos personales del afectado, cuando ello fuere procedente.
+        </div>
+        
+        <div class="paragraph">
+          La supresión de algún/nos datos no procederá cuando pudiese causar perjuicios a derechos o intereses legítimos de terceros, o cuando existiera una obligación legal de conservar los datos.
+        </div>
+        
+        <h3 class="subsection-title">Derechos específicos:</h3>
+        <div class="list-item"><strong>El derecho a exigir la rectificación de los datos:</strong> En principio, el derecho a exigir la rectificación puede ser ejercido ante la falsedad, inexactitud, imprecisión o carácter erróneo que tengan los datos. Su reconocimiento implica el de la preservación de la veracidad de la información, condición que hace a la calidad de la misma.</div>
+        
+        <div class="list-item"><strong>El derecho a requerir la actualización de los datos:</strong> La actualización estriba en preservar la vigencia del dato, esto es, la correspondencia de la fracción de información que representa con el ámbito temporal en que es proporcionado.</div>
+        
+        <div class="list-item"><strong>Los derechos a la adición y disociación:</strong> Los usuarios podrán requerir que se adicionen informaciones a los datos registrados, cuando se consideren incompletos de modo tal que no reflejen las realidades que representan. En similar sentido, también podrán exigir la disociación de datos cuyas calidades o características sólo permitan su tratamiento sin posibilidad de establecer asociaciones o vinculaciones con los titulares de los datos.</div>
+        
+        <div class="list-item"><strong>Los derechos a la supresión y sometimiento a la confidencialidad:</strong> La "supresión" de un dato implica su eliminación definitiva del archivo o registro, esto es su completa desaparición, sin que puedan quedar constancias de su anterior registración.</div>
+      </div>
+
+      <!-- Sección 8 -->
+      <div class="main-section">
+        <h2 class="section-title">Sobre las Cookies</h2>
+        <div class="paragraph">
+          Eventualmente el sitio puede utilizar cookies, que se instalarán en la computadora del usuario cuando este navegue por el sitio. Tienen por finalidad facilitar la navegación por el sitio al usuario, y proporcionar a {{ nombreEmpresa }}, información que le ayudara a mejorar sus servicios y contenidos. En ningún caso las cookies utilizadas por el sitio proporcionarán información de carácter personal de usuario, quien en relación a las mismas mantendrá pleno anonimato, aun frente a {{ nombreEmpresa }}, dado que tampoco suministran información tendiente a la individualización del usuario.
+        </div>
+        
+        <div class="paragraph">
+          Es intención de {{ nombreEmpresa }} poner de resalto que para navegar por el sitio, no resulta necesario que el usuario permita la instalación de las cookies enviadas por el sitio. Ello solo podrá requerirse en relación a ciertos servicios y/o contenidos. El sitio puede incluir cookies anónimas colocadas por terceros (proveedores de tecnología) en el navegador utilizado por los visitantes. Conforme a lo dispuesto en la normativa de protección de datos, {{ nombreEmpresa }} tendrá derecho de acceso, rectificación y cancelación de los datos personales recopilados con la única finalidad de prestar el servicio.
+        </div>
+      </div>
+
+      <!-- Sección 9 -->
+      <div class="main-section">
+        <h2 class="section-title">Utilizamos métodos de seguridad apropiados</h2>
+        <div class="paragraph">
+          En {{ nombreEmpresa }} la seguridad es importante. {{ nombreEmpresa }} adopta todas las medidas de seguridad lógica y física exigidas por las reglamentaciones, y las que resultan de la adecuada prudencia y diligencia en la protección de los Usuarios que han depositado su confianza en {{ nombreEmpresa }}, para proteger la información personal reunida contra el acceso no autorizado, alteración o destrucción. {{ nombreEmpresa }} evalúa y mejora sus sistemas de seguridad toda vez que sea necesario.
+        </div>
+      </div>
+
+      <!-- Sección 10 -->
+      <div class="main-section">
+        <h2 class="section-title">Cambios a esta Política</h2>
+        <div class="paragraph">
+          En caso de modificación de esta Política, publicaremos esos cambios en esta sección y otros lugares que sean considerados apropiados para notificar a los Usuarios sobre los cambios. {{ nombreEmpresa }} se reserva el derecho a modificar esta Política en cualquier momento, a cuyo efecto los Usuarios deberán tomar conocimiento de la misma en forma regular, recurriendo a la lectura de la misma con una frecuencia no menor a una vez a la semana.
+        </div>
+      </div>
+
+      <!-- Sección 11 -->
+      <div class="main-section">
+        <h2 class="section-title">¿Qué ocurre con su Información Personal cuando cierra su cuenta?</h2>
+        <div class="paragraph">
+          En el caso que un Usuario decida cerrar su cuenta, nuestra Política de Privacidad continuará vigente respecto ese Usuario. Toda su información personal será señalada como no disponible o eliminada. El supuesto de ser señalada como indisponible, tiene por objeto la conservación de la información única y exclusivamente a los fines de resolver alguna disputa o litigio posterior.
+        </div>
+      </div>
+
+      <!-- Sección 12 -->
+      <div class="main-section">
+        <h2 class="section-title">Eliminación de cuenta y datos</h2>
+        
+        <h3 class="subsection-title">Desde la aplicación:</h3>
+        <div class="list-item">1. Acceder a "Mi Perfil" en la aplicación</div>
+        <div class="list-item">2. Seleccionar "Configuración de Cuenta"</div>
+        <div class="list-item">3. Elegir "Eliminar Cuenta"</div>
+        <div class="list-item">4. Confirmar la eliminación mediante contraseña</div>
+        <div class="list-item">5. Confirmar definitivamente la eliminación</div>
+        
+        <h3 class="subsection-title">Por contacto directo:</h3>
+        <div class="list-item">1. Enviar solicitud de eliminación a nuestro email de soporte: {{ emailSoporte }}</div>
+        <div class="list-item">2. Proporcionar datos de identificación para verificar identidad</div>
+        <div class="list-item">3. Confirmar la eliminación de forma expresa</div>
+        
+        <div class="important-clause">
+          <strong>Nota importante:</strong> Algunos datos pueden conservarse por obligaciones legales (datos de transacciones por ley fiscal - {{ aniosConservacionFiscal }} años, comprobantes de compra por obligación contable, registros de seguridad sin datos identificatorios).
+        </div>
+      </div>
+
+      <!-- Sección 13 -->
+      <div class="main-section">
+        <h2 class="section-title">Autoridad de Control</h2>
+        <div class="paragraph">
+          Los usuarios pueden presentar reclamos ante la {{ autoridadControl }}:
+        </div>
+        
+        <div class="list-item"><strong>Sitio web:</strong> {{ sitioWebAAIP }}</div>
+        <div class="list-item"><strong>Email:</strong> {{ emailAAIP }}</div>
+        <div class="list-item"><strong>Teléfono:</strong> {{ telefonoAAIP }}</div>
+      </div>
+
+      <!-- Footer informativo -->
+      <div class="main-section">
+        <div class="legal-footer">
+          <strong>{{ nombreEmpresa }} - {{ tipoProyecto }}</strong><br>
+          {{ institucionEducativa }}<br>
+          Cumple con {{ legislacionAplicable }}
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Contenido Principal -->
-  <div class="container py-4">
-    <div class="row justify-content-center">
-      <div class="col-lg-10 col-xl-8">
-        
-        <!-- Info de versión -->
-        <div class="alert alert-info d-flex align-items-center mb-4">
-          <i class="fas fa-info-circle me-2"></i>
-          <small>
-            <strong>Última actualización:</strong> {{ getCurrentDate() }} | 
-            <strong>Versión:</strong> 1.0 | 
-            <strong>Legislación:</strong> Ley 25.326 (Argentina)
-          </small>
-        </div>
-
-        <!-- Contenido de Política de Privacidad -->
-        <div class="bg-white rounded shadow-sm p-4">
-          
-          <!-- Definición y Derechos del Usuario -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-shield-alt me-2"></i>
-              Definición y Derechos del Usuario
-            </h2>
-            
-            <div class="card border-primary mb-3">
-              <div class="card-body">
-                <p class="card-text">
-                  <strong>Protección de datos personales:</strong> Es el derecho del usuario de una aplicación de software, 
-                  a decidir o autorizar de forma libre, previa, expresa e informada la recolección, uso o tratamiento de 
-                  los datos personales, así como de conocer, actualizar, rectificar, suprimir o controlar lo que se hace 
-                  con la información.
-                </p>
-              </div>
-            </div>
-            
-            <div class="alert alert-warning">
-              <i class="fas fa-mobile-alt me-2"></i>
-              <strong>Importante:</strong> Toda aplicación publicada y disponible para descargar, tiene que incluir 
-              una forma de que el usuario en caso de dejar de usar la app, pueda gestionar la eliminación de sus datos 
-              personales, capturados por la misma, además de la desinstalación.
-            </div>
-          </div>
-
-          <!-- Datos Personales Recopilados -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-clipboard-list me-2"></i>
-              Datos Personales Recopilados
-            </h2>
-            
-            <div class="row g-4">
-              <div class="col-lg-4">
-                <div class="card h-100 border-info">
-                  <div class="card-header bg-info text-white">
-                    <h5 class="card-title mb-0">
-                      <i class="fas fa-user me-2"></i>
-                      Datos de Registro y Cuenta
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Nombre y apellido</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Número de documento de identidad</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Correo electrónico</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Número de teléfono</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-info me-2"></i><strong>Fecha de nacimiento</strong></li>
-                      <li class="mb-0"><i class="fas fa-check text-info me-2"></i><strong>Contraseña</strong> (encriptada)</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-4">
-                <div class="card h-100 border-success">
-                  <div class="card-header bg-success text-white">
-                    <h5 class="card-title mb-0">
-                      <i class="fas fa-credit-card me-2"></i>
-                      Datos de Transacciones
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Productos comprados</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Montos de las transacciones</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Métodos de pago utilizados</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Fechas y horarios de las compras</strong></li>
-                      <li class="mb-0"><i class="fas fa-check text-success me-2"></i><strong>Comprobantes generados</strong></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-4">
-                <div class="card h-100 border-warning">
-                  <div class="card-header bg-warning text-dark">
-                    <h5 class="card-title mb-0">
-                      <i class="fas fa-chart-bar me-2"></i>
-                      Datos de Uso de la Aplicación
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-2"><i class="fas fa-check text-warning me-2"></i><strong>Historial de navegación</strong> dentro de la aplicación</li>
-                      <li class="mb-2"><i class="fas fa-check text-warning me-2"></i><strong>Productos visualizados</strong></li>
-                      <li class="mb-2"><i class="fas fa-check text-warning me-2"></i><strong>Búsquedas realizadas</strong></li>
-                      <li class="mb-0"><i class="fas fa-check text-warning me-2"></i><strong>Tiempo de uso de la aplicación</strong></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Finalidad del Tratamiento de Datos -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-target me-2"></i>
-              Finalidad del Tratamiento de Datos
-            </h2>
-            <p class="text-muted mb-4">Los datos personales son utilizados para:</p>
-            
-            <div class="row g-3">
-              <div class="col-md-6 col-lg-4">
-                <div class="d-flex align-items-center p-3 bg-light rounded">
-                  <span class="badge bg-primary rounded-circle me-3 fs-6">1</span>
-                  <strong>Gestión de la cuenta de usuario</strong>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="d-flex align-items-center p-3 bg-light rounded">
-                  <span class="badge bg-primary rounded-circle me-3 fs-6">2</span>
-                  <strong>Procesamiento de pedidos y transacciones</strong>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="d-flex align-items-center p-3 bg-light rounded">
-                  <span class="badge bg-primary rounded-circle me-3 fs-6">3</span>
-                  <strong>Generación de comprobantes de compra</strong>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="d-flex align-items-center p-3 bg-light rounded">
-                  <span class="badge bg-primary rounded-circle me-3 fs-6">4</span>
-                  <strong>Comunicación con el usuario</strong> sobre pedidos
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="d-flex align-items-center p-3 bg-light rounded">
-                  <span class="badge bg-primary rounded-circle me-3 fs-6">5</span>
-                  <strong>Mejora del servicio</strong> mediante análisis de uso
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="d-flex align-items-center p-3 bg-light rounded">
-                  <span class="badge bg-primary rounded-circle me-3 fs-6">6</span>
-                  <strong>Cumplimiento de obligaciones legales</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Base Legal para el Tratamiento -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-balance-scale me-2"></i>
-              Base Legal para el Tratamiento
-            </h2>
-            <p class="text-muted mb-4">El tratamiento de sus datos personales se fundamenta en:</p>
-            
-            <div class="row g-3">
-              <div class="col-md-6">
-                <div class="card border-success h-100">
-                  <div class="card-body text-center">
-                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
-                    <h5 class="card-title">Consentimiento expreso</h5>
-                    <p class="card-text">del usuario al aceptar estos términos</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card border-info h-100">
-                  <div class="card-body text-center">
-                    <i class="fas fa-file-contract fa-2x text-info mb-3"></i>
-                    <h5 class="card-title">Ejecución contractual</h5>
-                    <p class="card-text">para procesar compras y brindar servicios</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card border-warning h-100">
-                  <div class="card-body text-center">
-                    <i class="fas fa-university fa-2x text-warning mb-3"></i>
-                    <h5 class="card-title">Cumplimiento de obligaciones legales</h5>
-                    <p class="card-text">fiscales y contables</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card border-secondary h-100">
-                  <div class="card-body text-center">
-                    <i class="fas fa-lock fa-2x text-secondary mb-3"></i>
-                    <h5 class="card-title">Interés legítimo</h5>
-                    <p class="card-text">para la seguridad y mejora del servicio</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Medidas de Seguridad -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-shield-alt me-2"></i>
-              Medidas de Seguridad
-            </h2>
-            
-            <div class="row g-4">
-              <div class="col-lg-6">
-                <div class="card border-primary h-100">
-                  <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">
-                      <i class="fas fa-laptop me-2"></i>
-                      Protección Técnica
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-2"><i class="fas fa-key text-primary me-2"></i><strong>Encriptación de contraseñas</strong> mediante algoritmos seguros</li>
-                      <li class="mb-2"><i class="fas fa-shield-alt text-primary me-2"></i><strong>Conexiones seguras HTTPS</strong> para todas las comunicaciones</li>
-                      <li class="mb-2"><i class="fas fa-user-lock text-primary me-2"></i><strong>Acceso restringido</strong> a los datos por personal autorizado</li>
-                      <li class="mb-2"><i class="fas fa-database text-primary me-2"></i><strong>Respaldos seguros</strong> de la información</li>
-                      <li class="mb-0"><i class="fas fa-sync-alt text-primary me-2"></i><strong>Actualizaciones regulares</strong> de seguridad del sistema</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6">
-                <div class="card border-secondary h-100">
-                  <div class="card-header bg-secondary text-white">
-                    <h5 class="card-title mb-0">
-                      <i class="fas fa-building me-2"></i>
-                      Protección Física
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-2"><i class="fas fa-server text-secondary me-2"></i><strong>Servidores seguros</strong> con acceso controlado</li>
-                      <li class="mb-2"><i class="fas fa-lock text-secondary me-2"></i><strong>Medidas de protección</strong> contra accesos no autorizados</li>
-                      <li class="mb-0"><i class="fas fa-eye text-secondary me-2"></i><strong>Monitoreo continuo</strong> de la seguridad del sistema</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Derechos del Usuario -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-user-shield me-2"></i>
-              Sus Derechos
-            </h2>
-            <p class="text-muted mb-4"><strong>Usted tiene derecho a:</strong></p>
-            
-            <div class="row g-3">
-              <div class="col-md-6 col-lg-4">
-                <div class="card border-info h-100">
-                  <div class="card-body">
-                    <h6 class="card-title text-info">
-                      <i class="fas fa-search me-2"></i>
-                      Derecho de Acceso
-                    </h6>
-                    <ul class="list-unstyled small mb-0">
-                      <li class="mb-1"><strong>Conocer qué datos</strong> personales tenemos sobre usted</li>
-                      <li><strong>Solicitar una copia</strong> de su información personal</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-4">
-                <div class="card border-warning h-100">
-                  <div class="card-body">
-                    <h6 class="card-title text-warning">
-                      <i class="fas fa-edit me-2"></i>
-                      Derecho de Rectificación
-                    </h6>
-                    <ul class="list-unstyled small mb-0">
-                      <li class="mb-1"><strong>Corregir datos incorrectos</strong> o desactualizados</li>
-                      <li><strong>Completar información</strong> incompleta</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-4">
-                <div class="card border-danger h-100">
-                  <div class="card-body">
-                    <h6 class="card-title text-danger">
-                      <i class="fas fa-trash me-2"></i>
-                      Derecho de Supresión
-                    </h6>
-                    <ul class="list-unstyled small mb-0">
-                      <li class="mb-1"><strong>Solicitar la eliminación</strong> de sus datos personales</li>
-                      <li><strong>Derecho al olvido</strong> cuando los datos ya no sean necesarios</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-4">
-                <div class="card border-success h-100">
-                  <div class="card-body">
-                    <h6 class="card-title text-success">
-                      <i class="fas fa-download me-2"></i>
-                      Derecho de Portabilidad
-                    </h6>
-                    <ul class="list-unstyled small mb-0">
-                      <li class="mb-1"><strong>Recibir sus datos</strong> en formato estructurado</li>
-                      <li><strong>Transferir sus datos</strong> a otro responsable</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-4">
-                <div class="card border-secondary h-100">
-                  <div class="card-body">
-                    <h6 class="card-title text-secondary">
-                      <i class="fas fa-ban me-2"></i>
-                      Derecho de Oposición
-                    </h6>
-                    <ul class="list-unstyled small mb-0">
-                      <li class="mb-1"><strong>Oponerse al tratamiento</strong> de sus datos</li>
-                      <li><strong>Retirar el consentimiento</strong> en cualquier momento</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Procedimiento para Ejercer sus Derechos -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-clipboard-check me-2"></i>
-              Procedimiento para Ejercer sus Derechos
-            </h2>
-            
-            <div class="row g-3">
-              <div class="col-md-6 col-lg-3">
-                <div class="card border-primary h-100 text-center">
-                  <div class="card-body">
-                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
-                      <strong>1</strong>
-                    </div>
-                    <h6 class="card-title">Envíe su solicitud</h6>
-                    <p class="card-text small">por correo electrónico a: <strong>{{ mailTienda }}</strong></p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-3">
-                <div class="card border-info h-100 text-center">
-                  <div class="card-body">
-                    <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
-                      <strong>2</strong>
-                    </div>
-                    <h6 class="card-title">Incluya información:</h6>
-                    <ul class="list-unstyled small text-start">
-                      <li>• Nombre completo y documento</li>
-                      <li>• Descripción de su solicitud</li>
-                      <li>• Copia del documento de identidad</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-3">
-                <div class="card border-success h-100 text-center">
-                  <div class="card-body">
-                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
-                      <strong>3</strong>
-                    </div>
-                    <h6 class="card-title">Plazo de respuesta:</h6>
-                    <p class="card-text"><strong>Máximo 10 días hábiles</strong></p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-3">
-                <div class="card border-warning h-100 text-center">
-                  <div class="card-body">
-                    <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
-                      <strong>4</strong>
-                    </div>
-                    <h6 class="card-title">Sin costo:</h6>
-                    <p class="card-text">El ejercicio de estos derechos es <strong>completamente gratuito</strong></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Eliminación de Cuenta y Datos -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-user-times me-2"></i>
-              Eliminación de Cuenta y Datos
-            </h2>
-            
-            <div class="row g-4 mb-4">
-              <div class="col-lg-6">
-                <div class="card border-success h-100">
-                  <div class="card-header bg-success text-white">
-                    <h5 class="card-title mb-0">
-                      <i class="fas fa-mobile-alt me-2"></i>
-                      Desde la Aplicación
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ol class="mb-0">
-                      <li>Acceder a <strong>"Mi Perfil"</strong> en la aplicación</li>
-                      <li>Seleccionar <strong>"Configuración de Cuenta"</strong></li>
-                      <li>Elegir <strong>"Eliminar Cuenta"</strong></li>
-                      <li>Confirmar la eliminación mediante contraseña</li>
-                      <li>Confirmar definitivamente la eliminación</li>
-                    </ol>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6">
-                <div class="card border-info h-100">
-                  <div class="card-header bg-info text-white">
-                    <h5 class="card-title mb-0">
-                      <i class="fas fa-envelope me-2"></i>
-                      Por Contacto Directo
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ol class="mb-0">
-                      <li>Enviar solicitud de eliminación a nuestro email de soporte</li>
-                      <li>Proporcionar datos de identificación para verificar identidad</li>
-                      <li>Confirmar la eliminación de forma expresa</li>
-                    </ol>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row g-4">
-              <div class="col-lg-6">
-                <div class="card border-success h-100">
-                  <div class="card-header bg-success text-white">
-                    <h6 class="card-title mb-0">
-                      <i class="fas fa-check-circle me-2"></i>
-                      Qué se Elimina
-                    </h6>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-2"><i class="fas fa-trash text-success me-2"></i><strong>Datos de identificación personal</strong></li>
-                      <li class="mb-2"><i class="fas fa-trash text-success me-2"></i><strong>Historial de navegación y uso</strong></li>
-                      <li class="mb-2"><i class="fas fa-trash text-success me-2"></i><strong>Preferencias y configuraciones</strong></li>
-                      <li class="mb-0"><i class="fas fa-trash text-success me-2"></i><strong>Datos de contacto</strong></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6">
-                <div class="card border-warning h-100">
-                  <div class="card-header bg-warning text-dark">
-                    <h6 class="card-title mb-0">
-                      <i class="fas fa-balance-scale me-2"></i>
-                      Qué se Conserva (por obligación legal)
-                    </h6>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-2"><i class="fas fa-archive text-warning me-2"></i><strong>Datos de transacciones</strong> (ley fiscal - 10 años)</li>
-                      <li class="mb-2"><i class="fas fa-archive text-warning me-2"></i><strong>Comprobantes de compra</strong> (obligación contable)</li>
-                      <li class="mb-0"><i class="fas fa-archive text-warning me-2"></i><strong>Registros de seguridad</strong> (sin datos identificatorios)</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Autoridad de Control -->
-          <div class="mb-5 pb-3 border-bottom">
-            <h2 class="h4 text-primary mb-3">
-              <i class="fas fa-university me-2"></i>
-              Autoridad de Control
-            </h2>
-            <p class="text-muted mb-4">Puede presentar reclamos ante:</p>
-            
-            <div class="card border-primary">
-              <div class="card-header bg-primary text-white">
-                <h5 class="card-title mb-0">Agencia de Acceso a la Información Pública (AAIP)</h5>
-              </div>
-              <div class="card-body">
-                <div class="row g-3">
-                  <div class="col-md-4">
-                    <div class="d-flex align-items-center">
-                      <i class="fas fa-globe text-primary me-2"></i>
-                      <div>
-                        <strong>Sitio web:</strong><br>
-                        <small>www.argentina.gob.ar/aaip</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="d-flex align-items-center">
-                      <i class="fas fa-envelope text-primary me-2"></i>
-                      <div>
-                        <strong>Email:</strong><br>
-                        <small>{{ emailAAIP }}</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="d-flex align-items-center">
-                      <i class="fas fa-phone text-primary me-2"></i>
-                      <div>
-                        <strong>Teléfono:</strong><br>
-                        <small>0800-222-DATO (3286)</small>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+</body>

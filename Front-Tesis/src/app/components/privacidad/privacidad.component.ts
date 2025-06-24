@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-privacidad',
@@ -12,38 +11,36 @@ import { RouterLink } from '@angular/router';
 })
 export class PrivacidadComponent {
 
-  termsAccepted: boolean = false;
-   mailTienda: string = '';
-   telefonoTienda: string = '';
-   horarioTienda: string = '';
-   isLoading: boolean = true;
-   emailAAIP: string = '';
-   telefonoAAIP: string = '';
-   emailProteccionDatos: string = '';
+  // Variables de configuración de la empresa
+  nombreEmpresa: string = 'BELLATECH';
+  sitioWeb: string = 'http://localhost:4200';
+  version: string = '1.0';
+  tipoProyecto: string = 'Proyecto de Tesis';
+  institucionEducativa: string = 'Universidad Tecnológica Nacional - Facultad Regional Córdoba';
+  
+  // Variables de contacto
+  emailSoporte: string = '114094@tecnicatura.frc.utn.edu.ar';
+  telefonoTienda: string = '+54 351 6533-654';
+  horarioTienda: string = 'Lunes a Sabados de 9:00 a 20:00 hs';
+  
+  // Variables legales
+  legislacionAplicable: string = 'Ley 25.326 de Protección de Datos Personales (Argentina)';
+  aniosConservacionFiscal: number = 10;
+  
+  // Variables de autoridad de control
+  autoridadControl: string = 'Agencia de Acceso a la Información Pública (AAIP)';
+  sitioWebAAIP: string = 'www.argentina.gob.ar/aaip';
+  emailAAIP: string = 'datospersonales@aaip.gob.ar';
+  telefonoAAIP: string = '0800-222-DATO (3286)';
+  
+  // Variables de estado
+  isLoading: boolean = true;
 
   constructor(private titleService: Title) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle('Términos y Condiciones - Mi Tienda Online');
-  }
-
-  // Método para imprimir la página
-  printPage(): void {
-    window.print();
-  }
-
-  // Método para volver atrás
-  goBack(): void {
-    window.close();
-  }
-
-  // Método para cerrar ventana (si se abrió en popup)
-  closeWindow(): void {
-    if (window.opener) {
-      window.close();
-    } else {
-      this.goBack();
-    }
+    this.titleService.setTitle('Política de Privacidad - Mi Tienda Online');
+    this.isLoading = false;
   }
 
   getCurrentDate(): string {
@@ -54,34 +51,4 @@ export class PrivacidadComponent {
       day: 'numeric'
     });
   }
-
-  onTermsChange(event: any): void {
-    this.termsAccepted = event.target.checked;
-  }
-
-  continuar(): void {
-  if (this.termsAccepted) {
-    console.log('Términos aceptados');
-    
-    // Comunicar al componente padre (register) que los términos fueron aceptados
-    if (window.opener) {
-      // Si se abrió como popup desde el registro
-      window.opener.postMessage({ 
-        type: 'TERMS_ACCEPTED', 
-        accepted: true 
-      }, window.location.origin);
-      window.close();
-    } else {
-      // Si se navega directamente
-      window.location.href = '/store';
-    }
-  } else {
-    console.warn('Debe aceptar los términos y condiciones para continuar');
-  }
-}
-  isPopup(): boolean {
-  // Verifica si la ventana actual es un popup
-  return window.opener !== null && !window.opener.closed;
-
-    } 
 }

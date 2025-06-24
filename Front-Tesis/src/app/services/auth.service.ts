@@ -48,4 +48,9 @@ export class AuthService {
       console.log("userss", id)
       return this.http.get<User>(`${URL_USERS}/${id}`)
     }
+
+    forgotPassword(email: string): Observable<any> {
+      console.log("Email para recuperar contraseña: ", email);
+      return this.http.post<any>(`${URL_USERS}/changePassword`, { email });
+    }
 }

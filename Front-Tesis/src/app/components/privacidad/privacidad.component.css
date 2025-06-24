@@ -1,0 +1,132 @@
+body {
+  font-family: 'Times New Roman', serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+}
+
+.document-container {
+  max-width: 210mm;
+  margin: 0 auto;
+  background: white;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.header-section {
+  text-align: center;
+  padding: 30px 40px;
+  border-bottom: 2px solid #333;
+}
+
+.document-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.document-meta {
+  font-size: 12px;
+  color: #666;
+  margin-top: 15px;
+}
+
+.content-body {
+  padding: 40px;
+  text-align: justify;
+  counter-reset: section-counter;
+}
+
+.main-section {
+  margin-bottom: 35px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 25px 0 15px 0;
+  color: #000;
+  text-transform: uppercase;
+  counter-increment: section-counter;
+}
+
+.section-title::before {
+  content: counter(section-counter) ". ";
+}
+
+.subsection-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 20px 0 10px 0;
+  color: #000;
+}
+
+.paragraph {
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+.important-clause {
+  background: #f8f9fa;
+  border-left: 4px solid #333;
+  padding: 15px;
+  margin: 20px 0;
+  font-style: italic;
+}
+
+.list-item {
+  margin-left: 20px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+.legal-footer {
+  font-size: 11px;
+  color: #888;
+  margin-top: 20px;
+  text-align: center;
+  padding: 20px 0;
+  border-top: 1px solid #ddd;
+}
+
+/* Media queries para responsive */
+@media print {
+  .document-container {
+    box-shadow: none;
+    margin: 0;
+  }
+  
+  .header-section, .content-body {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .document-container {
+    margin: 0;
+    box-shadow: none;
+  }
+  
+  .header-section, .content-body {
+    padding: 20px;
+  }
+  
+  .document-title {
+    font-size: 20px;
+  }
+  
+  .section-title {
+    font-size: 14px;
+  }
+  
+  .paragraph, .list-item {
+    font-size: 13px;
+  }
+}

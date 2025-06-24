@@ -23,15 +23,15 @@ interface FAQItem {
 export class FooterComponent implements OnDestroy {
   
   email: string = '';
-  emailTienda: string = 'info@tienda.com';
+  emailTienda: string = '114094@tecnicatura.frc.utn.edu.ar';
   showFAQ: boolean = false;
   instagramUrl: string = 'https://www.instagram.com/dibella.indumentaria/';
   facebookUrl: string = 'https://www.facebook.com/dibella.indumentaria';
   whatsappUrl: string = 'https://wa.me/3516533654'; // Reemplaza con tu número de WhatsApp
   twitterUrl: string = 'https://twitter.com/tu_tienda';
   direccionTienda: string = 'Tomas de Archondo 2877 Yofre Norte, Córdoba, Argentina';
-  telefonoTienda: string = '+351 6533654';
-  horarioAtencion: string = 'Lunes a Sabados: 9:00 - 13:00 || 17:00 - 21:00';
+  telefonoTienda: string = '+54 351 6533-654';
+  horarioAtencion: string = 'Lunes a Sabados: 9:00 - 20:00 hs';
   currentYear: number = new Date().getFullYear();
 
   constructor(private toastr: ToastrService) {}
@@ -302,33 +302,9 @@ showContactInfo(): void {
   this.showFAQModal();
 }
 
-showTermsAndConditions(): void {
-  this.faqItems = [
-    {
-      id: 1,
-      question: "¿Qué acepto al comprar en la tienda?",
-      answer: "Al comprar aceptas nuestros precios, política de devoluciones, términos de garantía y uso responsable de nuestros servicios.",
-      isOpen: false
-    },
-    {
-      id: 2,
-      question: "¿Los precios pueden cambiar?",
-      answer: "Sí, los precios están sujetos a cambios sin previo aviso. El precio válido es el mostrado al momento de la compra.",
-      isOpen: false
-    },
-    {
-      id: 3,
-      question: "¿Qué pasa si hay un problema con mi compra?",
-      answer: "Contactanos inmediatamente. Evaluaremos cada caso y buscaremos la mejor solución según nuestros términos.",
-      isOpen: false
-    },
-    {
-      id: 4,
-      question: "¿Cómo manejan mis datos personales?",
-      answer: "Protegemos tu información personal y solo la usamos para procesar compras y comunicaciones relacionadas.",
-      isOpen: false
-    }
-  ];
-  this.showFAQModal();
+showTermsAndConditions(){
+  window.open('/terminos', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
+   
 }
+
 }

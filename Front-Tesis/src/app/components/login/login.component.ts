@@ -98,21 +98,6 @@ export class LoginComponent implements OnInit {
   }
 
   forgotPassword() {
-    const email = this.loginForm.value.email;
-    if (!email) {
-      this.errorMessage.set('Por favor, ingresa tu correo electrónico.');
-      return;
-    }
-
-    this.authService.forgotPassword(email).subscribe({
-      next: (response) => {
-        console.log('Correo de recuperación enviado:', response);
-        this.toastr.success('Correo de recuperación enviado. Por favor, revisa tu bandeja de entrada.', 'Éxito');
-      },
-      error: (error) => {
-        console.error('Error al enviar correo de recuperación:', error);
-        this.errorMessage.set('Error al enviar el correo de recuperación. Por favor, inténtalo de nuevo más tarde.');
-      }
-    });
+    this.router.navigate(['/forgot-password']);
   }
 }

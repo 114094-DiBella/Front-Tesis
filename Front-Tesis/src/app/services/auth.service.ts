@@ -51,6 +51,22 @@ export class AuthService {
 
     forgotPassword(email: string): Observable<any> {
       console.log("Email para recuperar contraseña: ", email);
-      return this.http.post<any>(`${URL_USERS}/changePassword`, { email });
+      const payload = { email: email.trim().toLowerCase() };
+      return this.http.post<any>(`${URL_USERS}/changePassword`, payload);
+    }
+
+    // ✅ NUEVO - Método para restablecer contraseña con token
+    resetPassword(token: string, newPassword: string): Observable<any> {
+      console.log("Restableciendo contraseña con token");
+      const payload = { 
+        token: token,
+        newPassword: newPassword 
+      };
+      return this.http.post<any>(`${URL_USERS}/reset-password`, payload);
+    }
+
+    // ✅ NUEVO - Método para validar token de recuperación
+    validateResetToken(token: string): Observable<any> {
+      return this.http.get<any>(`${URL_USERS}/validate-reset-token/${token}`);
     }
 }

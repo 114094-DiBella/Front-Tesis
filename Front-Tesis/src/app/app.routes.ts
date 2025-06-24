@@ -19,6 +19,7 @@ import { PrivacidadComponent } from './components/privacidad/privacidad.componen
 import { BrandsComponent } from './components/brands/brands.component';
 import { CategoriesComponent } from './components/categories/categories.component';
 import { PaymentSuccessComponent } from './components/shoppingcart/payment-success/payment-success.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
     // ✅ TIENDA PÚBLICA: Redirigir al store por defecto (acceso público)
@@ -52,6 +53,7 @@ export const routes: Routes = [
     { path: 'marcas', component: BrandsComponent, canActivate: [AuthGuard] }, // Gestión de marcas (pública)
     { path: 'categorias', component: CategoriesComponent, canActivate: [AuthGuard] }, // Gestión de categorías (pública)
     { path: 'payment/success', component: PaymentSuccessComponent, canActivate: [AuthGuard] }, // Página de éxito de pago (protegida)
+    { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'privacidad', component: PrivacidadComponent }, // Política de privacidad (pública)
 
     // Cualquier ruta no encontrada redirige al store

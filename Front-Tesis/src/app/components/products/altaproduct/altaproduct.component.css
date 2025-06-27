@@ -564,6 +564,24 @@ select.form-control {
 .form-section:not(.form-grid .form-section):hover::before {
   opacity: 1;
 }
+/* Form-row para campos en línea - LAYOUT HORIZONTAL */
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0; /* Eliminar margin-bottom en form-row */
+  min-width: 0; /* Para que funcione el flex correctamente */
+}
+
+/* Asegurar que los inputs en form-row tengan el mismo ancho */
+.form-row .form-control {
+  width: 100%;
+}
 @media (max-width: 768px) {
   .product-form-container {
     padding: 30px 15px;

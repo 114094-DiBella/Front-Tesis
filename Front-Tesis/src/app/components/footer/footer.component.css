@@ -163,7 +163,7 @@ app-footer .faq-answer p {
 
 /* === FOOTER PRINCIPAL === */
 app-footer .footer {
-  background: linear-gradient(135deg, #5d4e8d, var(--footer-text-color));
+  background: linear-gradient(135deg, hsl(254, 39%, 56%), var(--footer-text-color));
   color: var(--footer-white);
   padding: 50px 0 25px;
   margin-top: 60px;

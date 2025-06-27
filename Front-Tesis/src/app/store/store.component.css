@@ -117,14 +117,14 @@ body {
   font-size: 0.9rem;
   font-weight: 400;
   margin-bottom: 5px;
-  color: #888;
+  color: #080808;
   opacity: 1;
 }
 
 .price-amount {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: #333333;
   text-shadow: none;
 }
 
@@ -643,7 +643,7 @@ body {
 .product-price {
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--black);
   display: block;
   margin-bottom: 4px;
 }
@@ -661,8 +661,8 @@ body {
 
 .add-to-cart-modern {
   width: 100%;
-  background: var(--black);
-  color: var(--white);
+  background: var(--black-overlay);
+  color: var(--black);
   border: none;
   padding: 14px;
   font-weight: 600;
@@ -705,7 +705,7 @@ body {
 
 /* === BANNER PROMOCIONAL === */
 .promo-banner-modern {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  background: linear-gradient(135deg, var(--white), var(--dark));
   color: var(--white);
   padding: 80px 20px;
   text-align: center;
@@ -716,12 +716,14 @@ body {
   font-weight: 700;
   margin-bottom: 20px;
   letter-spacing: -1px;
+  color: #000;
 }
 
 .promo-content p {
   font-size: 1.2rem;
   margin-bottom: 40px;
   opacity: 0.9;
+  color: #000;
 }
 
 .promo-btn {

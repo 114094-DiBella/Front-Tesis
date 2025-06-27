@@ -1,7 +1,501 @@
-/* You can add global styles to this file, and also import other style files */
+
+/* Agregar este archivo a angular.json en styles o importar en styles.css */
+
+/* === VARIABLES GLOBALES CONSISTENTES === */
 :root {
-    --primary-purple: #6f42c1;
-    --purple-dark: #5e35b1;
-    --purple-light: #9575cd;
-    --purple-very-light: #f3f0ff;
+  --primary-color: #8860d0;
+  --primary-light: #aa8ee0;
+  --primary-dark: #5e3ca0;
+  --secondary-color: #c1b3e2;
+  --accent-color: #5d4e8d;
+  --text-color: #333333;
+  --text-light: #666666;
+  --background-color: #f9f7ff;
+  --white: #ffffff;
+  --light-gray: #f5f5f5;
+  --border-color: #e0e0e0;
+  --black: #000000;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  
+  /* Sombras consistentes */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+  
+  /* Espaciados consistentes */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  /* Radios consistentes */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 15px;
+  --radius-xl: 20px;
+  --radius-full: 50%;
+  
+  /* Transiciones */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* === RESET Y BASE === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+/* === BOTONES UNIFICADOS === */
+/* Sobrescribir todos los botones de editar para que sean consistentes */
+.btn-edit,
+.edit-btn,
+.btn-edit-user,
+.btn-edit-product,
+.btn-edit-category,
+.btn-modificar,
+.btn-editar {
+  padding: 10px 18px !important;
+  border-radius: var(--radius-xl) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: all var(--transition-normal) !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  min-width: 100px !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  
+  /* Estilo unificado para editar */
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
+  color: var(--white) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.btn-edit:hover,
+.edit-btn:hover,
+.btn-edit-user:hover,
+.btn-edit-product:hover,
+.btn-edit-category:hover,
+.btn-modificar:hover,
+.btn-editar:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 30px rgba(136, 96, 208, 0.4) !important;
+}
+
+.btn-edit i,
+.edit-btn i,
+.btn-edit-user i,
+.btn-edit-product i,
+.btn-edit-category i,
+.btn-modificar i,
+.btn-editar i {
+  font-size: 14px !important;
+}
+
+/* Botones de eliminar unificados */
+.btn-delete,
+.delete-btn,
+.btn-delete-user,
+.btn-delete-product,
+.btn-eliminar,
+.btn-borrar {
+  padding: 10px 18px !important;
+  border-radius: var(--radius-xl) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: all var(--transition-normal) !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  min-width: 100px !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  
+  background: linear-gradient(135deg, var(--danger-color), #c62828) !important;
+  color: var(--white) !important;
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3) !important;
+}
+
+.btn-delete:hover,
+.delete-btn:hover,
+.btn-delete-user:hover,
+.btn-delete-product:hover,
+.btn-eliminar:hover,
+.btn-borrar:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 30px rgba(220, 53, 69, 0.4) !important;
+}
+
+/* Botones primarios unificados */
+.btn-primary,
+.primary-btn,
+.btn-primary-custom,
+.btn-save,
+.btn-guardar,
+.btn-crear,
+.btn-enviar {
+  padding: 12px 24px !important;
+  border-radius: var(--radius-xl) !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  transition: all var(--transition-normal) !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
+  color: var(--white) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.btn-primary:hover,
+.primary-btn:hover,
+.btn-primary-custom:hover,
+.btn-save:hover,
+.btn-guardar:hover,
+.btn-crear:hover,
+.btn-enviar:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-lg) !important;
+  background: linear-gradient(135deg, var(--primary-dark), #4a2c7a) !important;
+}
+
+.btn-primary:disabled,
+.primary-btn:disabled,
+.btn-primary-custom:disabled,
+.btn-save:disabled,
+.btn-guardar:disabled,
+.btn-crear:disabled,
+.btn-enviar:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Botones secundarios unificados */
+.btn-secondary,
+.secondary-btn,
+.btn-cancel,
+.btn-cancelar,
+.btn-outline-primary {
+  padding: 12px 24px !important;
+  border-radius: var(--radius-xl) !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  transition: all var(--transition-normal) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  
+  background: transparent !important;
+  color: var(--primary-color) !important;
+  border: 2px solid var(--primary-color) !important;
+}
+
+.btn-secondary:hover,
+.secondary-btn:hover,
+.btn-cancel:hover,
+.btn-cancelar:hover,
+.btn-outline-primary:hover {
+  background: var(--primary-color) !important;
+  color: var(--white) !important;
+  transform: translateY(-1px) !important;
+}
+
+
+
+/* === CARDS UNIFICADAS === */
+.card,
+.product-card,
+.user-card,
+.category-card,
+.order-card,
+.modern-card {
+  background: var(--white) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all var(--transition-normal) !important;
+  border: 1px solid rgba(136, 96, 208, 0.1) !important;
+}
+
+.card:hover,
+.product-card:hover,
+.user-card:hover,
+.category-card:hover,
+.order-card:hover,
+.modern-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* === FORMULARIOS UNIFICADOS === */
+.form-control,
+.input-field,
+.form-input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="tel"],
+textarea,
+select {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  border: 2px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  transition: all var(--transition-normal) !important;
+  background: var(--white) !important;
+  color: var(--text-color) !important;
+  font-family: inherit !important;
+}
+
+.form-control:focus,
+.input-field:focus,
+.form-input:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary-color) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(136, 96, 208, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* === CONTENEDORES UNIFICADOS === */
+.container,
+.main-container,
+.page-container,
+.component-container {
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: var(--spacing-xl) var(--spacing-lg) !important;
+}
+
+/* === HEADERS Y TÍTULOS UNIFICADOS === */
+.page-title,
+.section-title,
+.component-title,
+h1, h2, h3 {
+  font-weight: 700 !important;
+  color: var(--text-color) !important;
+  margin-bottom: var(--spacing-lg) !important;
+  letter-spacing: -0.5px !important;
+}
+
+.page-title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem) !important;
+  text-align: center !important;
+  position: relative !important;
+  padding-bottom: 15px !important;
+}
+
+.page-title::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 60px !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-light)) !important;
+  border-radius: 2px !important;
+}
+
+/* === ESPECÍFICOS PARA FORGOT PASSWORD === */
+/* Unificar el estilo diferente de forgot password */
+.forgot-password-container {
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--background-color) !important; /* Cambiar gradient por fondo uniforme */
+  padding: 20px !important;
+}
+
+.forgot-password-card {
+  background: var(--white) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 40px !important;
+  max-width: 480px !important;
+  width: 100% !important;
+  border: 1px solid rgba(136, 96, 208, 0.1) !important;
+}
+
+/* === ESTADOS DE CARGA Y LOADING === */
+.loading,
+.spinner,
+.btn:disabled {
+  opacity: 0.7 !important;
+  pointer-events: none !important;
+}
+
+/* === ALERTAS UNIFICADAS === */
+.alert,
+.notification,
+.message {
+  padding: 15px 20px !important;
+  border-radius: var(--radius-md) !important;
+  margin-bottom: var(--spacing-md) !important;
+  font-weight: 500 !important;
+  border: none !important;
+}
+
+.alert-danger,
+.alert-error {
+  background: rgba(220, 53, 69, 0.1) !important;
+  color: var(--danger-color) !important;
+  border-left: 4px solid var(--danger-color) !important;
+}
+
+.alert-success {
+  background: rgba(40, 167, 69, 0.1) !important;
+  color: var(--success-color) !important;
+  border-left: 4px solid var(--success-color) !important;
+}
+
+.alert-warning {
+  background: rgba(255, 193, 7, 0.1) !important;
+  color: var(--warning-color) !important;
+  border-left: 4px solid var(--warning-color) !important;
+}
+
+/* === GRIDS RESPONSIVOS === */
+.grid,
+.products-grid,
+.users-grid,
+.categories-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: var(--spacing-lg) !important;
+  margin-bottom: var(--spacing-xxl) !important;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .grid,
+  .products-grid,
+  .users-grid,
+  .categories-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-md) !important;
   }
+  
+  .container,
+  .main-container,
+  .page-container,
+  .component-container {
+    padding: var(--spacing-md) !important;
+  }
+  
+  .btn-edit,
+  .btn-delete,
+  .btn-primary,
+  .btn-secondary {
+    min-width: 80px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out !important;
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out !important;
+}
+
+/* === UTILITIES === */
+.text-center { text-align: center !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: var(--spacing-xs) !important; }
+.mb-2 { margin-bottom: var(--spacing-sm) !important; }
+.mb-3 { margin-bottom: var(--spacing-md) !important; }
+.mb-4 { margin-bottom: var(--spacing-lg) !important; }
+.mb-5 { margin-bottom: var(--spacing-xl) !important; }
+
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: var(--spacing-xs) !important; }
+.mt-2 { margin-top: var(--spacing-sm) !important; }
+.mt-3 { margin-top: var(--spacing-md) !important; }
+.mt-4 { margin-top: var(--spacing-lg) !important; }
+.mt-5 { margin-top: var(--spacing-xl) !important; }
+
+.p-0 { padding: 0 !important; }
+.p-1 { padding: var(--spacing-xs) !important; }
+.p-2 { padding: var(--spacing-sm) !important; }
+.p-3 { padding: var(--spacing-md) !important; }
+.p-4 { padding: var(--spacing-lg) !important; }
+.p-5 { padding: var(--spacing-xl) !important; }
+
+.d-flex { display: flex !important; }
+.d-block { display: block !important; }
+.d-none { display: none !important; }
+
+.justify-center { justify-content: center !important; }
+.justify-between { justify-content: space-between !important; }
+.justify-end { justify-content: flex-end !important; }
+
+.align-center { align-items: center !important; }
+.align-start { align-items: flex-start !important; }
+.align-end { align-items: flex-end !important; }
+
+.gap-1 { gap: var(--spacing-xs) !important; }
+.gap-2 { gap: var(--spacing-sm) !important; }
+.gap-3 { gap: var(--spacing-md) !important; }
+.gap-4 { gap: var(--spacing-lg) !important; }
+.gap-5 { gap: var(--spacing-xl) !important; }

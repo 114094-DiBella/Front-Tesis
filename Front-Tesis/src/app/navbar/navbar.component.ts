@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService, CartSummary } from '../services/cart.service';
-import { AuthService } from '../services/auth.service'; // ✅ NUEVO
 
 @Component({
   selector: 'app-navbar',
@@ -30,9 +29,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private cartService: CartService,
-    private router: Router,
-    private authService: AuthService // ✅ NUEVO
+    private router: Router
   ) {}
+
 
   ngOnInit(): void {
     // Suscribirse al carrito
@@ -66,52 +65,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isAdmin = userRole === 'ADMIN';
   }
 
-  // ✅ CORREGIDO - Ir al perfil con ID real del usuario
+
+  // Ir al perfil
   goToProfile(): void {
     if (this.isLoggedIn) {
-      if (this.userId) {
-        // Si tenemos el ID guardado, ir directo a editar
-        this.router.navigate(['/users/edit', this.userId]);
-      } else {
-        // Si no tenemos el ID, buscarlo por email
-        this.getUserIdByEmail();
-      }
+      this.router.navigate(['/users/edit', this.userId]);
     } else {
-      // Si no está logueado, ir al login
       this.router.navigate(['/login']);
     }
-  }
-
-  // ✅ NUEVO - Obtener ID del usuario por email
-  private getUserIdByEmail(): void {
-    const userEmail = localStorage.getItem('userEmail');
-    if (!userEmail) {
-      console.error('No hay email de usuario guardado');
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    // Buscar el usuario por email para obtener su ID
-    this.authService.getAllUsers().subscribe({
-      next: (users) => {
-        const currentUser = users.find(user => user.email === userEmail);
-        if (currentUser && currentUser.id) {
-          // Guardar el ID para futuras referencias
-          localStorage.setItem('userId', currentUser.id);
-          this.userId = currentUser.id;
-          
-          // Navegar a editar perfil
-          this.router.navigate(['/users/edit', currentUser.id]);
-        } else {
-          console.error('Usuario no encontrado');
-          this.router.navigate(['/login']);
-        }
-      },
-      error: (error) => {
-        console.error('Error al buscar usuario:', error);
-        this.router.navigate(['/login']);
-      }
-    });
   }
 
   // Ir al carrito (protegido)

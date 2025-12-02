@@ -1,21 +1,5 @@
 
-    /* Variables consistentes con el resto de la app */
-    :root {
-      --primary-color: #8860d0;
-      --primary-light: #aa8ee0;
-      --primary-dark: #5e3ca0;
-      --secondary-color: #c1b3e2;
-      --accent-color: #5d4e8d;
-      --text-color: #333333;
-      --text-light: #666666;
-      --background-color: #f9f7ff;
-      --white: #ffffff;
-      --light-gray: #f5f5f5;
-      --border-color: #e0e0e0;
-      --success-color: #28a745;
-      --danger-color: #dc3545;
-      --warning-color: #ffc107;
-    }
+/* Usa variables globales definidas en src/styles.css */
 
     .payment-success-container {
       max-width: 1000px;
@@ -33,16 +17,15 @@
       justify-content: center;
       padding: 100px 40px;
       background: var(--white);
-      border-radius: 20px;
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(136, 96, 208, 0.1);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
       text-align: center;
     }
 
     .spinner {
       width: 60px;
       height: 60px;
-      border: 4px solid rgba(136, 96, 208, 0.1);
+      border: 4px solid var(--border-color);
       border-top: 4px solid var(--primary-color);
       border-radius: 50%;
       animation: spin 1s linear infinite;
@@ -113,7 +96,7 @@
       background: linear-gradient(135deg, var(--white), var(--light-gray));
       border-radius: 25px;
       box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(136, 96, 208, 0.1);
+      border: 1px solid var(--border-color);
       position: relative;
       overflow: hidden;
     }
@@ -128,12 +111,7 @@
       background: linear-gradient(90deg, var(--success-color), #20c997);
     }
 
-    .success-icon {
-      font-size: 80px;
-      color: var(--success-color);
-      margin-bottom: 25px;
-      animation: successPulse 1.5s ease-in-out;
-    }
+
 
     @keyframes successPulse {
       0% { transform: scale(0.5); opacity: 0; }
@@ -160,8 +138,8 @@
     .order-info-card, .products-card, .pickup-info-card {
       background: var(--white);
       border-radius: 20px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(136, 96, 208, 0.1);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
       overflow: hidden;
     }
 
@@ -177,7 +155,7 @@
     .order-number h2 {
       font-size: 1.8rem;
       font-weight: 700;
-      margin: 0 0 5px 0;
+      border: 1px solid var(--border-color);
     }
 
     .order-label {
@@ -306,12 +284,6 @@
       font-weight: 600;
       color: var(--text-color);
       margin: 0 0 8px 0;
-    }
-
-    .product-specs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
     }
 
     .spec-item {

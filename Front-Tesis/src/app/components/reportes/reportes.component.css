@@ -1,22 +1,5 @@
 /* === DASHBOARD DE REPORTES === */
-/* Variables consistentes con el resto de la aplicación */
-:root {
-  --primary-color: #8860d0;
-  --primary-light: #aa8ee0;
-  --primary-dark: #5e3ca0;
-  --secondary-color: #c1b3e2;
-  --accent-color: #5d4e8d;
-  --text-color: #333333;
-  --text-light: #666666;
-  --background-color: #f9f7ff;
-  --white: #ffffff;
-  --light-gray: #f5f5f5;
-  --border-color: #e0e0e0;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --info-color: #17a2b8;
-}
+/* Usa variables globales definidas en src/styles.css */
 
 .reports-container {
   max-width: 1400px;
@@ -93,7 +76,7 @@
   background: var(--primary-color);
   color: var(--white);
   border-color: var(--primary-color);
-  box-shadow: 0 4px 15px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .refresh-btn {
@@ -213,7 +196,7 @@
   background: var(--white);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
   border-left: 4px solid transparent;
   position: relative;
@@ -222,7 +205,7 @@
 
 .kpi-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
 }
 
 .kpi-card.primary {
@@ -299,7 +282,7 @@
   background: var(--white);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .section-title {
@@ -351,7 +334,7 @@
 .distribution-count {
   font-weight: 600;
   color: var(--primary-color);
-  background: rgba(136, 96, 208, 0.1);
+  background: var(--light-gray);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;

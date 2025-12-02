@@ -77,7 +77,8 @@ export class LoginComponent implements OnInit {
         if (response.token) {
           localStorage.setItem('token', response.token);
           localStorage.setItem('userEmail', user.email || '');
-          // Si el backend devuelve rol, guardarlo también
+          localStorage.setItem('userName', response.name || user.email?.split('@')[0] || '');
+          localStorage.setItem('userId', response.id || '');
           localStorage.setItem('userRole', response.role || 'USER');
         }
         

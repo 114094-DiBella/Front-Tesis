@@ -1,21 +1,4 @@
-/* Variables consistentes - mismas del formulario y usuarios */
-:root {
-  --primary-color: #8860d0;
-  --primary-light: #aa8ee0;
-  --primary-dark: #5e3ca0;
-  --secondary-color: #c1b3e2;
-  --accent-color: #5d4e8d;
-  --text-color: #333333;
-  --text-light: #666666;
-  --background-color: #f9f7ff;
-  --white: #ffffff;
-  --light-gray: #f5f5f5;
-  --border-color: #e0e0e0;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-  --info-color: #17a2b8;
-}
+/* Usar variables globales desde src/styles.css */
 
 /* === CONTENEDOR PRINCIPAL === */
 .orders-container {
@@ -74,8 +57,8 @@
   border-radius: 20px;
   padding: 30px 25px;
   text-align: center;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -125,7 +108,7 @@
   padding: 30px;
   margin-bottom: 40px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  border: 1px solid var(--border-color);
   display: grid;
   grid-template-columns: 2fr 1fr 2fr;
   gap: 25px;
@@ -161,7 +144,7 @@
 .search-input:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 4px rgba(136, 96, 208, 0.1);
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.06);
   transform: translateY(-2px);
 }
 
@@ -191,7 +174,7 @@
 .filter-select:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 4px rgba(136, 96, 208, 0.1);
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.06);
   transform: translateY(-2px);
 }
 
@@ -216,7 +199,7 @@
 .date-input:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 4px rgba(136, 96, 208, 0.1);
+  box-shadow: 0 0 0 4px rgba(15, 52, 80, 0.06);
   transform: translateY(-2px);
 }
 
@@ -237,7 +220,7 @@
   background: var(--white);
   border-radius: 20px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  border: 1px solid var(--border-color);
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
@@ -268,7 +251,7 @@
 .order-header {
   padding: 15px 20px 10px;
   background: linear-gradient(135deg, var(--light-gray), #fafafa);
-  border-bottom: 1px solid rgba(136, 96, 208, 0.1);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -363,7 +346,7 @@
   gap: 12px;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(136, 96, 208, 0.05);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .item-preview:last-child {
@@ -428,7 +411,7 @@
   justify-content: flex-end;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid rgba(136, 96, 208, 0.1);
+  border-top: 1px solid var(--border-color);
 }
 
 .btn {
@@ -531,14 +514,14 @@
   border-color: var(--primary-color);
   color: var(--primary-color);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(136, 96, 208, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .pagination-btn.active {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   border-color: var(--primary-color);
   color: var(--white);
-  box-shadow: 0 8px 20px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .pagination-btn:disabled {

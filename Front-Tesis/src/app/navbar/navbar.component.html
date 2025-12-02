@@ -1,46 +1,65 @@
-<header class="header">
-    <div class="logo">TIENDA</div>
-    <nav class="nav-menu">
-      <ul>
-        <li><a routerLink="store" routerLinkActive="active">Inicio</a></li>
-        <li><a routerLink="products" routerLinkActive="active">Productos</a></li>
-        
-        <!-- 🔒 Menús para usuarios logueados -->
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="top-bar-text">Envíos a todo el país • Atención por WhatsApp</div>
+  <div class="top-bar-right">
+    <a class="top-bar-link" routerLink="/terms">Términos</a>
+    <a class="top-bar-link" routerLink="/privacy">Privacidad</a>
+  </div>
+</div>
+
+<!-- Main header -->
+<header class="modern-header">
+  <div class="header-container">
+    <div class="main-nav">
+      <!-- Left links -->
+      <ul class="nav-left">
+        <li><a class="nav-link" routerLink="/store" routerLinkActive="active">Inicio</a></li>
+        <li><a class="nav-link" routerLink="/products" routerLinkActive="active">Productos</a></li>
         @if(isLoggedIn && isAdmin) {
-          <li><a routerLink="users" routerLinkActive="active">Usuarios</a></li>
-          <li><a routerLink="orders" routerLinkActive="active">Pedidos</a></li>
-          <li><a routerLink="products/new" routerLinkActive="active">Alta Productos</a></li>
-          <li><a routerLink="reports" routerLinkActive="active">Reportes</a></li>
-          <li><a routerLink="categorias" routerLinkActive="active">Categorías</a></li>
-          <li><a routerLink="marcas" routerLinkActive="active">Marcas</a></li>
+          <li><a class="nav-link" routerLink="/users" routerLinkActive="active">Usuarios</a></li>
+          <li><a class="nav-link" routerLink="/orders" routerLinkActive="active">Pedidos</a></li>
+          <li><a class="nav-link" routerLink="/products/new" routerLinkActive="active">Alta Productos</a></li>
+          <li><a class="nav-link" routerLink="/reports" routerLinkActive="active">Reportes</a></li>
+          <li><a class="nav-link" routerLink="/categorias" routerLinkActive="active">Categorías</a></li>
+          <li><a class="nav-link" routerLink="/marcas" routerLinkActive="active">Marcas</a></li>
         }
       </ul>
-    </nav>
-    
-    <div class="header-icons">
-      <a href="#"><i class="fas fa-search"></i></a>
-      
-      <!-- 👤 Icono de usuario (siempre visible) -->
-      <a (click)="goToProfile()" style="cursor: pointer;">
-        <i class="bi bi-person-fill"></i>
+
+      <!-- Center logo -->
+      <a class="brand-logo logo-center" routerLink="/store">WOMEN BAY</a>
+
+      <!-- Right icons -->
+      <div class="nav-right">
+        <div class="nav-icon">
+          <a class="icon-link" routerLink="/search"><i class="fas fa-search"></i></a>
+        </div>
+
+        <div class="nav-icon">
+          <a class="icon-link" (click)="goToProfile()" style="cursor:pointer;">
+            <i class="bi bi-person-fill"></i>
+            @if (isLoggedIn && userName) {
+              <span class="user-badge">{{ userName }}</span>
+            }
+          </a>
+        </div>
+
+        <div class="nav-icon">
+          <a class="icon-link" (click)="goToCart()" style="cursor:pointer;">
+            <i class="bi bi-cart-fill"></i>
+            @if (cartItemCount > 0) {
+              <span class="cart-badge">{{ cartItemCount }}</span>
+            }
+          </a>
+        </div>
+
         @if (isLoggedIn) {
-          <span class="user-indicator">{{ userName.split('@')[0] }}</span>
+          <div class="nav-icon">
+            <a class="icon-link" (click)="logout()" title="Cerrar sesión" style="cursor:pointer;">
+              <i class="bi bi-box-arrow-right"></i>
+            </a>
+          </div>
         }
-      </a>
-      
-      <!-- 🛒 Carrito (siempre visible pero funcionalidad protegida) -->
-      <a (click)="goToCart()" class="cart-link" style="cursor: pointer;">
-        <i class="bi bi-cart-fill"></i>
-        @if (cartItemCount > 0) {
-          <span class="badge">{{ cartItemCount }}</span>
-        }
-      </a>
-      
-      <!-- 🚪 Logout (solo si está logueado) -->
-      @if (isLoggedIn) {
-        <a (click)="logout()" style="cursor: pointer;" title="Cerrar sesión">
-          <i class="bi bi-box-arrow-right"></i>
-        </a>
-      }
+      </div>
     </div>
+  </div>
 </header>

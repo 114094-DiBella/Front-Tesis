@@ -17,8 +17,8 @@
   }
   
   .upload-area:hover, .upload-area.drag-over {
-    border-color: #8860d0;
-    background-color: rgba(136, 96, 208, 0.05);
+    border-color: var(--primary-color);
+    background-color: var(--secondary-color);
   }
   
   .upload-area.has-image {
@@ -32,7 +32,7 @@
   
   .upload-prompt i {
     font-size: 48px;
-    color: #8860d0;
+    color: var(--primary-color);
     margin-bottom: 10px;
   }
   
@@ -81,8 +81,8 @@
   }
   
   .main-badge {
-    background-color: #8860d0;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 12px;
@@ -90,8 +90,8 @@
   }
   
   .set-main-btn {
-    background-color: rgba(136, 96, 208, 0.7);
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
     border: none;
     border-radius: 4px;
     padding: 2px 8px;
@@ -114,8 +114,8 @@
   }
   
   .add-more:hover {
-    border-color: #8860d0;
-    color: #8860d0;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
   }
   
   .add-more i {
@@ -134,7 +134,7 @@
   
   .progress {
     height: 100%;
-    background-color: #8860d0;
+    background-color: var(--primary-color);
     transition: width 0.3s ease;
   }
   
@@ -155,8 +155,8 @@
   
   .btn-upload {
     padding: 8px 15px;
-    background-color: #8860d0;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -179,14 +179,14 @@
   .uploaded-images {
     margin-top: 20px;
     padding: 15px;
-    background-color: #f9f7ff;
+    background-color: var(--background-color);
     border-radius: 8px;
   }
   
   .uploaded-images h3 {
     font-size: 16px;
     margin-bottom: 10px;
-    color: #5e3ca0;
+    color: var(--primary-dark);
   }
   
   .uploaded-images ul {

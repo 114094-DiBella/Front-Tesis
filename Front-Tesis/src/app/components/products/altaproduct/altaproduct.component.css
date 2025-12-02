@@ -1,21 +1,4 @@
-/* Variables consistentes */
-:root {
-  --primary-color: #8860d0;
-  --primary-light: #aa8ee0;
-  --primary-dark: #5e3ca0;
-  --secondary-color: #c1b3e2;
-  --accent-color: #5d4e8d;
-  --text-color: #333333;
-  --text-light: #666666;
-  --background-color: #f9f7ff;
-  --white: #ffffff;
-  --light-gray: #f5f5f5;
-  --border-color: #e0e0e0;
-  --black: #000000;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-}
+/* Usa variables globales definidas en src/styles.css */
 
 /* Reset y base */
 * {
@@ -84,7 +67,7 @@
   background: var(--primary-color);
   color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
   text-decoration: none;
 }
 
@@ -97,15 +80,15 @@
   text-align: center;
   margin-bottom: 40px;
   border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-lg);
   background: var(--white);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .spinner {
   width: 60px;
   height: 60px;
-  border: 4px solid rgba(136, 96, 208, 0.1);
+  border: 4px solid var(--border-color);
   border-top: 4px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -165,8 +148,8 @@
   margin-bottom: 30px;
   background: var(--white);
   border-radius: 25px;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
   padding: 40px;
 }
 
@@ -283,7 +266,7 @@ textarea {
 .form-control:focus {
   border-color: var(--primary-color) !important;
   outline: none !important;
-  box-shadow: 0 0 0 4px rgba(136, 96, 208, 0.1) !important;
+  box-shadow: 0 0 0 4px rgba(15, 52, 80, 0.06) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -349,7 +332,7 @@ select.form-control {
 
 .form-check:hover {
   border-color: var(--primary-light);
-  background: rgba(136, 96, 208, 0.05);
+  background: var(--light-gray);
 }
 
 .form-check-input {
@@ -367,7 +350,7 @@ select.form-control {
 
 .form-check-input:checked {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-  box-shadow: 0 4px 15px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .form-check-input::after {
@@ -522,12 +505,12 @@ select.form-control {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   border: none;
   color: var(--white);
-  box-shadow: 0 8px 25px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-save:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(136, 96, 208, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 .btn-save:disabled {
@@ -542,8 +525,8 @@ select.form-control {
 .form-section:not(.form-grid .form-section) {
   background: var(--white);
   border-radius: 25px;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
   padding: 35px 30px;
   position: relative;
   margin-bottom: 30px;

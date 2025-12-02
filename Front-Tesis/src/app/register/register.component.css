@@ -38,13 +38,13 @@
 
 /* Cabecera del modal */
 .modal-header {
-  background-color: #8860d0;
+  background-color: var(--primary-color);
   color: white;
   padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .modal-header h2 {
@@ -77,8 +77,8 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  border-top: 1px solid #e0e0e0;
-  background-color: #f9f7ff;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--background-color);
 }
 
 /* Estilos del formulario */
@@ -114,9 +114,9 @@ label {
 }
 
 .form-control:focus {
-  border-color: #8860d0;
+  border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(136, 96, 208, 0.1);
+  box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.1);
 }
 
 .form-control.is-invalid {
@@ -185,7 +185,7 @@ input[type="date"]:active {
 
 /* Enlaces de términos */
 .terms-link {
-  color: #8860d0;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
@@ -212,12 +212,12 @@ input[type="date"]:active {
 }
 
 .btn-primary {
-  background-color: #8860d0;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--white);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #7050b0;
+  background-color: var(--primary-dark);
 }
 
 .btn-primary:disabled {
@@ -226,12 +226,12 @@ input[type="date"]:active {
 }
 
 .btn-secondary {
-  background-color: #e0e0e0;
-  color: #333;
+  background-color: var(--light-gray);
+  color: var(--text-color);
 }
 
 .btn-secondary:hover {
-  background-color: #d0d0d0;
+  background-color: var(--border-color);
 }
 
 /* Adaptación para dispositivos móviles */

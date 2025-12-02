@@ -224,7 +224,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     const button = event.target as HTMLElement;
     const originalText = button.textContent;
     button.textContent = '¡AGREGADO!';
-    button.style.backgroundColor = '#28a745';
+    button.style.backgroundColor = 'var(--success-color)';
     
     setTimeout(() => {
       button.textContent = originalText;

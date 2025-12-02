@@ -1,21 +1,4 @@
-/* Variables consistentes - mismas de todos los componentes anteriores */
-:root {
-  --primary-color: #8860d0;
-  --primary-light: #aa8ee0;
-  --primary-dark: #5e3ca0;
-  --secondary-color: #c1b3e2;
-  --accent-color: #5d4e8d;
-  --text-color: #333333;
-  --text-light: #666666;
-  --background-color: #f9f7ff;
-  --white: #ffffff;
-  --light-gray: #f5f5f5;
-  --border-color: #e0e0e0;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-  --info-color: #17a2b8;
-}
+/* Usa variables globales definidas en src/styles.css */
 
 /* === CONTENEDOR PRINCIPAL === */
 .product-detail-container {
@@ -36,8 +19,8 @@
   padding: 12px 16px;
   background: var(--white);
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 .breadcrumbs a {
@@ -70,12 +53,12 @@
   padding: 100px 0;
   background: var(--white);
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
 }
 
 .spinner {
-  border: 4px solid rgba(136, 96, 208, 0.1);
+  border: 4px solid var(--border-color);
   border-radius: 50%;
   border-top: 4px solid var(--primary-color);
   width: 50px;
@@ -104,7 +87,7 @@
   margin-bottom: 30px;
   text-align: center;
   border-left: 4px solid var(--danger-color);
-  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .error-message i {
@@ -124,12 +107,12 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  box-shadow: 0 4px 15px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .back-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(136, 96, 208, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 /* === DETALLE DEL PRODUCTO === */
@@ -141,8 +124,8 @@
   background: var(--white);
   border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
   position: relative;
   overflow: hidden;
 }
@@ -175,7 +158,7 @@
   justify-content: center;
   border: 2px solid var(--border-color);
   transition: transform 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .main-image:hover {
@@ -213,7 +196,7 @@
 
 .thumbnail.active {
   border-color: var(--primary-color);
-  box-shadow: 0 4px 15px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .thumbnail img {
@@ -256,7 +239,7 @@
   letter-spacing: 0.5px;
   display: inline-block;
   margin-bottom: 8px;
-  box-shadow: 0 4px 15px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .product-title {
@@ -340,12 +323,12 @@
   display: flex;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(136, 96, 208, 0.05);
+  border-bottom: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
 .attribute-row:hover {
-  background: rgba(136, 96, 208, 0.03);
+  background: var(--light-gray);
   padding-left: 10px;
   border-radius: 8px;
 }
@@ -374,7 +357,7 @@
   height: 24px;
   border-radius: 50%;
   border: 2px solid var(--white);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 /* === SECCIÓN DE COMPRA === */
@@ -387,7 +370,7 @@
   background: var(--white);
   border-radius: 15px;
   border: 2px solid var(--primary-color);
-  box-shadow: 0 8px 25px rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .quantity-selector {
@@ -461,12 +444,12 @@
   gap: 10px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  box-shadow: 0 6px 20px rgba(136, 96, 208, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .add-to-cart-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(136, 96, 208, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 .add-to-cart-btn:disabled {
@@ -525,9 +508,9 @@
 
 .policy:hover {
   border-color: var(--primary-light);
-  background: rgba(136, 96, 208, 0.05);
+  background: var(--light-gray);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(136, 96, 208, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .policy i {
@@ -587,8 +570,8 @@
   background: var(--white);
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(136, 96, 208, 0.1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -608,7 +591,7 @@
 
 .related-product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .related-product-card:hover::before {

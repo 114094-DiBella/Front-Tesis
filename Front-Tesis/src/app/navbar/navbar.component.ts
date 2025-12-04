@@ -1,4 +1,4 @@
-// navbar.component.ts - ACTUALIZADO CON MANEJO DE PERFIL
+// navbar.component.ts - AGREGAR ESTO
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -16,13 +16,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   
   // Estado de autenticación
   isLoggedIn: boolean = false;
-  userName: string = ''; // ✅ CORREGIDO - Cambiado a userName
+  userName: string = '';
   userEmail: string = '';
-  userId: string = ''; // ✅ NUEVO - ID del usuario
+  userId: string = '';
   isAdmin: boolean = false;
   
   // Estado del carrito
   cartItemCount: number = 0;
+  
+  // ✅ NUEVO - Estado del menú desplegable
+  isAdminMenuOpen: boolean = false;
   
   // Para limpiar suscripciones
   private destroy$ = new Subject<void>();
@@ -31,7 +34,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private router: Router
   ) {}
-
 
   ngOnInit(): void {
     // Suscribirse al carrito
@@ -54,17 +56,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
   checkLoginStatus(): void {
     const token = localStorage.getItem('token');
     const userEmail = localStorage.getItem('userEmail');
-    const userName = localStorage.getItem('userName'); // ✅ CORREGIDO - Cambiado a userName
-    const userId = localStorage.getItem('userId'); // ✅ NUEVO
+    const userName = localStorage.getItem('userName');
+    const userId = localStorage.getItem('userId');
     const userRole = localStorage.getItem('userRole');
     
     this.isLoggedIn = !!token;
-    this.userName = userName || ''; // ✅ CORREGIDO - Cambiado a userName
+    this.userName = userName || '';
     this.userEmail = userEmail || '';
-    this.userId = userId || ''; // ✅ NUEVO
+    this.userId = userId || '';
     this.isAdmin = userRole === 'ADMIN';
   }
 
+  // ✅ NUEVO - Toggle menú admin
+  toggleAdminMenu(): void {
+    this.isAdminMenuOpen = !this.isAdminMenuOpen;
+  }
 
   // Ir al perfil
   goToProfile(): void {
@@ -92,8 +98,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // Limpiar datos de autenticación
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
-    localStorage.removeItem('userId'); // ✅ NUEVO
+    localStorage.removeItem('userId');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
     
     // Limpiar carrito
     this.cartService.clearCart();
@@ -101,8 +108,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // Actualizar estado
     this.isLoggedIn = false;
     this.userEmail = '';
-    this.userId = ''; // ✅ NUEVO
+    this.userId = '';
     this.isAdmin = false;
+    this.isAdminMenuOpen = false; // ✅ Cerrar menú al logout
     
     // Redirigir al store
     this.router.navigate(['/store']);

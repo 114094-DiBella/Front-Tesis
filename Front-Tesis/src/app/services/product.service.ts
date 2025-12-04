@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 
-const URL_PRODUCTS = "http://localhost:8080";
+import { environment } from '../../environments/environment';
 
+const URL_PRODUCTS = environment.URL_PRODUCTS;
 @Injectable({
     providedIn: 'root'
 })

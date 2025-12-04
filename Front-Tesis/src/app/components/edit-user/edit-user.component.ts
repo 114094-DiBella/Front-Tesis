@@ -47,6 +47,7 @@ export class EditUserComponent implements OnInit {
 
   loadUserData(): void {
     this.isLoading = true;
+    console.log("Cargando usuario con ID:", this.userId);
     this.authService.getUserById(this.userId).subscribe({
       next: (user) => {
         // Formatear la fecha para el input date

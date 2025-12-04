@@ -2,8 +2,8 @@
 <div class="top-bar">
   <div class="top-bar-text">Envíos a todo el país • Atención por WhatsApp</div>
   <div class="top-bar-right">
-    <a class="top-bar-link" routerLink="/terms">Términos</a>
-    <a class="top-bar-link" routerLink="/privacy">Privacidad</a>
+    <a class="top-bar-link" routerLink="/terminos">Términos</a>
+    <a class="top-bar-link" routerLink="/privacidad">Privacidad</a>
   </div>
 </div>
 
@@ -15,13 +15,22 @@
       <ul class="nav-left">
         <li><a class="nav-link" routerLink="/store" routerLinkActive="active">Inicio</a></li>
         <li><a class="nav-link" routerLink="/products" routerLinkActive="active">Productos</a></li>
+        
         @if(isLoggedIn && isAdmin) {
-          <li><a class="nav-link" routerLink="/users" routerLinkActive="active">Usuarios</a></li>
-          <li><a class="nav-link" routerLink="/orders" routerLinkActive="active">Pedidos</a></li>
-          <li><a class="nav-link" routerLink="/products/new" routerLinkActive="active">Alta Productos</a></li>
-          <li><a class="nav-link" routerLink="/reports" routerLinkActive="active">Reportes</a></li>
-          <li><a class="nav-link" routerLink="/categorias" routerLinkActive="active">Categorías</a></li>
-          <li><a class="nav-link" routerLink="/marcas" routerLinkActive="active">Marcas</a></li>
+          <li class="dropdown">
+            <a class="nav-link dropdown-toggle" (click)="toggleAdminMenu()">
+              Administración
+              <i class="bi bi-chevron-down" [class.rotated]="isAdminMenuOpen"></i>
+            </a>
+            <ul class="dropdown-menu" [class.show]="isAdminMenuOpen">
+              <li><a class="dropdown-item" routerLink="/users" routerLinkActive="active">Usuarios</a></li>
+              <li><a class="dropdown-item" routerLink="/orders" routerLinkActive="active">Pedidos</a></li>
+              <li><a class="dropdown-item" routerLink="/products/new" routerLinkActive="active">Alta Productos</a></li>
+              <li><a class="dropdown-item" routerLink="/reports" routerLinkActive="active">Reportes</a></li>
+              <li><a class="dropdown-item" routerLink="/categorias" routerLinkActive="active">Categorías</a></li>
+              <li><a class="dropdown-item" routerLink="/marcas" routerLinkActive="active">Marcas</a></li>
+            </ul>
+          </li>
         }
       </ul>
 
@@ -32,9 +41,8 @@
       <div class="nav-right">
         <div class="nav-icon">
           <a class="icon-link" routerLink="/search">
-            <i class="fas fa-search">
-              
-            </i></a>
+            <i class="fas fa-search"></i>
+          </a>
         </div>
 
         <div class="nav-icon">

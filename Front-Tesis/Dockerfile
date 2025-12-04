@@ -11,7 +11,7 @@ RUN npm ci
 COPY . .
 
 # Crear build sin restricciones de budget
-RUN ./node_modules/.bin/ng build --configuration=development
+RUN ./node_modules/.bin/ng build --configuration=production
 
 # Nginx stage
 FROM nginx:alpine

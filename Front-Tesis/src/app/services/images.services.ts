@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../env/dev';
+import { environment } from '../../environments/environment';
 export interface Base64ImageDTO {
   base64Image: string;
   fileName: string;

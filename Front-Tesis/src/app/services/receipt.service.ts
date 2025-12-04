@@ -2,13 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class ReceiptService {
   
-  
+  private apiUrl = environment.URL_ORDERS;
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +20,7 @@ export class ReceiptService {
       'Accept': 'application/pdf'
     });
 
-    return this.http.get(`${URL_ORDERS}/api/receipts/download/${orderCode}`, {
+    return this.http.get(`${this.apiUrl}/api/receipts/download/${orderCode}`, {
       headers,
       responseType: 'blob',
       observe: 'response'
@@ -35,7 +35,7 @@ export class ReceiptService {
       'Accept': 'application/pdf'
     });
 
-    return this.http.get(`${URL_ORDERS}/api/receipts/preview/${orderCode}`, {
+    return this.http.get(`${this.apiUrl}/api/receipts/preview/${orderCode}`, {
       headers,
       responseType: 'blob',
       observe: 'response'
@@ -46,6 +46,6 @@ export class ReceiptService {
    * Verificar estado del comprobante
    */
   checkReceiptStatus(orderCode: string): Observable<any> {
-    return this.http.get(`${URL_ORDERS}/api/receipts/status/${orderCode}`);
+    return this.http.get(`${this.apiUrl}/api/receipts/status/${orderCode}`);
   }
 }

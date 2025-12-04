@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Order } from '../models/order.model';
 import { NewOrder } from '../models/newOrder.model';
-import { environment } from '../../env/dev';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({

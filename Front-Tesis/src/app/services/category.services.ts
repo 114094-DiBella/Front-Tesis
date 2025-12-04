@@ -2,32 +2,33 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '../models/product.model';
-
+import { environment } from '../../env/dev';
 
 @Injectable({
     providedIn: 'root'
   })
 export class CategoryService{
+    private apiUrl = environment.URL_PRODUCTS;
     constructor(private http: HttpClient) { }
     
     getAllCategories(): Observable<Category[]> {
-        console.log("URL_PRODUCTS", URL_PRODUCTS);
-        return this.http.get<Category[]>(URL_PRODUCTS + "/api/categories");
+        console.log("URL_PRODUCTS", this.apiUrl);
+        return this.http.get<Category[]>(this.apiUrl + "/api/categories");
     }
 
     createCategory(category: Category): Observable<any> {
-        return this.http.post(URL_PRODUCTS + "/api/categories", category);
+        return this.http.post(this.apiUrl + "/api/categories", category);
     }
 
     updateCategory(id: string, category: Category): Observable<any> {
-        return this.http.put(`${URL_PRODUCTS}/api/categories/${id}`, category);
+        return this.http.put(`${this.apiUrl}/api/categories/${id}`, category);
     }
 
     deleteCategory(id: string): Observable<any> {
-        return this.http.delete(`${URL_PRODUCTS}/api/categories/${id}`);
+        return this.http.delete(`${this.apiUrl}/api/categories/${id}`);
     }
     getCategoryById(id: string): Observable<any> {
-        return this.http.get(`${URL_PRODUCTS}/api/categories/${id}`);
+        return this.http.get(`${this.apiUrl}/api/categories/${id}`);
     }
 
 

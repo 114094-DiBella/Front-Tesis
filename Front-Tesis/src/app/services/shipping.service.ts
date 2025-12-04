@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../env/dev';
 export interface ShippingAddress {
   street: string;
   streetNumber: string;
@@ -72,55 +72,55 @@ export interface TrackingEvent {
 })
 export class ShippingService {
   
-  
+  private apiUrl = environment.URL_SHIPPING;
   constructor(private http: HttpClient) {}
 
   /**
    * Obtener cotizaciones de envío
    */
   getShippingQuotes(request: QuoteRequest): Observable<ShippingQuote[]> {
-    return this.http.post<ShippingQuote[]>(`${URL_SHIPPING}/api/shipping/quotes`, request);
+    return this.http.post<ShippingQuote[]>(`${this.apiUrl}/api/shipping/quotes`, request);
   }
 
   /**
    * Crear un envío
    */
   createShipment(request: CreateShipmentRequest): Observable<ShipmentResponse> {
-    return this.http.post<ShipmentResponse>(`${URL_SHIPPING}/api/shipping/create`, request);
+    return this.http.post<ShipmentResponse>(`${this.apiUrl}/api/shipping/create`, request);
   }
 
   /**
    * Obtener envío por código de orden
    */
   getShipmentByOrderCode(orderCode: string): Observable<ShipmentResponse> {
-    return this.http.get<ShipmentResponse>(`${URL_SHIPPING}/api/shipping/order/${orderCode}`);
+    return this.http.get<ShipmentResponse>(`${this.apiUrl}/api/shipping/order/${orderCode}`);
   }
 
   /**
    * Rastrear envío por número de tracking
    */
   trackShipment(trackingNumber: string): Observable<ShipmentResponse> {
-    return this.http.get<ShipmentResponse>(`${URL_SHIPPING}/api/shipping/track/${trackingNumber}`);
+    return this.http.get<ShipmentResponse>(`${this.apiUrl}/api/shipping/track/${trackingNumber}`);
   }
 
   /**
    * Cancelar envío
    */
   cancelShipment(orderCode: string): Observable<any> {
-    return this.http.delete(`${URL_SHIPPING}/api/shipping/order/${orderCode}`);
+    return this.http.delete(`${this.apiUrl}/api/shipping/order/${orderCode}`);
   }
 
   /**
    * Verificar estado del servicio
    */
   checkServiceHealth(): Observable<any> {
-    return this.http.get(`${URL_SHIPPING}/api/shipping/health`);
+    return this.http.get(`${this.apiUrl}/api/shipping/health`);
   }
 
   /**
    * Actualizar tracking manualmente
    */
   updateTracking(): Observable<any> {
-    return this.http.post(`${URL_SHIPPING}/api/shipping/update-tracking`, {});
+    return this.http.post(`${this.apiUrl}/api/shipping/update-tracking`, {});
   }
 }

@@ -14,6 +14,8 @@ export class StoreComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   featuredCategories: Category[] = [];
   lowPriceHero: number = 20000.00;
+  // Flag para usar datos mock (false por defecto). Activar sólo para pruebas locales.
+  useMockData: boolean = false;
 
   // === CARRUSEL AUTO-SCROLL === //
   currentCategoryIndex = 0;
@@ -45,6 +47,12 @@ export class StoreComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit(): void {
+    if (this.useMockData) {
+      this.loadMockData();
+      this.startAutoScroll();
+      return;
+    }
+
     this.getAllProducts();
     this.getFeaturedCategories();
     this.startAutoScroll();
@@ -230,5 +238,32 @@ export class StoreComponent implements OnInit, OnDestroy {
       button.textContent = originalText;
       button.style.backgroundColor = '';
     }, 2000);
+  }
+
+  // ===== MOCK DATA (temporal, opt-in) =====
+  loadMockData(): void {
+    // Categorías de ejemplo
+    this.featuredCategories = [
+      new Category({ id: 'c-jeans', name: 'Jeans', image_url: this.categoryImages['Jeans'] }),
+      new Category({ id: 'c-remeras', name: 'Remeras', image_url: this.categoryImages['Remeras'] }),
+      new Category({ id: 'c-vestidos', name: 'Vestidos', image_url: this.categoryImages['Vestidos'] }),
+      new Category({ id: 'c-casual', name: 'Casual', image_url: this.categoryImages['Casual'] }),
+      new Category({ id: 'c-abrigos', name: 'Abrigos', image_url: this.categoryImages['Abrigos'] }),
+      new Category({ id: 'c-sweaters', name: 'Sweaters', image_url: this.categoryImages['Sweaters'] })
+    ];
+
+    // Productos de ejemplo (usar tipos seguros: no BigInt)
+    this.products = [
+      new Product({ id: 'p1', name: 'Jean Slim Fit', price: 34999, active: true, stock: 12 as any, imageUrls: ['/images/jeans_1.jpg'], category: this.featuredCategories[0] }),
+      new Product({ id: 'p2', name: 'Remera Básica', price: 9999, active: true, stock: 30 as any, imageUrls: ['/images/remera_1.jpg'], category: this.featuredCategories[1] }),
+      new Product({ id: 'p3', name: 'Vestido Midi Floral', price: 27999, active: true, stock: 8 as any, imageUrls: ['/images/vestido_1.jpg'], category: this.featuredCategories[2] }),
+      new Product({ id: 'p4', name: 'Camisa Casual', price: 16999, active: true, stock: 16 as any, imageUrls: ['/images/camisa_1.jpg'], category: this.featuredCategories[3] }),
+      new Product({ id: 'p5', name: 'Campera Acolchada', price: 45999, active: true, stock: 5 as any, imageUrls: ['/images/campera_1.jpg'], category: this.featuredCategories[4] }),
+      new Product({ id: 'p6', name: 'Sweater Oversize', price: 18999, active: true, stock: 20 as any, imageUrls: ['/images/sweater_1.jpg'], category: this.featuredCategories[5] }),
+      new Product({ id: 'p7', name: 'Pantalón Chino', price: 22999, active: true, stock: 14 as any, imageUrls: ['/images/pantalon_1.jpg'], category: this.featuredCategories[0] }),
+      new Product({ id: 'p8', name: 'Blusa Seda', price: 19999, active: true, stock: 10 as any, imageUrls: ['/images/blusa_1.jpg'], category: this.featuredCategories[2] })
+    ];
+
+    this.lowPriceHero = 14999;
   }
 }

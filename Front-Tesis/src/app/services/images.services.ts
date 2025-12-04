@@ -20,7 +20,7 @@ export interface ImageResponse {
   providedIn: 'root'
 })
 export class ImageService {
-  private apiUrl = 'http://localhost:8080/api/images';
+ 
 
   constructor(private http: HttpClient) { }
 
@@ -29,7 +29,7 @@ export class ImageService {
     const formData = new FormData();
     formData.append('file', file);
     
-    return this.http.post<ImageResponse>(`${this.apiUrl}/upload`, formData);
+    return this.http.post<ImageResponse>(`${URL_PRODUCTS}/api/images/upload`, formData);
   }
 
   // Método para subir una imagen como Base64
@@ -48,7 +48,7 @@ export class ImageService {
           displayOrder: displayOrder
         };
         
-        this.http.post<ImageResponse>(`${this.apiUrl}/upload-base64`, imageDTO).subscribe({
+        this.http.post<ImageResponse>(`${URL_PRODUCTS}/api/images/upload-base64`, imageDTO).subscribe({
           next: (response) => observer.next(response),
           error: (error) => observer.error(error),
           complete: () => observer.complete()
@@ -65,6 +65,6 @@ export class ImageService {
 
   // Método para obtener una imagen en formato Base64
   getImageAsBase64(id: string): Observable<ImageResponse> {
-    return this.http.get<ImageResponse>(`${this.apiUrl}/get-base64/${id}`);
+    return this.http.get<ImageResponse>(`${URL_PRODUCTS}/api/images/get-base64/${id}`);
   }
 }

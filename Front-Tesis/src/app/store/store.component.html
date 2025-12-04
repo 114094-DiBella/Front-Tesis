@@ -58,7 +58,7 @@
           <button class="category-tab" data-category="remeras" (click)="filterProducts('remeras')">REMERAS Y CHOMBAS</button>
         </div>
         
-        <div class="product-carousel-container">
+        <!-- <div class="product-carousel-container">
           <button class="carousel-control prev-btn" (click)="scrollCategoryPrev()" aria-label="Anterior">
             <i class="bi bi-arrow-left-short"></i>
           </button>
@@ -92,7 +92,6 @@
           <i class="bi bi-arrow-right"></i>
           </button>
           
-          <!-- NUEVOS INDICADORES -->
           <div class="carousel-indicators">
             @for (category of featuredCategories; track category.id; let i = $index) {
               <button 
@@ -103,13 +102,10 @@
               </button>
             }
           </div>
-        </div>
-      </div>
-    </section>
-<!-- Productos Destacados - Solo Grid -->
-<section class="featured-products">
+        </div> -->
+      <section class="featured-products">
   <div class="section-container">
-    <h2 class="section-title">PRODUCTOS DESTACADOS</h2>
+    <!-- <h2 class="section-title">PRODUCTOS DESTACADOS</h2> -->
     
     <!-- GRID DIRECTO - SIN carrusel -->
     <div class="products-grid">
@@ -151,7 +147,9 @@
     </div>
   </div>
 </section>
-
+      </div>
+    </section>
+<!-- Productos Destacados - Solo Grid -->
   <!-- Banner Promocional -->
   <section class="promo-banner-modern">
     <div class="promo-content">

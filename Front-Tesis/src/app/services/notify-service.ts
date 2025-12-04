@@ -2,7 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-const URL_NOTIFY = "http://localhost:8083/api/notifications";
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +10,6 @@ const URL_NOTIFY = "http://localhost:8083/api/notifications";
     constructor(private http: HttpClient) {}
 
     sendNotification(data: any): Observable<any> {
-      return this.http.post(URL_NOTIFY, data);
+      return this.http.post(`${URL_NOTIFY}/api/notifications`, data);
     }
   }

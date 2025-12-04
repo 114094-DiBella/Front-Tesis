@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ReceiptService {
   
-  private readonly API_URL = 'http://localhost:8081/api/receipts';
+  
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +20,7 @@ export class ReceiptService {
       'Accept': 'application/pdf'
     });
 
-    return this.http.get(`${this.API_URL}/download/${orderCode}`, {
+    return this.http.get(`${URL_ORDERS}/api/receipts/download/${orderCode}`, {
       headers,
       responseType: 'blob',
       observe: 'response'
@@ -35,7 +35,7 @@ export class ReceiptService {
       'Accept': 'application/pdf'
     });
 
-    return this.http.get(`${this.API_URL}/preview/${orderCode}`, {
+    return this.http.get(`${URL_ORDERS}/api/receipts/preview/${orderCode}`, {
       headers,
       responseType: 'blob',
       observe: 'response'
@@ -46,6 +46,6 @@ export class ReceiptService {
    * Verificar estado del comprobante
    */
   checkReceiptStatus(orderCode: string): Observable<any> {
-    return this.http.get(`${this.API_URL}/status/${orderCode}`);
+    return this.http.get(`${URL_ORDERS}/api/receipts/status/${orderCode}`);
   }
 }

@@ -5,9 +5,6 @@ import { Observable } from 'rxjs';
 import { PaymentMethod } from '../models/payment.models';
 
 
-
-const URL_PAYMENT_METHODS = 'http://localhost:8081/api/formas-pago'; // Ajusta según tu backend
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,16 +14,16 @@ export class PaymentService {
 
   // Obtener todos los métodos de pago activos
   getActivePaymentMethods(): Observable<PaymentMethod[]> {
-    return this.http.get<PaymentMethod[]>(`${URL_PAYMENT_METHODS}/active`);
+    return this.http.get<PaymentMethod[]>(`${URL_PAYMENT_METHODS}/api/formas-pago/active`);
   }
 
   // Obtener método de pago por ID
   getPaymentMethodById(id: string): Observable<PaymentMethod> {
-    return this.http.get<PaymentMethod>(`${URL_PAYMENT_METHODS}/${id}`);
+    return this.http.get<PaymentMethod>(`${URL_PAYMENT_METHODS}/api/formas-pago/${id}`);
   }
 
   // Obtener todos los métodos (para admin)
   getAllPaymentMethods(): Observable<PaymentMethod[]> {
-    return this.http.get<PaymentMethod[]>(URL_PAYMENT_METHODS);
+    return this.http.get<PaymentMethod[]>(URL_PAYMENT_METHODS + `/api/formas-pago`);
   }
 }

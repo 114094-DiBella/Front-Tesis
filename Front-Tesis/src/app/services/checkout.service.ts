@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 export class CheckoutService {
   
 
-  private apiUrl = environment.URL_PAYMENT_METHODS;
+  private apiUrl = environment.URL_ORDERS;
   constructor(private http: HttpClient) { }
 
   createCheckout(checkoutData: any): Observable<any> {

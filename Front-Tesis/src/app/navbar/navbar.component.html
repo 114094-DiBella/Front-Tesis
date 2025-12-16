@@ -17,18 +17,18 @@
         <li><a class="nav-link" routerLink="/products" routerLinkActive="active">Productos</a></li>
         
         @if(isLoggedIn && isAdmin) {
-          <li class="dropdown">
-            <a class="nav-link dropdown-toggle" (click)="toggleAdminMenu()">
+          <li class="dropdown" #adminDropdown>
+            <a class="nav-link dropdown-toggle" (click)="toggleAdminMenu($event)">
               Administración
               <!-- <i class="bi bi-chevron-down" [class.rotated]="isAdminMenuOpen"></i> -->
             </a>
             <ul class="dropdown-menu" [class.show]="isAdminMenuOpen">
-              <li><a class="dropdown-item" routerLink="/users" routerLinkActive="active">Usuarios</a></li>
-              <li><a class="dropdown-item" routerLink="/orders" routerLinkActive="active">Pedidos</a></li>
-              <li><a class="dropdown-item" routerLink="/products/new" routerLinkActive="active">Alta Productos</a></li>
-              <li><a class="dropdown-item" routerLink="/reports" routerLinkActive="active">Reportes</a></li>
-              <li><a class="dropdown-item" routerLink="/categorias" routerLinkActive="active">Categorías</a></li>
-              <li><a class="dropdown-item" routerLink="/marcas" routerLinkActive="active">Marcas</a></li>
+              <li><a class="dropdown-item" routerLink="/users" routerLinkActive="active" (click)="closeAdminMenu()">Usuarios</a></li>
+              <li><a class="dropdown-item" routerLink="/orders" routerLinkActive="active" (click)="closeAdminMenu()">Pedidos</a></li>
+              <li><a class="dropdown-item" routerLink="/products/new" routerLinkActive="active" (click)="closeAdminMenu()">Alta Productos</a></li>
+              <li><a class="dropdown-item" routerLink="/reports" routerLinkActive="active" (click)="closeAdminMenu()">Reportes</a></li>
+              <li><a class="dropdown-item" routerLink="/categorias" routerLinkActive="active" (click)="closeAdminMenu()">Categorías</a></li>
+              <li><a class="dropdown-item" routerLink="/marcas" routerLinkActive="active" (click)="closeAdminMenu()">Marcas</a></li>
             </ul>
           </li>
         }
@@ -39,11 +39,11 @@
 
       <!-- Right icons -->
       <div class="nav-right">
-        <div class="nav-icon">
+        <!-- <div class="nav-icon">
           <a class="icon-link" routerLink="/search">
             <i class="fas fa-search"></i>
           </a>
-        </div>
+        </div> -->
 
         <div class="nav-icon">
           <a class="icon-link" (click)="goToProfile()" style="cursor:pointer;">

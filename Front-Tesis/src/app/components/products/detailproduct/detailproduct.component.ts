@@ -91,7 +91,7 @@ export class DetailproductComponent implements OnInit {
         if (this.product.category?.id) {
           this.loadRelatedProducts(this.product.category.id, productId);
         }
-        
+        console.log('Detalle del producto cargado:', this.product);
         this.isLoading = false;
       },
       error: (error) => {

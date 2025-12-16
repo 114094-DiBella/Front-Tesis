@@ -25,6 +25,7 @@ export class ProductService {
     }
 
     createProduct(product: any): Observable<any> {
+        console.log('Creating product with data:', product);
         return this.http.post(`${URL_PRODUCTS}/api/products`, product);
     }
 
@@ -66,6 +67,11 @@ export class ProductService {
                     product.imageUrls = [imageUrl] as unknown as string[];
                 }
             }
+        }
+        // Normalize description key coming from backend (e.g., 'descripcion')
+        const descrAny = (product as any)?.descripcion as string | undefined;
+        if (!product.description && descrAny) {
+            product.description = descrAny;
         }
         return product;
     }

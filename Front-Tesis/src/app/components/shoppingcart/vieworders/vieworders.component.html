@@ -104,6 +104,9 @@
                   </div>
                   <div class="item-info">
                     <span class="item-name">{{ detail.product.name }}</span>
+                    @if (detail.product.description) {
+                      <span class="item-desc">{{ detail.product.description | slice:0:120 }}@if (detail.product.description.length > 120) { ... }</span>
+                    }
                     <span class="item-details">{{ getProductSpecs(detail.product) }}</span>
                     <span class="item-quantity">Cantidad: {{ detail.quantity }}</span>
                     <span class="item-price">{{ formatPrice(detail.priceUnit) }} c/u</span>

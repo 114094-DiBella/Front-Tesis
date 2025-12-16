@@ -11,6 +11,7 @@ export class User {
     status?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+    imageUrl?: string;
 
 
     constructor(data?: Partial<User>) {

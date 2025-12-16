@@ -43,6 +43,16 @@
               </div>
             }
           </div>
+
+          <div class="form-group">
+            <label for="description">Descripción del producto</label>
+            <textarea id="description" formControlName="description" class="form-control" rows="4"></textarea>
+            @if (productForm.controls['description'].invalid && productForm.controls['description'].touched) {
+              <div class="error-text">
+                La descripción no debe exceder 2000 caracteres
+              </div>
+            }
+          </div>
           
           <div class="form-row">
             <div class="form-group">

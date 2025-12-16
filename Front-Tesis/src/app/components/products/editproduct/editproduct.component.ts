@@ -66,6 +66,7 @@ export class EditproductComponent implements OnInit {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       marcaId: ['', Validators.required],
+      description: ['', [Validators.maxLength(2000)]],
       categoryId: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
@@ -118,6 +119,7 @@ export class EditproductComponent implements OnInit {
         // Completar el formulario con los datos del producto
         this.productForm.patchValue({
           name: product.name,
+          description: product.description || product.descripcion || '', // fallback for backend Spanish naming
           marcaId: product.marca?.id || product.marcaId,
           categoryId: product.category?.id || product.categoryId,
           price: product.price,
@@ -162,6 +164,8 @@ export class EditproductComponent implements OnInit {
     // Preparar el objeto del producto según el formato requerido por el backend
     const productData: any = {
       name: formValues.name,
+      description: formValues.description ?? '',
+      descripcion: formValues.description ?? '', // Spanish fallback key
       marcaId: formValues.marcaId,
       categoryId: formValues.categoryId,
       price: formValues.price,
@@ -170,6 +174,7 @@ export class EditproductComponent implements OnInit {
       color: formValues.color,
       active: formValues.active
     };
+    console.log('Product data prepared for submit (editproduct):', JSON.stringify(productData, null, 2));
     
     // Agregar información de imágenes
     if (this.uploadedImages.length > 0) {

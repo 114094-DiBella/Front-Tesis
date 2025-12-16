@@ -184,6 +184,7 @@
             <thead>
               <tr>
                 <th>Producto</th>
+                <th>Descripción</th>
                 <th>Marca</th>
                 <th>Categoría</th>
                 <th>Stock</th>
@@ -196,6 +197,13 @@
                 <tr>
                   <td>
                     <div class="product-name">{{ product.name }}</div>
+                  </td>
+                  <td>
+                    @if (product.description) {
+                      <div class="product-desc">{{ product.description | slice:0:120 }}@if (product.description.length > 120) { ... }</div>
+                    } @else {
+                      <div class="product-desc muted">—</div>
+                    }
                   </td>
                   <td>{{ product.marca?.name || 'Sin marca' }}</td>
                   <td>{{ product.category?.name || 'Sin categoría' }}</td>
@@ -283,6 +291,9 @@
               <div class="sales-item">
                 <div class="sales-product">
                   <span class="product-name">{{ item.product.name }}</span>
+                  @if (item.product.description) {
+                    <span class="product-desc">{{ item.product.description | slice:0:100 }}@if (item.product.description.length > 100) { ... }</span>
+                  }
                   <span class="product-brand">{{ item.product.marca?.name || 'Sin marca' }}</span>
                 </div>
                 <div class="sales-stats">

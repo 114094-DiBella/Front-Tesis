@@ -125,6 +125,9 @@
           <div class="product-info">
             <h3 class="product-name">{{product.name}}</h3>
             <p class="product-brand">{{product.marca?.name}}</p>
+            @if (product.description) {
+              <p class="product-description">{{ product.description | slice:0:110 }}@if (product.description.length > 110) { ... }</p>
+            }
             
             
             <div class="product-pricing">

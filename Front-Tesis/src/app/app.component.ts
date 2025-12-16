@@ -6,11 +6,12 @@ import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from './components/footer/footer.component';
 import { SocialMediaFabComponent } from "./components/social-media-fab-component/social-media-fab-component.component";
+import { CartPreviewComponent } from './components/shoppingcart/cart-preview/cart-preview.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, CommonModule, FooterComponent, SocialMediaFabComponent],
+  imports: [RouterOutlet, NavbarComponent, CommonModule, FooterComponent, SocialMediaFabComponent, CartPreviewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

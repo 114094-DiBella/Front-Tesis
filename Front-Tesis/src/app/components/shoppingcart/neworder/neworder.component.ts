@@ -11,6 +11,7 @@ import { PaymentService } from '../../../services/payment.service';
 import { PaymentMethod } from '../../../models/payment.models';
 import { CreateShipmentRequest, QuoteRequest, ShippingAddress, ShippingQuote, ShippingService } from '../../../services/shipping.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-neworder',
@@ -43,8 +44,9 @@ export class NeworderComponent implements OnInit, OnDestroy {
   // Para limpiar suscripciones
   private destroy$ = new Subject<void>();
   
-  // Datos temporales (en una app real vendrían del usuario logueado)
-  private readonly TEMP_USER_ID = "550e8400-e29b-41d4-a716-446655440000";
+  // El ID del usuario ahora se obtiene desde AuthService / localStorage.
+  // Si no hay usuario logueado, solicitaremos iniciar sesión antes de finalizar la compra.
+  
 
   shippingQuotes: ShippingQuote[] = [];
   selectedShippingQuote: ShippingQuote | null = null;
@@ -55,6 +57,7 @@ export class NeworderComponent implements OnInit, OnDestroy {
     private checkoutService: CheckoutService, // ✅ CAMBIO: Usar CheckoutService
     private cartService: CartService,
     private paymentService: PaymentService,
+    private userService: AuthService ,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -64,6 +67,7 @@ export class NeworderComponent implements OnInit, OnDestroy {
     this.checkoutForm = this.fb.group({
       paymentMethodId: ['']
     });
+
   }
 
   ngOnInit(): void {
@@ -198,13 +202,21 @@ proceedToCheckout(): void {
   }
   
   this.processingCheckout = true;
+
+  const currentUserId = this.userService.getCurrentUserId();
+  if (!currentUserId) {
+    this.toastr.warning('Debes iniciar sesión para completar la compra', 'Autenticación requerida');
+    this.processingCheckout = false;
+    this.router.navigate(['/login']);
+    return;
+  }
   
   const checkoutData = {
     detalles: this.cartItems.map(item => ({
       idProducto: item.product.id!,
       cantidad: item.quantity
     })),
-    userId: this.TEMP_USER_ID,
+    userId: currentUserId,
     idFormaPago: this.selectedPaymentMethod?.id || '11111111-1111-1111-1111-111111111111',
   };
   
@@ -275,7 +287,9 @@ proceedToCheckout(): void {
         
         // Abrir MercadoPago en nueva pestaña
         console.log('🌐 Abriendo MercadoPago en nueva pestaña');
-        window.open(response.paymentUrl, '_blank');
+        //window.open(response.paymentUrl, '_blank');
+        window.location.href = response.paymentUrl;
+
 
         
         // Redirigir a página de éxito (mostrará "pendiente" si es necesario)

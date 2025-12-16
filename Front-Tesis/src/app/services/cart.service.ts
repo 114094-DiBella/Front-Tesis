@@ -34,9 +34,25 @@ export class CartService {
   // Observables públicos
   public cartItems$ = this.cartItemsSubject.asObservable();
   public cartSummary$ = this.cartSummarySubject.asObservable();
+  // Preview drawer state
+  private previewOpenSubject = new BehaviorSubject<boolean>(false);
+  public previewOpen$ = this.previewOpenSubject.asObservable();
 
   constructor() {
     this.loadCartFromStorage();
+  }
+
+  // Preview drawer control
+  openPreview(): void {
+    this.previewOpenSubject.next(true);
+  }
+
+  closePreview(): void {
+    this.previewOpenSubject.next(false);
+  }
+
+  togglePreview(): void {
+    this.previewOpenSubject.next(!this.previewOpenSubject.value);
   }
 
   // Cargar carrito desde localStorage
@@ -260,6 +276,8 @@ export class CartService {
     return {
       detalles: cartItems.map(item => ({
         idProducto: item.product.id,
+        nombreProducto: item.product.name,
+        descripcionProducto: item.product.description,
         cantidad: item.quantity
       })),
       userId: userId,

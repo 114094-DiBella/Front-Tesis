@@ -103,6 +103,9 @@
         
         <div class="product-info">
           <h3 class="product-name">{{product.name}}</h3>
+            @if (product.description) {
+              <p class="product-description">{{ product.description | slice:0:100 }}@if (product.description.length > 100) { ... }</p>
+            }
           <div class="product-details">
             <span class="marca">{{product.marca?.name}}</span>
             <span class="category">{{product.category?.name}}</span>

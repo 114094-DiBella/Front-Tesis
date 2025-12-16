@@ -1,8 +1,8 @@
 // navbar.component.ts - AGREGAR ESTO
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { Subject, takeUntil, filter } from 'rxjs';
 import { CartService, CartSummary } from '../services/cart.service';
 
 @Component({
@@ -26,6 +26,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   
   // ✅ NUEVO - Estado del menú desplegable
   isAdminMenuOpen: boolean = false;
+  private closeMenuTimer: any = null;
+  @ViewChild('adminDropdown') adminDropdown?: ElementRef;
   
   // Para limpiar suscripciones
   private destroy$ = new Subject<void>();
@@ -45,8 +47,51 @@ export class NavbarComponent implements OnInit, OnDestroy {
     
     // Verificar estado de login al iniciar
     this.checkLoginStatus();
+
+    // Cerrar el menú admin cuando se navega a otra ruta
+    this.router.events
+      .pipe(filter((e) => e instanceof NavigationEnd), takeUntil(this.destroy$))
+      .subscribe(() => this.closeAdminMenu());
   }
-  
+
+  // ✅ NUEVO - Toggle menú admin
+  toggleAdminMenu(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    this.isAdminMenuOpen = !this.isAdminMenuOpen;
+
+    if (this.isAdminMenuOpen) {
+      this.clearCloseTimer();
+      this.closeMenuTimer = setTimeout(() => this.closeAdminMenu(), 5000);
+    } else {
+      this.clearCloseTimer();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.isAdminMenuOpen) return;
+    if (this.adminDropdown && this.adminDropdown.nativeElement.contains(event.target)) {
+      return; // Click dentro del dropdown -> no cerrar
+    }
+    this.closeAdminMenu();
+  }
+
+  // Cerrar el menú admin
+  closeAdminMenu(): void {
+    this.isAdminMenuOpen = false;
+    this.clearCloseTimer();
+  }
+
+  private clearCloseTimer(): void {
+    if (this.closeMenuTimer) {
+      clearTimeout(this.closeMenuTimer);
+      this.closeMenuTimer = null;
+    }
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -67,10 +112,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isAdmin = userRole === 'ADMIN';
   }
 
-  // ✅ NUEVO - Toggle menú admin
-  toggleAdminMenu(): void {
-    this.isAdminMenuOpen = !this.isAdminMenuOpen;
-  }
 
   // Ir al perfil
   goToProfile(): void {
@@ -81,14 +122,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Ir al carrito (protegido)
+  // Ir al carrito: abrir previsualización en drawer (no navegación inmediata)
   goToCart(): void {
-    if (this.isLoggedIn) {
-      this.router.navigate(['/orders/new']);
-    } else {
-      alert('Debes iniciar sesión para acceder al carrito');
-      this.router.navigate(['/login']);
-    }
+    // Abrir/alternar la previsualización del carrito
+    this.cartService.togglePreview();
   }
 
   // Logout mejorado

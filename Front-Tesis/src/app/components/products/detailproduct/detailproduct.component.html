@@ -117,6 +117,7 @@
               </div>
             }
           </div>
+      
           
           <!-- Selector de cantidad y botón de añadir al carrito -->
           <div class="purchase-section">
@@ -160,8 +161,8 @@
           <!-- Descripción del producto -->
           <div class="description-section">
             <h3>Descripción del Producto</h3>
-            @if (product.name) {
-              <p>{{product.name}}</p>
+            @if (product.description) {
+              <p>{{product.description}}</p>
             } @else {
               <p>Este producto no tiene una descripción detallada disponible en este momento.</p>
             }

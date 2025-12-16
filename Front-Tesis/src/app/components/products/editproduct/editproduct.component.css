@@ -133,12 +133,12 @@
   font-size: 18px;
   font-weight: 500;
 }
-    box-shadow: var(--shadow-lg);
 .error-message {
   background: linear-gradient(135deg, #ffebee, #fce4ec);
   border-left: 5px solid var(--danger-color);
   color: var(--danger-color);
-    border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color);
+}
 
 .success-message {
   background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
@@ -150,12 +150,6 @@
   font-size: 3rem;
   margin-bottom: 20px;
   opacity: 0.8;
-}
-
-    border-bottom: 1px solid var(--border-color);
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
 }
 
 .error-message button {
@@ -177,7 +171,6 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
 }
-    box-shadow: var(--shadow-md);
 /* === FORMULARIO PRINCIPAL === */
 .product-form {
   background: var(--white);
@@ -224,6 +217,7 @@
   border-bottom: 2px solid var(--border-color);
   position: relative;
     box-shadow: var(--shadow-lg);
+}
 
 .form-section h2::after {
   content: '';

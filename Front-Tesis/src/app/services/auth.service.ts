@@ -29,6 +29,7 @@ export class AuthService {
 
     createUser(user: User): Observable<User> {
       console.log("User to create: ", user);
+      user.imageUrl = user.imageUrl || 'https://example.com/default-image.png';
       return this.http.post<User>(this.apiUrl + "/users/create", user);
     }
 
@@ -46,6 +47,11 @@ export class AuthService {
     getUserById(id: string): Observable<User> {
       console.log("userss", id)
       return this.http.get<User>(`${this.apiUrl}/users/${id}`)
+    }
+
+    // Obtener el ID del usuario actualmente autenticado (desde localStorage)
+    getCurrentUserId(): string | null {
+      return localStorage.getItem('userId');
     }
 
     forgotPassword(email: string): Observable<any> {

@@ -95,6 +95,9 @@
           </div>
           <div class="product-info">
             <h4>{{ detail.product.name }}</h4>
+            @if (detail.product.description) {
+              <p class="product-desc">{{ detail.product.description | slice:0:140 }}@if (detail.product.description.length > 140) { ... }</p>
+            }
             <div class="product-specs">
               <span *ngIf="detail.product.marca?.name" class="spec-item">
                 <i class="fas fa-tag"></i>

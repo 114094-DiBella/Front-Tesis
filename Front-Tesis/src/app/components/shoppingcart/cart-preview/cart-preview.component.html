@@ -1,0 +1,45 @@
+<div class="cart-preview-backdrop" *ngIf="open" (click)="close()">
+  <aside class="cart-preview-drawer" (click)="$event.stopPropagation()">
+    <header class="cart-preview-header">
+      <h3>Mi carrito</h3>
+      <button class="close-x" (click)="close()">✕</button>
+    </header>
+
+    <div class="cart-preview-body">
+      <ng-container *ngIf="items && items.length; else empty">
+        <ul class="cart-items-list">
+          <li *ngFor="let it of items" class="cart-item-row">
+            <img [src]="it.product.imageUrls?.[0] || '/placeholder.png'" alt="" class="mini-img" />
+            <div class="meta">
+              <div class="name">{{ it.product.name }}</div>
+              <div class="meta-sub">Talle: {{ it.size || '-' }} · Cant: {{ it.quantity }}</div>
+              @if (it.product.description) {
+                <div class="meta-desc">{{ it.product.description | slice:0:80 }}@if (it.product.description.length > 80) { ... }</div>
+              }
+              <div class="controls">
+                <button (click)="decrease(it)" class="qty">-</button>
+                <span class="qty-val">{{ it.quantity }}</span>
+                <button (click)="increase(it)" class="qty">+</button>
+                <button (click)="remove(it)" class="remove">Eliminar</button>
+              </div>
+            </div>
+            <div class="price">$ {{ it.subtotal | number }}</div>
+          </li>
+        </ul>
+
+        <div class="summary">
+          <div class="summary-row"><span>Subtotal</span><strong>$ {{ summary?.subtotal | number }}</strong></div>
+          <div class="summary-row"><span>Envío</span><span>$ {{ summary?.shipping | number }}</span></div>
+          <div class="summary-row total"><span>Total</span><strong>$ {{ summary?.total | number }}</strong></div>
+          <div class="summary-actions">
+            <button class="btn btn-primary" (click)="goToCartPage()">Ir al carrito</button>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #empty>
+        <div class="empty-state">Tu carrito está vacío</div>
+      </ng-template>
+    </div>
+  </aside>
+</div>

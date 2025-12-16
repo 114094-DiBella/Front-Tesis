@@ -1,4 +1,6 @@
 import { Component, inject, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { Category, Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
@@ -6,6 +8,8 @@ import { CategoryService } from '../services/category.services';
 
 @Component({
   selector: 'app-store',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.css']
 })

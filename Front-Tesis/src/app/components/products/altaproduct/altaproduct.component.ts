@@ -64,6 +64,7 @@ export class AltaproductComponent implements OnInit {
       name: ['', Validators.required],
       marcaId: ['', Validators.required],
       categoryId: ['', Validators.required],
+      description: ['', [Validators.maxLength(2000)]],
       size: ['', Validators.required],
       color: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
@@ -105,11 +106,12 @@ export class AltaproductComponent implements OnInit {
           name: product.name,
           marcaId: product.marca?.id,
           categoryId: product.category?.id,
+          description: product.description || product.descripcion || '', // fallback for backend Spanish naming
           size: product.size,
           color: product.color,
           price: product.price,
           stock: product.stock,
-          active: product.active
+          active: product.active,
         });
         
         // Si el producto tiene imágenes, cargarlas
@@ -161,10 +163,12 @@ export class AltaproductComponent implements OnInit {
     
     const productData = {
       ...formData,
+      description: formData.description ?? '',
+      descripcion: formData.description ?? '', // include Spanish key for backend
       imageIds: imageIds
-    };
+    }; // productData contains both description (from form) and descripcion (for backend compatibility)
     
-    console.log('Datos del producto a enviar:', productData);
+    console.log('Datos del producto a enviar (altaproduct):', JSON.stringify(productData, null, 2));
     
     this.isLoading = true;
     

@@ -21,7 +21,7 @@
 
     <!-- Items del carrito -->
     @for (item of cartItems; track (item.product?.id ?? '') + (item.size ?? '') + (item.color ?? '')) {
-      <div class="cart-item">
+      <div class="cart-item" [attr.data-description]="item.product.description" [attr.descripcion]="item.product.description || item.product['descripcion']" title="{{ item.product.description || item.product['descripcion'] }}">
         <div class="item-image">
           @if (item.product.imageUrls && item.product.imageUrls.length > 0) {
             <img [src]="item.product.imageUrls[0]" [alt]="item.product.name" class="product-image">
@@ -32,6 +32,9 @@
         
         <div class="item-details">
             <h3 class="item-name">{{ item.product.name }}</h3>
+            @if (item.product.description) {
+              <p class="item-description">{{ item.product.description | slice:0:140 }}@if (item.product.description.length > 140) { ... }</p>
+            }
             <div class="item-specs">
               @if (item.product.marca?.name) {
                 <span class="item-brand">{{ item.product.marca?.name }}</span>

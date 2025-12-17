@@ -119,13 +119,15 @@
           placeholder="tu.email@ejemplo.com"
           class="newsletter-input"
           (keypress)="onNewsletterKeyPress($event)"
+          [disabled]="isSendingNewsletter"
         />
         <button 
           class="newsletter-btn" 
           (click)="subscribeNewsletter()"
-          [disabled]="!email"
+          [disabled]="!email || isSendingNewsletter"
         >
-          Suscribirse
+          <span *ngIf="!isSendingNewsletter">Suscribirse</span>
+          <span *ngIf="isSendingNewsletter"><i class="bi bi-hourglass-split"></i> Enviando...</span>
         </button>
       </div>
     </div>

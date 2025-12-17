@@ -97,7 +97,7 @@
                 <div class="item-preview">
                   <div class="item-image">
                     @if (detail.product.imageUrls && detail.product.imageUrls.length > 0) {
-                      <img [src]="detail.product.imageUrls[0]" [alt]="detail.product.name" class="product-thumbnail">
+                       <img [src]="detail.product.imageUrls?.[0] || '/placeholder.png'" alt="" class="mini-img" />
                     } @else {
                       <span class="product-icon">📦</span>
                     }

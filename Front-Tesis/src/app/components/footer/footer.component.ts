@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NotifyService } from '../../services/notify-service';
 
 interface FAQItem {
   id: number;
@@ -33,8 +34,9 @@ export class FooterComponent implements OnDestroy {
   telefonoTienda: string = '+54 351 6533-654';
   horarioAtencion: string = 'Lunes a Sabados: 9:00 - 20:00 hs';
   currentYear: number = new Date().getFullYear();
+  isSendingNewsletter: boolean = false;
 
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService, private notifyService: NotifyService) {}
 
   faqItems: FAQItem[] = [
     {
@@ -120,24 +122,44 @@ export class FooterComponent implements OnDestroy {
     }));
   }
 
-  // Newsletter con mejor validación
-// REEMPLAZAR DESDE subscribeNewsletter(): void { HASTA el final del método
-    subscribeNewsletter(): void {
-      if (!this.email) {
-        this.toastr.warning('Por favor ingresa tu email', 'Campo requerido');
-        return;
-      }
-
-      if (!this.isValidEmail(this.email)) {
-        this.toastr.error('Por favor ingresa un email válido', 'Email inválido');
-        return;
-      }
-
-      console.log('✅ Suscripción al newsletter:', this.email);
-      this.toastr.success('¡Gracias por suscribirte! Recibirás nuestras novedades pronto.', '¡Éxito!');
-      this.email = '';
+  // Newsletter - MÉTODO ACTUALIZADO
+  subscribeNewsletter(): void {
+    // Validación de email vacío
+    if (!this.email) {
+      this.toastr.warning('Por favor ingresa tu email', 'Campo requerido');
+      return;
     }
 
+    // Validación de formato de email
+    if (!this.isValidEmail(this.email)) {
+      this.toastr.error('Por favor ingresa un email válido', 'Email inválido');
+      return;
+    }
+
+    // Mostrar indicador de carga
+    this.isSendingNewsletter = true;
+
+    // Llamar al endpoint específico de newsletter
+    this.notifyService.sendNewsletterWelcome(this.email).subscribe({
+      next: (response) => {
+        console.log('✅ Email de newsletter enviado exitosamente:', response);
+        this.toastr.success(
+          '¡Revisa tu email para tu código de descuento! 🎁', 
+          '¡Bienvenida!'
+        );
+        this.email = ''; // Limpiar el campo
+        this.isSendingNewsletter = false;
+      },
+      error: (err) => {
+        console.error('❌ Error al enviar newsletter:', err);
+        this.toastr.error(
+          'No pudimos procesar tu suscripción. Intenta nuevamente.', 
+          'Error'
+        );
+        this.isSendingNewsletter = false;
+      }
+    });
+  }
 
   // Validación de email
   private isValidEmail(email: string): boolean {
@@ -180,131 +202,127 @@ export class FooterComponent implements OnDestroy {
     window.open('/privacidad', '_blank', 'width=800,height=600');
   }
 
-  // Reemplaza los métodos existentes por estos:
+  showDevolutionPolicy(): void {
+    this.faqItems = [
+      {
+        id: 1,
+        question: "¿Cuánto tiempo tengo para devolver un producto?",
+        answer: "Tienes 30 días desde la fecha de compra para realizar cambios o devoluciones.",
+        isOpen: false
+      },
+      {
+        id: 2,
+        question: "¿En qué estado debe estar el producto para devolverlo?",
+        answer: "El producto debe estar en perfecto estado, sin uso y con todas las etiquetas originales.",
+        isOpen: false
+      },
+      {
+        id: 3,
+        question: "¿Necesito el comprobante de compra?",
+        answer: "Sí, es obligatorio presentar el comprobante de compra o boleta para procesar la devolución.",
+        isOpen: false
+      },
+      {
+        id: 4,
+        question: "¿Hay productos que no se pueden devolver?",
+        answer: "No se pueden devolver productos de uso íntimo, productos personalizados o productos en oferta especial.",
+        isOpen: false
+      }
+    ];
+    this.showFAQModal();
+  }
 
-showDevolutionPolicy(): void {
-  this.faqItems = [
-    {
-      id: 1,
-      question: "¿Cuánto tiempo tengo para devolver un producto?",
-      answer: "Tienes 30 días desde la fecha de compra para realizar cambios o devoluciones.",
-      isOpen: false
-    },
-    {
-      id: 2,
-      question: "¿En qué estado debe estar el producto para devolverlo?",
-      answer: "El producto debe estar en perfecto estado, sin uso y con todas las etiquetas originales.",
-      isOpen: false
-    },
-    {
-      id: 3,
-      question: "¿Necesito el comprobante de compra?",
-      answer: "Sí, es obligatorio presentar el comprobante de compra o boleta para procesar la devolución.",
-      isOpen: false
-    },
-    {
-      id: 4,
-      question: "¿Hay productos que no se pueden devolver?",
-      answer: "No se pueden devolver productos de uso íntimo, productos personalizados o productos en oferta especial.",
-      isOpen: false
-    }
-  ];
-  this.showFAQModal();
-}
+  showSizeGuide(): void {
+    this.faqItems = [
+      {
+        id: 1,
+        question: "¿Cómo debo tomar mis medidas?",
+        answer: "Usa una cinta métrica flexible. Mide contorno de pecho, cintura y cadera en ropa interior ajustada.",
+        isOpen: false
+      },
+      {
+        id: 2,
+        question: "¿Qué talle debo elegir si estoy entre dos medidas?",
+        answer: "Recomendamos elegir el talle mayor para mayor comodidad, especialmente en prendas ajustadas.",
+        isOpen: false
+      },
+      {
+        id: 3,
+        question: "¿Las medidas son las mismas para todas las marcas?",
+        answer: "No, cada marca puede tener ligeras variaciones. Siempre consulta la tabla específica de cada producto.",
+        isOpen: false
+      },
+      {
+        id: 4,
+        question: "¿Puedo cambiar si el talle no me queda bien?",
+        answer: "Sí, puedes cambiar por otro talle dentro de los 30 días, siempre que el producto esté sin uso.",
+        isOpen: false
+      }
+    ];
+    this.showFAQModal();
+  }
 
-showSizeGuide(): void {
-  this.faqItems = [
-    {
-      id: 1,
-      question: "¿Cómo debo tomar mis medidas?",
-      answer: "Usa una cinta métrica flexible. Mide contorno de pecho, cintura y cadera en ropa interior ajustada.",
-      isOpen: false
-    },
-    {
-      id: 2,
-      question: "¿Qué talle debo elegir si estoy entre dos medidas?",
-      answer: "Recomendamos elegir el talle mayor para mayor comodidad, especialmente en prendas ajustadas.",
-      isOpen: false
-    },
-    {
-      id: 3,
-      question: "¿Las medidas son las mismas para todas las marcas?",
-      answer: "No, cada marca puede tener ligeras variaciones. Siempre consulta la tabla específica de cada producto.",
-      isOpen: false
-    },
-    {
-      id: 4,
-      question: "¿Puedo cambiar si el talle no me queda bien?",
-      answer: "Sí, puedes cambiar por otro talle dentro de los 30 días, siempre que el producto esté sin uso.",
-      isOpen: false
-    }
-  ];
-  this.showFAQModal();
-}
+  showPaymentMethods(): void {
+    this.faqItems = [
+      {
+        id: 1,
+        question: "¿Qué métodos de pago aceptan?",
+        answer: "Aceptamos efectivo, tarjetas de crédito y débito (Visa, Mastercard), transferencias bancarias y MercadoPago.",
+        isOpen: false
+      },
+      {
+        id: 2,
+        question: "¿Puedo pagar en cuotas?",
+        answer: "Sí, con tarjetas de crédito puedes pagar hasta en 6 cuotas sin interés, o más cuotas con interés según tu banco.",
+        isOpen: false
+      },
+      {
+        id: 3,
+        question: "¿Es seguro pagar con tarjeta?",
+        answer: "Absolutamente. Usamos sistemas de encriptación seguros y no almacenamos datos de tarjetas.",
+        isOpen: false
+      },
+      {
+        id: 4,
+        question: "¿Puedo pagar contraentrega?",
+        answer: "Actualmente solo aceptamos pago al momento del retiro en tienda, no ofrecemos contraentrega.",
+        isOpen: false
+      }
+    ];
+    this.showFAQModal();
+  }
 
-showPaymentMethods(): void {
-  this.faqItems = [
-    {
-      id: 1,
-      question: "¿Qué métodos de pago aceptan?",
-      answer: "Aceptamos efectivo, tarjetas de crédito y débito (Visa, Mastercard), transferencias bancarias y MercadoPago.",
-      isOpen: false
-    },
-    {
-      id: 2,
-      question: "¿Puedo pagar en cuotas?",
-      answer: "Sí, con tarjetas de crédito puedes pagar hasta en 6 cuotas sin interés, o más cuotas con interés según tu banco.",
-      isOpen: false
-    },
-    {
-      id: 3,
-      question: "¿Es seguro pagar con tarjeta?",
-      answer: "Absolutamente. Usamos sistemas de encriptación seguros y no almacenamos datos de tarjetas.",
-      isOpen: false
-    },
-    {
-      id: 4,
-      question: "¿Puedo pagar contraentrega?",
-      answer: "Actualmente solo aceptamos pago al momento del retiro en tienda, no ofrecemos contraentrega.",
-      isOpen: false
-    }
-  ];
-  this.showFAQModal();
-}
+  showContactInfo(): void {
+    this.faqItems = [
+      {
+        id: 1,
+        question: "¿Cuál es la dirección de la tienda?",
+        answer: "Nos encontramos en Tomas de Archondo 2877 Yofre Norte, Córdoba, Argentina.",
+        isOpen: false
+      },
+      {
+        id: 2,
+        question: "¿Cuáles son los horarios de atención?",
+        answer: "Atendemos de Lunes a Sábados: 9:00 - 13:00 y 17:00 - 21:00. Domingos cerrado.",
+        isOpen: false
+      },
+      {
+        id: 3,
+        question: "¿Cómo puedo contactarlos por WhatsApp?",
+        answer: "Nuestro WhatsApp es +351 6533654. Respondemos consultas en horario comercial.",
+        isOpen: false
+      },
+      {
+        id: 4,
+        question: "¿Tienen email de contacto?",
+        answer: "Sí, puedes escribirnos a info@tienda.com para consultas generales o reclamos.",
+        isOpen: false
+      }
+    ];
+    this.showFAQModal();
+  }
 
-showContactInfo(): void {
-  this.faqItems = [
-    {
-      id: 1,
-      question: "¿Cuál es la dirección de la tienda?",
-      answer: "Nos encontramos en Tomas de Archondo 2877 Yofre Norte, Córdoba, Argentina.",
-      isOpen: false
-    },
-    {
-      id: 2,
-      question: "¿Cuáles son los horarios de atención?",
-      answer: "Atendemos de Lunes a Sábados: 9:00 - 13:00 y 17:00 - 21:00. Domingos cerrado.",
-      isOpen: false
-    },
-    {
-      id: 3,
-      question: "¿Cómo puedo contactarlos por WhatsApp?",
-      answer: "Nuestro WhatsApp es +351 6533654. Respondemos consultas en horario comercial.",
-      isOpen: false
-    },
-    {
-      id: 4,
-      question: "¿Tienen email de contacto?",
-      answer: "Sí, puedes escribirnos a info@tienda.com para consultas generales o reclamos.",
-      isOpen: false
-    }
-  ];
-  this.showFAQModal();
-}
-
-showTermsAndConditions(){
-  window.open('/terminos', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
-   
-}
-
+  showTermsAndConditions(): void {
+    window.open('/terminos', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
+  }
 }

@@ -170,7 +170,8 @@ app-footer .footer-column h3.footer-title {
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 15px;
-  color: var(--footer-white);
+  /* Forzar color blanco dentro del footer (sobrescribe regla global de h3) */
+  color: var(--footer-white) !important;
   border-bottom: 2px solid var(--footer-primary-light);
   padding-bottom: 8px;
   display: inline-block;
